@@ -61,8 +61,10 @@ namespace TreeFriend.Models {
                 .HasForeignKey(h => h.HashtagId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            modelBuilder.Entity<OrderDetail>(bulider => {
-                bulider.HasKey(x => new { x.UserId, x.LectureId });
+            modelBuilder.Entity<OrderDetail>(bulider =>
+            {
+                //bulider.HasKey(x => new { x.UserId, x.LectureId });
+                //.OnDelete(DeleteBehavior.NoAction)
                 bulider.HasOne(x => x.User).WithMany(x => x.OrderDetails).HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.NoAction);
                 bulider.HasOne(x => x.Lecture).WithMany(x => x.OrderDetails).HasForeignKey(x => x.LectureId).OnDelete(DeleteBehavior.NoAction);
             });

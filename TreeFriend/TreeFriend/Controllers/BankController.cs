@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,7 @@ using TreeFriend.Models.ViewModel;
 
 namespace TreeFriend.Controllers
 {
+    [Authorize]
     public class BankController : Controller
     {
         private readonly TreeFriendDbContext _db;
@@ -22,6 +24,8 @@ namespace TreeFriend.Controllers
         {
             _db = db;
         }
+
+
         /// <summary>
         /// 金流基本資料(可再移到Web.config或資料庫設定)
         /// </summary>
@@ -30,52 +34,69 @@ namespace TreeFriend.Controllers
             MerchantID = "MS134173586",
             HashKey = "5CeLdyhbqFmVrMG8P7AOehDtmtpa2glq",
             HashIV = "CF7bHa7apMCDuOlP",
-            ReturnURL = "https://www.google.com.tw/?hl=zh_TW", //庫存減少 mounted發一個get請求去後端庫存-1 帶商品ID 
-            NotifyURL = "https://bc1f-1-164-234-176.ngrok.io/Bank/SpgatewayReturn",
-            CustomerURL = "https://bc1f-1-164-234-176.ngrok.io/Bank/SpgatewayCustomer",
+            ReturnURL = "https://a175-49-158-79-227.ngrok.io/Home/HomePage", //ngrok網址要改
+            NotifyURL = "https://a175-49-158-79-227.ngrok.io/Bank/SpgatewayReturn",
+            CustomerURL = "https://a175-49-158-79-227.ngrok.io/Bank/SpgatewayCustomer",
             AuthUrl = "https://ccore.spgateway.com/MPG/mpg_gateway",
             CloseUrl = "https://core.newebpay.com/API/CreditCard/Close"
         };
 
-        //https://bc1f-1-164-234-176.ngrok.io/Bank/SpgatewayReturn
-
-        /// <summary>
-        /// 付款頁面
-        /// </summary>
-        /// <returns></returns>
-        //public ActionResult PayBill()
-        //{
-        //    return View();
-        //}
-
-        /// <summary>
-        /// [智付通支付]金流介接
-        /// </summary>
-        /// <param name="ordernumber">訂單單號</param>
-        /// <param name="amount">訂單金額</param>
-        /// <param name="payType">請款類型</param>
-        /// <returns></returns>
-        /// 
+        
 
 
-        //金流只在意付款方式、價格、訂單編號
-        [HttpPost]
+        
+
+         /// <summary>
+         /// 付款頁面
+         /// </summary>
+         /// <returns></returns>
+         //public ActionResult PayBill()
+         //{
+         //    return View();
+         //}
+
+         /// <summary>
+         /// [智付通支付]金流介接
+         /// </summary>
+         /// <param name="ordernumber">訂單單號</param>
+         /// <param name="amount">訂單金額</param>
+         /// <param name="payType">請款類型</param>
+         /// <returns></returns>
+         /// 
+
+
+
+         //金流只在意付款方式、價格、訂單編號
+         [HttpPost]
         public async Task SpgatewayPayBillAsync(int Buyercount, int InputlectureId)
         {
+            var UserId = Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(u => u.Type == "UserId").Value);
+           
+            
+            _db.OrderDetails.Add(new Models.Entity.OrderDetail()
+            {
+                CreateDate = DateTime.Now,
+                Price = _db.Lectures.Where(x => x.LectureId == InputlectureId).Select(y => y.Price).SingleOrDefault(),
+                Count=Buyercount,
+                UserId=UserId,
+                LectureId=InputlectureId
 
-            //訂單ID
-            //付款狀態:付款成功 1 未付款 0 預設值
-         
+            }) ;
+            _db.SaveChanges();
+
+
+            var i=_db.OrderDetails.Where(x => x.LectureId == InputlectureId && x.UserId == UserId).OrderBy(x=>x.OrderDetailId).LastOrDefault().OrderDetailId.ToString();
+            Console.WriteLine(i);
             string PayMethod = "";
             string version = "2.0";
-            string ordernumber = InputlectureId.ToString();
+            string ordernumber = i;
             var price = _db.Lectures.Where(x => x.LectureId == InputlectureId).Select(y => y.Price).SingleOrDefault();
             Console.WriteLine(price);
-            int amount = (int)(Buyercount * price);
+            int amount = Convert.ToInt32(Buyercount * price);
             Console.WriteLine(amount);
            
 
-
+            
 
             TradeInfo tradeInfo = new TradeInfo()
             {
@@ -203,7 +224,14 @@ namespace TreeFriend.Controllers
                 SpgatewayOutputDataModel convertModel = LambdaUtil.DictionaryToObject<SpgatewayOutputDataModel>(decryptTradeCollection.AllKeys.ToDictionary(k => k, k => decryptTradeCollection[k]));
 
                 // TODO 將回傳訊息寫入資料庫
-
+                if (convertModel.Status== "SUCCESS") {
+                    var od = _db.OrderDetails.FirstOrDefault(x => x.OrderDetailId == Convert.ToInt32(convertModel.MerchantOrderNo));
+                    od.PaymentStatus = true;
+                    od.PayTime = Convert.ToDateTime(convertModel.PayTime);
+                    var lecture = _db.Lectures.FirstOrDefault(x => x.LectureId == od.LectureId);
+                    lecture.Count -= od.Count;
+                    _db.SaveChanges();
+                }
 
 
                 return Content(JsonConvert.SerializeObject(convertModel));

@@ -27,10 +27,7 @@ namespace TreeFriend.Controllers
         }
 
 
-        public IActionResult AddLecture()
-        {
-            return View();
-        }
+      
 
 
         #region 渲染

@@ -14,13 +14,13 @@
     <div class="row mx-auto">
         <!--講座圖片-->
         <div class="col-1 position-relative ">
-            <img class="flegsearch-img position-absolute " src="~/imgs/searchfleg2.png" alt="">
+            <img class="flegsearch-img position-absolute " src="~/img/LecturePic/searchfleg2.png" alt="">
         </div>
         <div class="col-10 mt-3">
             <img src="https://picsum.photos/1280/400?random=1" class="img-fluid rounded " alt="">
         </div>
         <div class="col-1 position-relative ">
-            <img class="flegspeaker-img position-absolute  " src="~/imgs/flegspeaker1.png" alt="">
+            <img class="flegspeaker-img position-absolute  " src="~/img/LecturePic/flegspeaker1.png" alt="">
         </div>
     </div>
     <div v-for="item in lecturedetail">
@@ -118,7 +118,7 @@
                         </div>
 
                         <div class="d-grid gap-2 mt-3">
-                            <button class="btn buybtn" type="button" v-on:click="send"><b>立即購買</b></button>
+                            <button class="btn buybtn" type="button" @*v-on:click="send"*@><b>立即購買</b></button>
                         </div>
                     </div>
                     <div class="row mt-3">
@@ -185,10 +185,10 @@
                 //按鈕disable
 
             },
-            send()
+           
 
 
-        },
+        }
 
 
 

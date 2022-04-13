@@ -89,13 +89,16 @@
             .then(res => self.allHashTagList = res.data);
             //取得所有貼文
             axios.get("../Api/SkillPost/GetAllSkillPost")
-            .then(res => self.skillPostList = res.data)
+            .then(res => self.skillPostList = res.data);
         },
         watch:{
             checkedHashtag: function(){
                 const self = this;
                 if(self.checkedHashtag.length !== 0){
                     axios.post("../Api/SkillPost/GetSKillPostByHashtag",self.checkedHashtag)
+                    .then(res => self.skillPostList = res.data);
+                }else{
+                    axios.get("../Api/SkillPost/GetAllSkillPost")
                     .then(res => self.skillPostList = res.data);
                 }
             }

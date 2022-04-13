@@ -129,7 +129,7 @@ namespace TreeFriend.Controllers
         [HttpPost]
         public bool UploadFile(UploadFileViewModel model)
         {
-            //var UserId = Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(u => u.Type == "UserId").Value);
+            var UserId = Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(u => u.Type == "UserId").Value);
 
 
             string pic;
@@ -169,8 +169,7 @@ namespace TreeFriend.Controllers
                     Price = model.Price,
                     ImgPath = pic,
                     SpeakerImgPath = speakerpic,
-                    UserId = 1
-                    //UserId=UserId測試
+                    UserId = UserId
 
 
                 });

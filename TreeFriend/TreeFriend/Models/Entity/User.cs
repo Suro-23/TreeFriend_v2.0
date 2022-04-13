@@ -43,5 +43,7 @@ namespace TreeFriend.Models.Entity {
         //public virtual ICollection<PersonalPostMessage> PostsMessages { get; set; }
 
         public virtual ICollection<SkillPost> SkillPosts { get; set; }
+        public virtual ICollection<Lecture> Lectures { get; set; }
+        public virtual ICollection<OrderDetail> OrderDetails { get; set; }
     }
 }

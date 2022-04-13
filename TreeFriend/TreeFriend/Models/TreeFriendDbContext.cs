@@ -16,7 +16,9 @@ namespace TreeFriend.Models {
         public DbSet<SkillPost> skillPosts { get; set; }
         
         public DbSet<SkillPostMessage> skillPostMessages{ get; set; }
+        public DbSet<Lecture> Lectures { get; set; }
 
+        public DbSet<OrderDetail> OrderDetails { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
@@ -58,6 +60,13 @@ namespace TreeFriend.Models {
                 .WithOne(h => h.Hashtag)
                 .HasForeignKey(h => h.HashtagId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<OrderDetail>(bulider => {
+                bulider.HasKey(x => new { x.UserId, x.LectureId });
+                bulider.HasOne(x => x.User).WithMany(x => x.OrderDetails).HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.NoAction);
+                bulider.HasOne(x => x.Lecture).WithMany(x => x.OrderDetails).HasForeignKey(x => x.LectureId).OnDelete(DeleteBehavior.NoAction);
+            });
+            modelBuilder.Entity<Lecture>().HasOne(x => x.User).WithMany(x => x.Lectures).HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.Cascade);
 
             //modelBuilder.Entity<PersonalPost>()
             //    .Property(p => p.CreateDate)

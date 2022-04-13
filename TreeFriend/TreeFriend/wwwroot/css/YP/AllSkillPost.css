@@ -1,0 +1,97 @@
+﻿.member-content {
+    padding: 1rem 2rem;
+    margin-left: 2rem;
+    border-radius: 1rem;
+}
+
+.post-item {
+    position: relative;
+    background-color: rgb(255, 255, 255);
+    box-shadow: 0 0 .5rem .5rem rgb(221, 235, 247);
+    padding: 1rem;
+    border-radius: .5rem;
+}
+
+.catgory {
+    position: absolute;
+    right: 18px;
+    top: 14px;
+    background-color: rgb(139, 171, 184);
+    color: rgb(255, 255, 255);
+    border-radius: 1rem;
+}
+
+.uer-info img {
+    width: 50px;
+    border-radius: 100%;
+}
+
+.hashtag {
+    margin: 0.4rem 0;
+}
+
+    .hashtag span {
+        padding: 0.2rem 0.5rem;
+        color: rgb(139, 184, 167);
+        border: 1px solid rgb(139, 184, 167);
+    }
+
+        .hashtag span + span {
+            margin-left: .5rem;
+        }
+
+.post-content img {
+    height: 25px;
+}
+
+.post-item + .post-item {
+    margin-top: 1rem;
+}
+
+.msg-icon {
+    border: none;
+    background-color: white;
+}
+
+    .msg-icon img {
+        width: 30px;
+    }
+
+.leave-msg textarea {
+    background-color: rgb(240, 240, 240);
+}
+
+.user-msg-img img {
+    width: 45px;
+    border-radius: 100%;
+}
+
+.user-msg-content {
+    display: flex;
+    flex-direction: column;
+    margin-left: .4rem;
+    padding: .2rem .6rem;
+    background-color: rgb(240, 240, 240);
+    border-radius: 1rem;
+}
+
+.user-msg-div {
+    display: flex;
+    padding-left: 0;
+}
+
+    .user-msg-div + .user-msg-div {
+        margin-top: .5rem;
+    }
+
+.send-msg {
+    background-color: white;
+}
+
+    .send-msg img {
+        width: 25px;
+    }
+
+.hashtag-group div + div {
+    margin-left: .5rem;
+}

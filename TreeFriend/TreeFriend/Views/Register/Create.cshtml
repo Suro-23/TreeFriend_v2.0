@@ -1,0 +1,678 @@
+﻿@model TreeFriend.Models.Entity.User
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = null;
+}
+
+
+<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+<link rel="stylesheet" href="~/css/site.css" />
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
+
+<style>
+    html, body, div, span, applet, object, iframe,
+    h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+    a, abbr, acronym, address, big, cite, code,
+    del, dfn, em, img, ins, kbd, q, s, samp,
+    small, strike, strong, sub, sup, tt, var,
+    b, u, i, center,
+    dl, dt, dd, ol, ul, li,
+    fieldset, form, label, legend,
+    table, caption, tbody, tfoot, thead, tr, th, td,
+    article, aside, canvas, details, embed,
+    figure, figcaption, footer, header, hgroup,
+    menu, nav, output, ruby, section, summary,
+    time, mark, audio, video {
+        margin: 0;
+        padding: 0;
+        border: 0;
+        font-size: 100%;
+        font: inherit;
+        vertical-align: baseline;
+    }
+    /* HTML5 display-role reset for older browsers */
+    article, aside, details, figcaption, figure,
+    footer, header, hgroup, menu, nav, section {
+        display: block;
+    }
+
+    body {
+        line-height: 1;
+    }
+
+    ol, ul {
+        list-style: none;
+    }
+
+    blockquote, q {
+        quotes: none;
+    }
+
+        blockquote:before, blockquote:after,
+        q:before, q:after {
+            content: '';
+            content: none;
+        }
+
+    table {
+        border-collapse: collapse;
+        border-spacing: 0;
+    }
+
+    @@import url("https://fonts.googleapis.com/css?family=Poppins:200,300,400,500,600,700,800,900&display=swap");
+
+    * {
+        margin: 0; /*取消瀏覽器預設樣式 */
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Poppins", sans-serif;
+    }
+
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        background-color: #C5B9AD;
+        transition: 0.5s;
+    }
+
+        body.active {
+            background: #D2C4AA;
+        }
+
+    .container {
+        position: relative;
+        width: 800px;
+        height: 500px;
+        margin: 20px;
+    }
+
+    .Brownbg {
+        position: relative;
+        top: 40px;
+        width: 100%;
+        height: 420px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: rgba(255, 225, 255, 0.2);
+        box-shadow: 0 5px 45px rgba(0, 0, 0, 0.15);
+    }
+
+    .signinBtn {
+        width: 80px;
+        height: 30px;
+        display: block;
+        text-align: center;
+        cursor: pointer;
+        line-height: 30px;
+        color: #000;
+        background-color: transparent;
+        position: relative;
+        transition: all .3s linear;
+    }
+
+        .signinBtn > p {
+            position: relative;
+            z-index: 1;
+        }
+
+        .signinBtn::before {
+            content: "";
+            width: 20px;
+            height: 20px;
+            display: block;
+            box-sizing: border-box;
+            border-top: 1px solid #000;
+            border-left: 1px solid #000;
+            position: absolute;
+            top: 0;
+            left: 0;
+            transition: all .3s linear;
+        }
+
+        .signinBtn::after {
+            content: "";
+            width: 20px;
+            height: 20px;
+            display: block;
+            box-sizing: border-box;
+            border-bottom: 1px solid #000;
+            border-right: 1px solid #000;
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            transition: all .3s linear;
+        }
+
+        .signinBtn:hover::before,
+        .signinBtn:hover::after {
+            width: 100%;
+            height: 100%;
+        }
+
+    .signupBtn {
+        width: 80px;
+        height: 30px;
+        display: block;
+        text-align: center;
+        cursor: pointer;
+        line-height: 30px;
+        color: #000;
+        background-color: transparent;
+        position: relative;
+        transition: all .3s linear;
+    }
+
+        .signupBtn > p {
+            position: relative;
+            z-index: 1;
+        }
+
+        .signupBtn::before {
+            content: "";
+            width: 20px;
+            height: 20px;
+            display: block;
+            box-sizing: border-box;
+            border-top: 1px solid #000;
+            border-left: 1px solid #000;
+            position: absolute;
+            top: 0;
+            left: 0;
+            transition: all .3s linear;
+        }
+
+        .signupBtn::after {
+            content: "";
+            width: 20px;
+            height: 20px;
+            display: block;
+            box-sizing: border-box;
+            border-bottom: 1px solid #000;
+            border-right: 1px solid #000;
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            transition: all .3s linear;
+        }
+
+        .signupBtn:hover::before,
+        .signupBtn:hover::after {
+            width: 100%;
+            height: 100%;
+        }
+
+    .Brownbg .box {
+        position: relative;
+        width: 50%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+
+        .Brownbg .box h2 {
+            color: #fff;
+            font-size: 1.2em;
+            font-weight: 500;
+            margin-bottom: 10px;
+        }
+
+        .Brownbg .box button {
+            cursor: pointer; /*游標*/
+            padding: 10px, 20px;
+            background: #fff;
+            color: #333;
+            font-size: 16px;
+            font-weight: 500;
+            border: none;
+        }
+
+    .formBx {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 50%;
+        height: 100%;
+        background: #fff;
+        z-index: 1000; /*控制z軸*/
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        box-shadow: 0 5px 45px rgba(0, 0, 0, 0.25);
+        transition: 0.5s ease-in-out;
+        overflow: hidden; /* 自動隱藏超出的文字或圖片 */
+    }
+
+    .inputlogin {
+        border-radius: 5px;
+        width: 280px;
+        padding: 10px 5px;
+        border: 0.5px solid;
+    }
+
+    .inputregister {
+        padding: 0 10px;
+    }
+
+    .inputloginbtn {
+        border-radius: 5px;
+        width: 90px;
+        padding: 10px 0px;
+        background-color: #BDA684;
+        border: none;
+        color: #FFF;
+    }
+
+    .loginwords {
+        font-size: 25px;
+    }
+
+    .formBx.active {
+        left: 50%;
+    }
+
+    .formBx .form {
+        position: absolute;
+        left: 0;
+        width: 100%;
+        padding: 50px;
+        transition: 0.5s;
+    }
+
+    .formBx .signinForm {
+        transition-delay: 0.25s;
+    }
+
+
+    .formBx.active .signinForm {
+        left: -100%;
+        transition-delay: 0s; /* 取消註冊畫面延遲 */
+    }
+
+    .formBx .signupForm {
+        left: 100%;
+        transition-delay: 0s;
+    }
+
+
+    .formBx.active .signupForm {
+        left: 0;
+        transition-delay: 0.25s;
+    }
+
+
+    .formBx .form form {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+        .formBx .form form h3 {
+            font-size: 1.5em;
+            color: #333;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .formBx .form form input {
+            width: 100%;
+            margin-bottom: 20px;
+            padding: 10px;
+            outline: none;
+            font-size: 16px;
+            border: 1px solid #333;
+        }
+
+    .signinForm2 {
+        width: 100%;
+        margin-bottom: 20px;
+        padding: 10px;
+        outline: none;
+        font-size: 16px;
+    }
+
+    .formBx .form form input[type="submit"] {
+        background: #BDA684;
+        border: none;
+        color: #fff;
+        max-width: 100px;
+        cursor: pointer;
+    }
+
+    .formBx.active .signupForm input[type="submit"] {
+        background: #BDA684;
+    }
+
+    .formBx .form form .forget {
+        color: #333;
+    }
+
+    @@media(max-width: 991px) {
+        .container {
+            max-width: 400px;
+            height: 650px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+            .container .Brownbg {
+                top: 0;
+                height: 100%;
+            }
+
+        .formBx {
+            width: 100%;
+            height: 500px;
+            top: 0;
+            box-shadow: none;
+        }
+
+        .Brownbg .box {
+            position: absolute;
+            width: 100%;
+            height: 150px;
+            bottom: 0;
+        }
+
+        .box.signin {
+            top: 0;
+        }
+
+        .box.signup {
+            bottom: 0;
+        }
+        /* !*/
+
+
+        .formBx.active {
+            left: 0;
+            top: 150px;
+        }
+    }
+
+    .alerttext {
+        color: red;
+        font-size: 12px;
+    }
+
+    .alerttextOK {
+        color: green;
+        font-size: 12px;
+    }
+
+    .lableheight {
+        /*margin-bottom: 1em;*/
+        color: red;
+        font-size: 12px;
+    }
+</style>
+
+<body class="active">
+    <div class="container">
+        <div class="Brownbg">
+            <div class="box signin">
+                <h2>已是會員</h2>
+                <button class="signinBtn">登入</button>
+            </div>
+            <div class="box signup">
+                <h2>註冊會員</h2>
+
+                <button class="signupBtn" id="signupBtn">註冊</button>
+            </div>
+        </div>
+        <div class="formBx">
+            <div class="form signinForm">
+                <div class="signinForm2">
+                    <h3 class="loginwords">登入</h3>
+                    <br>
+                    <div>
+                        <input class="inputlogin" type="text" placeholder="帳號" name="Email" id="loginEmail" />
+                    </div>
+                    <br>
+                    <div>
+                        <input class="inputlogin" type="password" placeholder="密碼" name="Password" id="loginPassword" />
+                    </div>
+                    <br>
+                    <input class="inputloginbtn" type="submit" value="登入" id="signinBtn" />
+                    <br>
+                    <br>
+                    <a href="#" class="forget">忘記密碼</a>
+                    <br>
+                </div>
+                <div class="img_btn">
+                    <a href="javascript:;">
+                        <img src="/img/fb48px.png" alt="" />
+                    </a>
+                    <a href="javascript:;">
+                        <img src="/img/google48px.png" alt="" />
+                    </a>
+                </div>
+            </div>
+
+
+            <div class="form signupForm">
+                <div class="inputregister">
+                    @*<form asp-action="Create">*@
+                    <div asp-validation-summary="ModelOnly"></div>
+                    <h3 class="loginwords">註冊</h3>
+                    <br>
+                    <div>
+                        <input class="inputlogin" asp-for="Email" placeholder="輸入Email" id="registerEmail" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                        <label id="lb" class="alerttext "></label>
+                        <label id="lbOK" class="alerttextOK"></label>
+                    </div>
+                    <div>
+                        <input class="inputlogin " asp-for="Password" placeholder="輸入密碼" type="password" id="registerPassword" required />
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                        <label id="Psrequired" class="alerttext"></label>
+                        <label></label>
+                    </div>
+                    <div>
+                        <input class="inputlogin height" type="password" placeholder="確認密碼" required id="confirmPassword" />
+                        <label id="Pssame" class="alerttext"></label>
+                        <label></label>
+                    </div>
+                    <div>
+                        <input class="inputlogin" type="text" required placeholder="輸入Email驗證碼" id="emailconfirm" />
+                        <label id="emailConfirm" class="alerttext"></label>
+                        <label></label>
+                    </div>
+                    <div>
+                        <input class="inputloginbtn" type="submit" value="註冊" id="registerbtn" />
+                    </div>
+                    <br>
+                    @*</form>*@
+                    <div class="img_btn">
+                        @*<a href="javascript:;">*@
+                        <img src="/img/fb48px.png" alt="" />
+                        @*</a>*@
+                        @*<a href="javascript:;">*@
+                        <img src="/img/google48px.png" alt="" />
+                        @*</a>*@
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        var signinBtn = document.querySelector(".signinBtn");
+        const signupBtn = document.querySelector(".signupBtn");
+        const formBx = document.querySelector(".formBx");
+        const body = document.querySelector("body");
+
+        signupBtn.onclick = function () {
+            formBx.classList.add("active");
+            body.classList.add("active");
+        };
+
+        signinBtn.onclick = function () {
+            formBx.classList.remove("active");
+            body.classList.remove("active");
+        };
+    </script>
+</body>
+
+@section Scripts {
+    @{
+    await Html.RenderPartialAsync("_ValidationScriptsPartial");
+}
+}
+
+
+<script>
+    var loginbtn = document.getElementById("signinBtn")
+    loginbtn.addEventListener("click", function () {
+        let Email = document.getElementById("loginEmail").value;
+        let Password = document.getElementById("loginPassword").value;
+        var data = {};
+        data.Password = Password;
+        data.Email = Email;
+
+    $.ajax(
+        {
+            url:'/register/login',
+            /*dataType: 'JSON',*/
+            contentType: "application/json",
+            type: 'POST',
+            data:
+                JSON.stringify(data),
+            error: function (xhr) {
+                alert('Ajax request 發生錯誤');
+            },
+            success: function (res) {
+                window.location.href=res;
+            }
+        });
+    });
+</script>
+
+<script>
+        var registerEmail1 = document.getElementById("registerEmail")
+        var labelemailTY = document.querySelector("#lb");
+        var labelemailOK = document.querySelector("#lbOK");
+
+         registerEmail1.addEventListener("blur", function(){
+        var regisEmailvalue = document.getElementById("registerEmail").value;
+             var regex = /^([a-zA-Z0-9_\.\-\+])+\@@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+
+                 var data = {};
+             data.Email = regisEmailvalue;
+
+                 $.ajax(
+                     {
+                         url: '/register/SameEmail',
+                         /*dataType: 'JSON',*/
+                         contentType: "application/json",
+                         type: 'POST',
+                         data:
+                             JSON.stringify(data),
+                         error: function (xhr) {
+                             alert('Ajax request 發生錯誤');
+                         },
+                         success: function (SameEmail) {
+                             if (regisEmailvalue != "") {
+                                 labelemailTY.textContent = "";
+                                 labelemailOK.textContent = "";
+                                 if (!regex.test(regisEmailvalue)) {
+
+                                         labelemailTY.textContent = "email格式不正確";
+                                     }
+                                     else
+                                     {
+                                     if (SameEmail == false) {
+
+                                             labelemailTY.textContent = "帳號已被使用,請重新輸入";
+                                             //alert("帳號已被使用，請重新輸入");
+                                     }
+                                         else
+                                     {
+
+                                             labelemailOK.textContent = "帳號尚未被使用，可以註冊";
+                                             //alert("帳號尚未被使用，可以註冊");
+                                         }
+                                       }
+                             } else
+                             {
+                                 labelemailTY.textContent = "帳號為必填";
+                                 //alert("帳號為必填");
+                             }
+                         }
+                  });
+
+         });
+         var Passwordinput = document.getElementById("confirmPassword");
+         var lablePsame = document.querySelector("#Pssame");
+         Passwordinput.addEventListener("blur", function () {
+             let Passwordvalue = document.getElementById("confirmPassword").value;
+             let Psrequiredvalue = document.getElementById("registerPassword").value;
+             if (Passwordvalue == Psrequiredvalue) {
+                 lablePsame.textContent = "";
+             } else
+             { lablePsame.textContent = "密碼需一致"; }
+         })
+         var registerbtn = document.getElementById("registerbtn")
+         registerbtn.addEventListener("click", function () {
+             let registerEmail = document.getElementById("registerEmail").value;
+             let registerPassword = document.getElementById("registerPassword").value;
+    /*         let registerPhone = document.getElementById("phone").value;*/
+
+             var data = {};
+             data.Password = registerPassword;
+             data.Email = registerEmail;
+    /*         data.Phone = registerPhone;*/
+
+             var lablepwd = document.querySelector("#Psrequired");
+             var Psrequired = document.getElementById("registerPassword").value
+             var labelEconfirm = document.querySelector("#emailConfirm");
+             var emailConfirmvalue = document.getElementById("emailconfirm").value;
+    /*      var emailrequired = document.getElementById("registerEmail").value;*/
+             if (Psrequired == "") {
+                 lablepwd.textContent = "";
+                 lablepwd.textContent = "密碼為必填";
+             } else { lablepwd.textContent = ""; }
+             if (emailConfirmvalue == "") {
+                 labelEconfirm.textContent = "";
+                 labelEconfirm.textContent = "需填驗證碼";
+             }
+
+             let confirmpassword = document.getElementById("confirmPassword").value;
+             let registerpassword = document.getElementById("registerPassword").value;
+             if (confirmpassword == registerpassword ) {
+                 $.ajax(
+                     {
+                         url: '/Register/Create',
+                         /*dataType: 'JSON',*/
+                         contentType: "application/json",
+                         type: 'POST',
+                         data:
+                             JSON.stringify(data),
+                         error: function (xhr) {
+                             alert('Ajax request 發生錯誤');
+                         },
+                         success: function (res) {
+                             if (res == "成功") {
+                                 alert("帳號重複");
+                             } else if (res == "資料有誤") {
+                                 alert("資料有誤");
+                             } else {
+                                 window.location.href = "/register/AfterRegister";
+                             }
+                         }
+                     });
+             }
+             else {
+                 alert("資料有誤");
+             }
+         });
+</script>

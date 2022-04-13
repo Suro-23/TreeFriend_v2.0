@@ -1,0 +1,34 @@
+.flegsit-img {
+    z-index: 9900;
+    max-width: 100%;
+    right: 100%;
+    top: -20%;
+}
+
+.flegsmile-img {
+    /* position: relative; */
+    z-index: 9900;
+    max-width: 100%;
+    /* left: 50%; */
+    top: 75%;
+}
+
+.card-img{
+    height:10rem;
+}
+
+.lecture {
+    text-decoration: none;
+}
+
+.card-img-top {
+    max-width: 100%;
+}
+
+.card {
+    height: 100%;
+}
+
+.lecture-border {
+    border-bottom: solid 0.5rem #fcd9b3;
+}

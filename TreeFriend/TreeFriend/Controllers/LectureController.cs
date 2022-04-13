@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +18,8 @@ namespace TreeFriend.Controllers
         {
             _db = db;
         }
+
+        [AllowAnonymous]
         public List<LecturelistViewModel> GetAllLecture()
         {
             var result = _db.Lectures.Where(x => x.IsDelete == false).Select(x => new LecturelistViewModel
@@ -35,6 +38,7 @@ namespace TreeFriend.Controllers
 
         }
 
+        [AllowAnonymous]
         [HttpGet]
         [Route("[controller]/[action]/{lecturedId}")]
         public List<LectureDetailViewModel> GetLectureDetails([FromRoute] int lecturedId)

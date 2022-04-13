@@ -33,6 +33,21 @@ namespace TreeFriend.Controllers {
             return View();
         }
 
+        //講座
+        public IActionResult LectureList()
+        {
+            return View();
+        }
+
+        public IActionResult LectureDetail(int? id)
+        {
+            if (id == null)
+            {
+                return RedirectToAction("LectureList", "Home"); //當為空值 導回商品頁面
+            }
+            return View();
+        }
+
         //發布技能貼文
         [Authorize]
         public IActionResult AddSkillPostPage() {
@@ -50,6 +65,7 @@ namespace TreeFriend.Controllers {
         public IActionResult MemberInfo() {
             return View();
         }
+
 
 
 

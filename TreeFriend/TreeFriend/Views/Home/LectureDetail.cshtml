@@ -1,0 +1,199 @@
+﻿
+@{
+    Layout = "_Layout";
+}
+
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
+<link rel="stylesheet" href="~/css/Yie/lecturedetail.css">
+
+
+
+
+<div class="container mx-auto" id="app">
+
+    <div class="row mx-auto">
+        <!--講座圖片-->
+        <div class="col-1 position-relative ">
+            <img class="flegsearch-img position-absolute " src="~/img/LecturePic/searchfleg2.png" alt="">
+        </div>
+        <div class="col-10 mt-3">
+            <img src="https://picsum.photos/1280/400?random=1" class="img-fluid rounded " alt="">
+        </div>
+        <div class="col-1 position-relative ">
+            <img class="flegspeaker-img position-absolute  " src="~/img/LecturePic/flegspeaker1.png" alt="">
+        </div>
+    </div>
+    <div v-for="item in lecturedetail">
+        <div class="row mt-3">
+            <div class="col">
+                <div class="d-flex gap-2 align-items-center ">
+                    <span class="material-icons-sharp h4">school</span>
+                    <h3 class="fs-5">{{item.theme}}</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="container mt-3">
+            <div class="row justify-content-around">
+                <!--左側：活動內容-->
+                <div class="col-12 col-md-7">
+                    <div class="row ">
+                        <div class="row border-left p-0 ">
+                            <div class="">
+                                <div class="d-flex gap-1 mt-0 mb-0">
+                                    <span class="material-icons-sharp">location_on</span>
+                                    <p>活動地點:{{item.venue}}</p>
+                                </div>
+                                <div class="d-flex gap-1 m-0">
+                                    <span class="material-icons-sharp">date_range</span>
+                                    <p class="m-0">活動時間：{{item.eventDate}} {{item.eventTimeStart}}-{{item.eventTimeEnd}}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            <div class="">
+                                <h3 class="fs-5">活動規劃</h3>
+                            </div>
+                        </div>
+                        <div class="row border-left p-0">
+                            <div class="">
+                                <P class="m-0 ">
+                                    {{item.description}}
+                                </P>
+                            </div>
+                        </div>
+
+                        <div class="row mt-3">
+                            <div class="">
+                                <h3 class="fs-5">活動講師</h3>
+                            </div>
+                        </div>
+                        <div class="row border-left p-0 ">
+                            <div class="">
+                                <div class="d-flex gap-3 m-0 ">
+                                    <img :src="item.speakerImgPath" alt=""
+                                         class="speaker-img rounded-circle" />
+                                    <!--抓User-->
+                                    <P class="">
+                                        {{item.speaker}}
+                                    </P>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mt-3">
+                            <div class="">
+                                <h3 class="fs-5">活動內容</h3>
+                            </div>
+                        </div>
+                        <div class="row border-left p-0">
+                            <div class="">
+                                <P class="m-0 ">
+                                    {{item.content}}
+                                </P>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--右側：價格&注意事項-->
+                <div class="col-12 col-md-4 ">
+                    <div class="d-flex flex-column ">
+                        <span class="fs-2"><b>NT${{item.price}}</b></span>
+                        <div class="d-flex gap-1 mt-1">
+                            <span class="material-icons-sharp">alarm</span>
+                            @*<p>{{item.eventDate}}</p>*@
+                            <p class="m-0">講座報名時間剩餘{{eventDate}}天</p>
+                        </div>
+                        <div class="d-flex gap-1 ">
+                            <span class="material-icons-sharp">local_fire_department</span>
+                            <p class="m-0">講座剩{{item.count}}位</p>
+                        </div>
+                        <div class="flex-row d-flex align-items-center gap-2 qty  mt-3">
+                            <span class="fs-5 text-center">購買數量</span>
+                            <span class="material-icons-sharp qtyminus rounded-circle p-1"
+                                  v-on:click="changeIndex(-1)">remove</span>
+                            <span class="number">{{amount}}</span>
+                            <span class="material-icons-sharp qtyplus rounded-circle p-1 "
+                                  v-on:click="changeIndex(+1)" v-if="item.count>=amount+1">add</span>
+                        </div>
+
+                        <div class="d-grid gap-2 mt-3">
+                            <button class="btn buybtn" type="button" @*v-on:click="send"*@><b>立即購買</b></button>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="">
+                            <h3 class="fs-5">注意事項</h3>
+                        </div>
+                    </div>
+
+                    <div class="row border-left">
+                        <div class="">
+                            <ul class="m-0 p-0 fs-6">
+                                <li>若報名人數不足15人，或因不可抗拒因素(如：天災、停電)主辦單位有權取消當次活動，並無息退還全額活動費用。</li>
+                                <li>主辦單位保留接受報名與否之權利，倘因故無法接受報名，將會無息退還全額活動費用。</li>
+                                <li>主辦單位保留對活動內容調整的權力。</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@*TODO付款方式描述我們僅採取信用卡(直接跳轉藍新信用卡付款頁面)*@
+
+<script>
+    let app = new Vue({
+        el: '#app',
+        data: {
+            amount: 1,
+            lecturedetail: [],
+            lecture: {
+                count: '',
+                eventDate: '',
+
+            }
+
+        },
+        mounted: function () {
+            let a = window.location.search;
+            let b = a.split("=");
+
+            let self = this;
+            axios.get("/Lecture/GetLectureDetails/" + b[1]).then(function (res) {
+                self.lecturedetail = res.data;
+            })
+        },
+        computed: {
+            eventDate: {
+                get() {
+                    return moment().countdown(app.lecturedetail[0].eventDate).days;
+                },
+            },
+        },
+        methods: {
+            changeIndex(change) {
+
+                this.amount += change;
+                //控管範圍  TODO抓取資料庫數量
+                if (this.amount <= 0) {
+                    this.amount = 0;
+                }
+                //按鈕disable
+
+            },
+           
+
+
+        }
+
+
+
+
+    })
+</script>
+
+

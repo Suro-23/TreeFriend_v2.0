@@ -108,18 +108,25 @@
                             <span class="material-icons-sharp">local_fire_department</span>
                             <p class="m-0">講座剩{{item.count}}位</p>
                         </div>
-                        <div class="flex-row d-flex align-items-center gap-2 qty  mt-3">
-                            <span class="fs-5 text-center">購買數量</span>
-                            <span class="material-icons-sharp qtyminus rounded-circle p-1"
-                                  v-on:click="changeIndex(-1)">remove</span>
-                            <span class="number">{{amount}}</span>
-                            <span class="material-icons-sharp qtyplus rounded-circle p-1 "
-                                  v-on:click="changeIndex(+1)" v-if="item.count>=amount+1">add</span>
-                        </div>
+                        
+                        <form id="form1" action="/Bank/SpgatewayPayBill" method="post" hidden="hidden">
+                            <input type="number" id="InputlectureId" name="InputlectureId" hidden="hidden" />
+                            <input type="number" id="Buyercount" name="Buyercount" hidden="hidden" />
+                            <button class="btn buybtn" type="submit" id="sendBuy" hidden="hidden"></button>
+                        </form>
 
-                        <div class="d-grid gap-2 mt-3">
-                            <button class="btn buybtn" type="button" @*v-on:click="send"*@><b>立即購買</b></button>
-                        </div>
+                            <div class="flex-row d-flex align-items-center gap-2 qty  mt-3">                               
+                                <span class="fs-5 text-center">購買數量</span>
+                                <span class="material-icons-sharp qtyminus rounded-circle p-1"
+                                      v-on:click="changeIndex(-1)">remove</span>
+                                <span class="number">{{amount}}</span>
+                                <span class="material-icons-sharp qtyplus rounded-circle p-1 "
+                                      v-on:click="changeIndex(+1)" v-if="item.count>=amount+1">add</span>
+                            </div>
+
+                            <div class="d-grid gap-2 mt-3">
+                                <button class="btn buybtn" type="submit" v-on:click="send"><b>立即購買</b></button>
+                            </div>
                     </div>
                     <div class="row mt-3">
                         <div class="">
@@ -146,6 +153,10 @@
 @*TODO付款方式描述我們僅採取信用卡(直接跳轉藍新信用卡付款頁面)*@
 
 <script>
+    let lectureURL = window.location.search;
+    let targetvalue = lectureURL.split("=");
+    let lectureId = targetvalue[1];
+    
     let app = new Vue({
         el: '#app',
         data: {
@@ -154,17 +165,16 @@
             lecture: {
                 count: '',
                 eventDate: '',
-
-            }
-
+                
+            },
+           
         },
         mounted: function () {
-            let a = window.location.search;
-            let b = a.split("=");
-
+            let lectureURL = window.location.search;
+            let targetvalue = lectureURL.split("=");
             let self = this;
-            axios.get("/Lecture/GetLectureDetails/" + b[1]).then(function (res) {
-                self.lecturedetail = res.data;
+            axios.get("/Lecture/GetLectureDetails/" + targetvalue[1]).then(function (res) {
+                self.lecturedetail = res.data;             
             })
         },
         computed: {
@@ -178,13 +188,23 @@
             changeIndex(change) {
 
                 this.amount += change;
-                //控管範圍  TODO抓取資料庫數量
+                
                 if (this.amount <= 0) {
                     this.amount = 0;
                 }
-                //按鈕disable
+
+                document.getElementById('Buyercount').value = parseInt(app.amount);
+                document.getElementById('InputlectureId').value = lectureId;
 
             },
+            send: function () {
+                var btnclick = document.getElementById('sendBuy');
+                btnclick.click();
+
+                
+
+
+            }
            
 
 

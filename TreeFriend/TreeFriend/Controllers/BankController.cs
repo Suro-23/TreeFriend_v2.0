@@ -1,16 +1,27 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
+using TreeFriend.Models;
 using TreeFriend.Models.Bank;
 using TreeFriend.Models.Bank.Util;
+using TreeFriend.Models.ViewModel;
 
 namespace TreeFriend.Controllers
 {
     public class BankController : Controller
     {
+        private readonly TreeFriendDbContext _db;
+
+        public BankController(TreeFriendDbContext db)
+        {
+            _db = db;
+        }
         /// <summary>
         /// 金流基本資料(可再移到Web.config或資料庫設定)
         /// </summary>
@@ -19,12 +30,14 @@ namespace TreeFriend.Controllers
             MerchantID = "MS134173586",
             HashKey = "5CeLdyhbqFmVrMG8P7AOehDtmtpa2glq",
             HashIV = "CF7bHa7apMCDuOlP",
-            ReturnURL = "http://yourWebsitUrl/Bank/SpgatewayReturn", //庫存減少 mounted發一個get請求去後端庫存-1 帶商品ID
-            NotifyURL = "http://yourWebsitUrl/Bank/SpgatewayNotify",
-            CustomerURL = "http://yourWebsitUrl/Bank/SpgatewayCustomer",
+            ReturnURL = "https://www.google.com.tw/?hl=zh_TW", //庫存減少 mounted發一個get請求去後端庫存-1 帶商品ID 
+            NotifyURL = "https://bc1f-1-164-234-176.ngrok.io/Bank/SpgatewayReturn",
+            CustomerURL = "https://bc1f-1-164-234-176.ngrok.io/Bank/SpgatewayCustomer",
             AuthUrl = "https://ccore.spgateway.com/MPG/mpg_gateway",
             CloseUrl = "https://core.newebpay.com/API/CreditCard/Close"
         };
+
+        //https://bc1f-1-164-234-176.ngrok.io/Bank/SpgatewayReturn
 
         /// <summary>
         /// 付款頁面
@@ -44,14 +57,23 @@ namespace TreeFriend.Controllers
         /// <returns></returns>
         /// 
 
+
         //金流只在意付款方式、價格、訂單編號
         [HttpPost]
-        public async Task SpgatewayPayBillAsync(string ordernumber, int amount, string PayMethod)
+        public async Task SpgatewayPayBillAsync(int Buyercount, int InputlectureId)
         {
+
+            //訂單ID
+            //付款狀態:付款成功 1 未付款 0 預設值
+         
+            string PayMethod = "";
             string version = "2.0";
-            ordernumber = "111";
-            amount = 500;
-            //TODO原為寫死 從資料庫撈出商品價格價格
+            string ordernumber = InputlectureId.ToString();
+            var price = _db.Lectures.Where(x => x.LectureId == InputlectureId).Select(y => y.Price).SingleOrDefault();
+            Console.WriteLine(price);
+            int amount = (int)(Buyercount * price);
+            Console.WriteLine(amount);
+           
 
 
 
@@ -127,7 +149,7 @@ namespace TreeFriend.Controllers
             List<KeyValuePair<string, string>> tradeData = LambdaUtil.ModelToKeyValuePairList<TradeInfo>(tradeInfo);
             // 將List<KeyValuePair<string, string>> 轉換為 key1=Value1&key2=Value2&key3=Value3...
             var tradeQueryPara = string.Join("&", tradeData.Select(x => $"{x.Key}={x.Value}"));
-            tradeQueryPara = tradeQueryPara + "&SAMSUNGPAY=1&ANDROIDPAY=1";
+            //tradeQueryPara = tradeQueryPara + "&SAMSUNGPAY=1&ANDROIDPAY=1";
             // AES 加密
             inputModel.TradeInfo = CryptoUtil.EncryptAESHex(tradeQueryPara, _bankInfoModel.HashKey, _bankInfoModel.HashIV);
             // SHA256 加密
@@ -159,40 +181,36 @@ namespace TreeFriend.Controllers
         /// <summary>
         /// [智付通]金流介接(結果: 支付完成 返回商店網址)
         /// </summary>
-        //[HttpPost]
-        //public ActionResult SpgatewayReturn()
-        //{
-        //    //Request.LogFormData("SpgatewayReturn(支付完成)");
+        [HttpPost]
+        public ActionResult SpgatewayReturn()
+        {
+            //Request.LogFormData("SpgatewayReturn(支付完成)");
 
-        //    // Status 回傳狀態 
-        //    // MerchantID 回傳訊息
-        //    // TradeInfo 交易資料AES 加密
-        //    // TradeSha 交易資料SHA256 加密
-        //    // Version 串接程式版本
-        //    NameValueCollection collection = Request.Form;
+            // Status 回傳狀態 
+            // MerchantID 回傳訊息
+            // TradeInfo 交易資料AES 加密
+            // TradeSha 交易資料SHA256 加密
+            // Version 串接程式版本
+            var collection = Request.Form;
 
-        //    if (collection["MerchantID"] != null && string.Equals(collection["MerchantID"], _bankInfoModel.MerchantID) &&
-        //        collection["TradeInfo"] != null && string.Equals(collection["TradeSha"], CryptoUtil.EncryptSHA256($"HashKey={_bankInfoModel.HashKey}&{collection["TradeInfo"]}&HashIV={_bankInfoModel.HashIV}")))
-        //    {
-        //        var decryptTradeInfo = CryptoUtil.DecryptAESHex(collection["TradeInfo"], _bankInfoModel.HashKey, _bankInfoModel.HashIV);
+            if (collection["MerchantID"].Count >0 && string.Equals(collection["MerchantID"], _bankInfoModel.MerchantID) &&
+                collection["TradeInfo"] .Count>0 && string.Equals(collection["TradeSha"], CryptoUtil.EncryptSHA256($"HashKey={_bankInfoModel.HashKey}&{collection["TradeInfo"]}&HashIV={_bankInfoModel.HashIV}")))
+            {
+                var decryptTradeInfo = CryptoUtil.DecryptAESHex(collection["TradeInfo"], _bankInfoModel.HashKey, _bankInfoModel.HashIV);
 
-        //        // 取得回傳參數(ex:key1=value1&key2=value2),儲存為NameValueCollection
-        //        NameValueCollection decryptTradeCollection = HttpUtility.ParseQueryString(decryptTradeInfo);
-        //        SpgatewayOutputDataModel convertModel = LambdaUtil.DictionaryToObject<SpgatewayOutputDataModel>(decryptTradeCollection.AllKeys.ToDictionary(k => k, k => decryptTradeCollection[k]));
+                // 取得回傳參數(ex:key1=value1&key2=value2),儲存為NameValueCollection
+                NameValueCollection decryptTradeCollection = HttpUtility.ParseQueryString(decryptTradeInfo);
+                SpgatewayOutputDataModel convertModel = LambdaUtil.DictionaryToObject<SpgatewayOutputDataModel>(decryptTradeCollection.AllKeys.ToDictionary(k => k, k => decryptTradeCollection[k]));
 
-        //        LogUtil.WriteLog(JsonConvert.SerializeObject(convertModel));
+                // TODO 將回傳訊息寫入資料庫
 
-        //        // TODO 將回傳訊息寫入資料庫
 
-        //        return Content(JsonConvert.SerializeObject(convertModel));
-        //    }
-        //    else
-        //    {
-        //        LogUtil.WriteLog("MerchantID/TradeSha驗證錯誤");
-        //    }
 
-        //    return Content(string.Empty);
-        //}
+                return Content(JsonConvert.SerializeObject(convertModel));
+            }
+
+            return Content(string.Empty);
+        }
 
         /// <summary>
         /// [智付通]金流介接(結果: 支付通知網址)

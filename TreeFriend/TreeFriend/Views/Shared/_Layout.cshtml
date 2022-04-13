@@ -70,17 +70,19 @@
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>
+
+
+</html>
 <script>
     new Vue({
-        el:"#header-nav",
-        methods:{
-            logout: function(){
+        el: "#header-nav",
+        methods: {
+            logout: function () {
                 axios.get("../Register/Logout")
-                .then(res => {
-                    window.location.href=res.data;
-                });
+                    .then(res => {
+                        window.location.href = res.data;
+                    });
             }
         }
     });
 </script>
-</html>

@@ -9,6 +9,7 @@ namespace TreeFriend.Models.Entity
     public class OrderDetail
     {
         //訂單編號: 複合主鍵 
+        //TODO藍新金流回傳欄位
         [Required]
         public DateTime CreateDate { get; set; }
         [Required]

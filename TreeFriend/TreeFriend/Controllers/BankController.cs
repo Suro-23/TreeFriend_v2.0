@@ -34,7 +34,7 @@ namespace TreeFriend.Controllers
             MerchantID = "MS134173586",
             HashKey = "DIQL4I5DZ6sG6aVcBnQ6sFgkzmxUHSdP",
             HashIV = "CNnhZ4oa0qTNVUMP",
-            ReturnURL = "http://yourWebsitUrl/Bank/SpgatewayReturn", //ngrok網址要改
+            ReturnURL = "http://yourWebsitUrl/Bank/SpgatewayReturn", //ngrok網址要改 https://0d54-1-164-234-176.ngrok.io/Home/HomePage 跳過NotifyUEL頁面 
             NotifyURL = "https://0d54-1-164-234-176.ngrok.io/Bank/SpgatewayReturn",
             CustomerURL = "http://yourWebsitUrl/Bank/SpgatewayCustomer",
             AuthUrl = "https://ccore.spgateway.com/MPG/mpg_gateway",

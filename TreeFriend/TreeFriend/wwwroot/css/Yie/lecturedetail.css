@@ -40,11 +40,17 @@
 .flegsearch-img{
     z-index: 9900;
     max-width: 100%;
-    top:80%;
+    top:85%;
 }
 .flegspeaker-img{
     z-index: 9900;
     max-width: 100%;
-    right: 1%;
-    top:50%;
+    right: 10%;
+   
+    top:65%;
+}
+
+.imgpath {
+    width: 60vw;
+   /* height: 60vh;*/
 }

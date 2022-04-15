@@ -32,11 +32,11 @@ namespace TreeFriend.Controllers
         private BankInfoModel _bankInfoModel = new BankInfoModel
         {   //已改為TreeFriend
             MerchantID = "MS134173586",
-            HashKey = "5CeLdyhbqFmVrMG8P7AOehDtmtpa2glq",
-            HashIV = "CF7bHa7apMCDuOlP",
-            ReturnURL = "https://a175-49-158-79-227.ngrok.io/Home/HomePage", //ngrok網址要改
-            NotifyURL = "https://a175-49-158-79-227.ngrok.io/Bank/SpgatewayReturn",
-            CustomerURL = "https://a175-49-158-79-227.ngrok.io/Bank/SpgatewayCustomer",
+            HashKey = "DIQL4I5DZ6sG6aVcBnQ6sFgkzmxUHSdP",
+            HashIV = "CNnhZ4oa0qTNVUMP",
+            ReturnURL = "http://yourWebsitUrl/Bank/SpgatewayReturn", //ngrok網址要改
+            NotifyURL = "https://0d54-1-164-234-176.ngrok.io/Bank/SpgatewayReturn",
+            CustomerURL = "http://yourWebsitUrl/Bank/SpgatewayCustomer",
             AuthUrl = "https://ccore.spgateway.com/MPG/mpg_gateway",
             CloseUrl = "https://core.newebpay.com/API/CreditCard/Close"
         };
@@ -202,6 +202,7 @@ namespace TreeFriend.Controllers
         /// <summary>
         /// [智付通]金流介接(結果: 支付完成 返回商店網址)
         /// </summary>
+        [AllowAnonymous]
         [HttpPost]
         public ActionResult SpgatewayReturn()
         {
@@ -223,7 +224,7 @@ namespace TreeFriend.Controllers
                 NameValueCollection decryptTradeCollection = HttpUtility.ParseQueryString(decryptTradeInfo);
                 SpgatewayOutputDataModel convertModel = LambdaUtil.DictionaryToObject<SpgatewayOutputDataModel>(decryptTradeCollection.AllKeys.ToDictionary(k => k, k => decryptTradeCollection[k]));
 
-                // TODO 將回傳訊息寫入資料庫
+                
                 if (convertModel.Status== "SUCCESS") {
                     var od = _db.OrderDetails.FirstOrDefault(x => x.OrderDetailId == Convert.ToInt32(convertModel.MerchantOrderNo));
                     od.PaymentStatus = true;
@@ -233,11 +234,13 @@ namespace TreeFriend.Controllers
                     _db.SaveChanges();
                 }
 
-
+                
                 return Content(JsonConvert.SerializeObject(convertModel));
             }
 
-            return Content(string.Empty);
+            //return Content(string.Empty);
+            return RedirectToAction("Index", "Home");
+
         }
 
         /// <summary>

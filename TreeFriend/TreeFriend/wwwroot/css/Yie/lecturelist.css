@@ -1,8 +1,8 @@
-.flegsit-img {
+.mflrg-img {
     z-index: 9900;
     max-width: 100%;
     right: 100%;
-    top: -20%;
+    top: -15%;
 }
 
 .flegsmile-img {
@@ -31,4 +31,9 @@
 
 .lecture-border {
     border-bottom: solid 0.5rem #fcd9b3;
+}
+
+.imgPath {
+    width: 60vw;
+    height:60vh;
 }

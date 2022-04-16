@@ -34,11 +34,16 @@ namespace TreeFriend.Controllers.Api {
         [AllowAnonymous]
         [HttpGet]
         [Route("GetAllSkillPost")]
-        public List<SkillPostViewModel> GetAllSkillPost() {
+        public List<SkillPostViewModel> GetAllSkillPost(int cId) {
             //拿到該使用者的所有貼文
             //將skillPostList join hashtagDetail 拿到所有文章的所有標籤ID
             //存成新物件備用
-            var skillPostList = _db.skillPosts.Where(p => p.Status == true).OrderByDescending(e => e.SkillPostId);
+            IQueryable<SkillPost> skillPostList;
+            if (cId == 0) {
+                skillPostList = _db.skillPosts.Where(p => p.Status == true).OrderByDescending(e => e.SkillPostId);
+            } else {
+                skillPostList = _db.skillPosts.Where(p => p.Status == true && p.CategoryId == cId).OrderByDescending(e => e.SkillPostId);
+            }
 
             //拿到文章總表
             //透過categoryId，HashtagId 關聯出 categoryName，hashtagName 供前端使用
@@ -117,7 +122,7 @@ namespace TreeFriend.Controllers.Api {
             if (vm.CheckId == 0) {
                 //拿到當前"存在"的所有文章標籤
                 validPostHashtagList = _db.hashtagDetails.Where(p => p.SkillPost.Status == true);
-            }else {
+            } else {
                 //如果有指定分類，根據分類取得技能貼文標籤
                 validPostHashtagList = _db.hashtagDetails.Where(p => p.SkillPost.Status == true && p.SkillPost.CategoryId == vm.CheckId);
             }

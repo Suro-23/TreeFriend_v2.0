@@ -4,7 +4,7 @@
 
 <link rel="stylesheet" href="~/css/YP/AllSkillPost.css" />
 
-<div id="app">
+<div id="allSkillPostApp">
     <div class="row mb-3">
         <div class="hashtag-group btn-group" role="group" aria-label="Basic checkbox toggle button group">
             <div class="w-auto" v-for="item in allHashTagList">
@@ -75,7 +75,7 @@
     }
 
     let app = new Vue({
-        el:"#app",
+        el:"#allSkillPostApp",
         data:{
             allHashTagList:[],
             skillPostList:[],

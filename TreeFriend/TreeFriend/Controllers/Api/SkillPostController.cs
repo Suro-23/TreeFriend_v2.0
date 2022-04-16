@@ -102,22 +102,28 @@ namespace TreeFriend.Controllers.Api {
                     });
             }
 
-            return resultList.OrderByDescending(x =>x.SkillPostId).ToList();
+            return resultList.OrderByDescending(x => x.SkillPostId).ToList();
         }
 
         //根據標籤取得貼文
         [AllowAnonymous]
         [HttpPost]
         [Route("GetSKillPostByHashtag")]
-        public List<SkillPostViewModel> GetSKillPostByHashtag(int[] hashtagIdList) {
+        public List<SkillPostViewModel> GetSKillPostByHashtag(QuerySkillPostViewModel vm) {
             //創建一個集合備用
             List<SkillPostViewModel> skpList = new();
 
-            //拿到當前"存在"的所有文章標籤
-            var validPostHashtagList = _db.hashtagDetails.Where(p => p.SkillPost.Status == true);
+            IQueryable<HashtagDetail> validPostHashtagList;
+            if (vm.CheckId == 0) {
+                //拿到當前"存在"的所有文章標籤
+                validPostHashtagList = _db.hashtagDetails.Where(p => p.SkillPost.Status == true);
+            }else {
+                //如果有指定分類，根據分類取得技能貼文標籤
+                validPostHashtagList = _db.hashtagDetails.Where(p => p.SkillPost.Status == true && p.SkillPost.CategoryId == vm.CheckId);
+            }
 
             //根據使用者選擇的標籤依序找出相對應的文章
-            foreach (int item in hashtagIdList) {
+            foreach (int item in vm.HashtagIdList) {
                 //找到當前該標籤的所有貼文並存入"post"中
                 //但此處史會找到一個貼文一筆標籤，會造成後續渲染有誤，故之後需再重新找到一次該貼文下所有的標籤
                 var post = validPostHashtagList.Where(p => p.HashtagId == item);

@@ -69,7 +69,7 @@
                     <div class="col text-center">貼文分類</div>
                 </div>
                 <div :class="{isCheck:item.isCheck}" class="form-check row" v-for="item in categoryList">
-                    <input v-model="checkId" :id="`radio-${item.categoryId}`" :value="item.categoryId" @@change="categoryChange(item.categoryId)" class="form-check-input" type="radio" name="flexRadioDefault">
+                    <input v-model="checkId" :id="`radio-${item.categoryId}`" :value="item.categoryId" @@change="categoryChange(item.categoryId)" class="form-check-input" type="radio" name="categoryRadio" :checked="item.isCheck">
                     <label class="form-check-label" :for="`radio-${item.categoryId}`">
                         {{item.categoryName}}
                     </label>
@@ -114,6 +114,8 @@
                 for(let c of self.categoryList){
                     c.isCheck = false;
                 }
+                self.categoryList[0].isCheck = true;
+                self.checkId = self.categoryList[0].categoryId;
             });
         },
         methods:{

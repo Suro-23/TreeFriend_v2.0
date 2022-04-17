@@ -1,0 +1,31 @@
+﻿
+@{
+    Layout = "_Layout";
+}
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
+
+
+
+<div class="container mt-5" id="qty">
+    <div class="row justify-content-center align-items-center">
+
+        <div class="col-2  ">
+            <img src="~/img/LecturePic/sorryfleg.png" class="w-75 mt-3 mx-auto" />
+        </div>
+        <div class="col-6 ">
+            <div class="alert alert-warning" role="alert">
+                <spn class="d-flex align-items-center fs-5 ">
+                    @ViewBag.message，請您再重新選購其他講座
+                    <a href="/home/lectureList" class="link-danger"><span class="material-icons-sharp">storefront</span></a>
+                </spn>
+            </div>
+        </div>
+        @*<div class="col-2  ">
+            <img src="~/img/LecturePic/sorryflegx.png" class="w-75 mt-3 mx-auto" />
+        </div>*@ 
+        <!--待調整-->
+    </div>
+</div>
+
+
+

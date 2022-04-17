@@ -34,15 +34,12 @@ namespace TreeFriend.Controllers
             MerchantID = "MS134173586",
             HashKey = "DIQL4I5DZ6sG6aVcBnQ6sFgkzmxUHSdP",
             HashIV = "CNnhZ4oa0qTNVUMP",
-            ReturnURL = "http://yourWebsitUrl/Bank/SpgatewayReturn", //ngrok網址要改 https://0d54-1-164-234-176.ngrok.io/Home/HomePage 跳過NotifyUEL頁面 
+            ReturnURL = "http://yourWebsitUrl/Bank/SpgatewayReturn", //ngrok網址要更改 https://0d54-1-164-234-176.ngrok.io/Home/HomePage 跳過NotifyUEL頁面 
             NotifyURL = "https://0d54-1-164-234-176.ngrok.io/Bank/SpgatewayReturn",
             CustomerURL = "http://yourWebsitUrl/Bank/SpgatewayCustomer",
             AuthUrl = "https://ccore.spgateway.com/MPG/mpg_gateway",
             CloseUrl = "https://core.newebpay.com/API/CreditCard/Close"
         };
-
-        
-
 
         
 
@@ -68,35 +65,58 @@ namespace TreeFriend.Controllers
 
          //金流只在意付款方式、價格、訂單編號
          [HttpPost]
-        public async Task SpgatewayPayBillAsync(int Buyercount, int InputlectureId)
+        public async Task<IActionResult> SpgatewayPayBillAsync(int Buyercount, int InputlectureId)
         {
+    
             var UserId = Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(u => u.Type == "UserId").Value);
-           
+            string PayMethod = "";
+            string Versions = "2.0";
+            var Price = _db.Lectures.Where(x => x.LectureId == InputlectureId).Select(y => y.Price).SingleOrDefault();
+            //Console.WriteLine(Price);
+            int Amount = Convert.ToInt32(Buyercount * Price);
+            //Console.WriteLine(Amount);
+            string GoodName = _db.Lectures.Where(x => x.LectureId == InputlectureId).Select(y => y.Theme).SingleOrDefault();
+            string GoodDesc = GoodName + "*" + Buyercount;
             
+           
+           
             _db.OrderDetails.Add(new Models.Entity.OrderDetail()
             {
                 CreateDate = DateTime.Now,
                 Price = _db.Lectures.Where(x => x.LectureId == InputlectureId).Select(y => y.Price).SingleOrDefault(),
                 Count=Buyercount,
                 UserId=UserId,
-                LectureId=InputlectureId
-
+                LectureId=InputlectureId,
+                
+               
             }) ;
+
             _db.SaveChanges();
 
+            var odno = _db.OrderDetails.Where(x => x.LectureId == InputlectureId && x.UserId == UserId).OrderBy(x => x.OrderDetailId).LastOrDefault().OrderDetailId.ToString();
+            //Console.WriteLine(odno);
+            string Ordernumber = odno;
 
-            var i=_db.OrderDetails.Where(x => x.LectureId == InputlectureId && x.UserId == UserId).OrderBy(x=>x.OrderDetailId).LastOrDefault().OrderDetailId.ToString();
-            Console.WriteLine(i);
-            string PayMethod = "";
-            string version = "2.0";
-            string ordernumber = i;
-            var price = _db.Lectures.Where(x => x.LectureId == InputlectureId).Select(y => y.Price).SingleOrDefault();
-            Console.WriteLine(price);
-            int amount = Convert.ToInt32(Buyercount * price);
-            Console.WriteLine(amount);
-           
+            var ud= _db.Lectures.Where(x => x.LectureId == InputlectureId).SingleOrDefault();
+            if (ud.Count-Buyercount>= 0)
+            {
+                ud.Count -= Buyercount;
+                _db.SaveChanges();
+                
+            }
+            else
+            {
+                var message = $"親愛會員，您所選擇的講座{GoodName}目前票券不足";
+                return RedirectToAction("Quantity", "Error", new { whatever = message });
+            }
 
             
+
+
+            
+
+
+
 
             TradeInfo tradeInfo = new TradeInfo()
             {
@@ -108,14 +128,15 @@ namespace TreeFriend.Controllers
                 // 目前時間轉換 +08:00, 防止傳入時間或Server時間時區不同造成錯誤
                 TimeStamp = DateTimeOffset.Now.ToOffset(new TimeSpan(8, 0, 0)).ToUnixTimeSeconds().ToString(),
                 // * 串接程式版本
-                Version = version,
+                Version = Versions,
                 // * 商店訂單編號
                 //MerchantOrderNo = $"T{DateTime.Now.ToString("yyyyMMddHHmm")}",
-                MerchantOrderNo = ordernumber,
+                MerchantOrderNo = Ordernumber,
                 // * 訂單金額
-                Amt = amount,
+                Amt = Amount,
                 // * 商品資訊
-                ItemDesc = "商品資訊(自行修改)",
+                //ItemDesc = "商品資訊(自行修改)",//TODO商品資料 撈出商品名稱和購買數量
+                ItemDesc = GoodDesc, //TODO商品資料 撈出商品名稱和購買數量
                 // 繳費有效期限(適用於非即時交易)
                 ExpireDate = null,
                 // 支付完成 返回商店網址
@@ -126,7 +147,7 @@ namespace TreeFriend.Controllers
                 // 商店取號網址
                 CustomerURL = _bankInfoModel.CustomerURL,
                 // 支付取消 返回商店網址
-                ClientBackURL = null,
+                ClientBackURL = "https://0d54-1-164-234-176.ngrok.io/home/homepage",//返回商店網址 ngrok網址要更改
                 // * 付款人電子信箱
                 Email = string.Empty,
                 // 付款人電子信箱 是否開放修改(1=可修改 0=不可修改)
@@ -163,7 +184,7 @@ namespace TreeFriend.Controllers
             var inputModel = new SpgatewayInputModel
             {
                 MerchantID = _bankInfoModel.MerchantID,
-                Version = version
+                Version = Versions
             };
 
             // 將model 轉換為List<KeyValuePair<string, string>>, null值不轉
@@ -197,6 +218,7 @@ namespace TreeFriend.Controllers
             //}
             var bytes = Encoding.UTF8.GetBytes(s.ToString());
             await Response.Body.WriteAsync(bytes, 0, bytes.Length);
+            return null;
         }
 
         /// <summary>
@@ -230,16 +252,23 @@ namespace TreeFriend.Controllers
                     od.PaymentStatus = true;
                     od.PayTime = Convert.ToDateTime(convertModel.PayTime);
                     var lecture = _db.Lectures.FirstOrDefault(x => x.LectureId == od.LectureId);
-                    lecture.Count -= od.Count;
                     _db.SaveChanges();
                 }
 
+                if (convertModel.Status != "SUCCESS")
+                {
+                    var od = _db.OrderDetails.FirstOrDefault(x => x.OrderDetailId == Convert.ToInt32(convertModel.MerchantOrderNo));
+                    
+
+                }
                 
-                return Content(JsonConvert.SerializeObject(convertModel));
+
+
+                    return Content(JsonConvert.SerializeObject(convertModel));
             }
 
-            //return Content(string.Empty);
-            return RedirectToAction("Index", "Home");
+            return Content(string.Empty); 
+           
 
         }
 

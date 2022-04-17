@@ -8,7 +8,6 @@
 
 
 
-
 <div class="container mx-auto" id="app">
     <div v-for="item in lecturedetail">
         <div class="row mx-auto">
@@ -100,8 +99,8 @@
                         <span class="fs-2"><b>NT${{item.price}}</b></span>
                         <div class="d-flex gap-1 mt-1 align-items-center">
                             <span class="material-icons-sharp align-middle">alarm</span>
-                            @*<p>{{item.eventDate}}</p>*@
-                            <p class="m-0">講座報名時間剩餘{{eventDate}}天</p>
+
+                        <p class="m-0">剩餘{{dateDiff}}天截止</p>
                         </div>
                         <div class="d-flex gap-1 align-items-center">
                             <span class="material-icons-sharp align-middle">local_fire_department</span>
@@ -124,7 +123,8 @@
                         </div>
 
                         <div class="d-grid gap-2 mt-3">
-                            <button class="btn buybtn" type="submit" v-on:click="send"><b>立即購買</b></button>
+                            <button class="btn buybtn" type="submit" v-bind:class="{'disabled':item.count<1}" v-on:click="send"><b>立即購買</b></button>
+                            @*{{item.count-app.amount}}*@
                         </div>
                     </div>
                     <div class="row mt-3">
@@ -136,7 +136,7 @@
                     <div class="row border-left">
                         <div class="">
                             <ul class="m-0 p-0  mb-1 fs-6">
-                                <li>付款方式僅採信用卡線上刷卡(VISA/MasterCard/JCB)，惟線上刷卡會需要一些時間進行作業，過程中請勿關閉頁面或重新整理頁面，會影響交易流程，並導致入帳作業延遲或有誤。</li>
+                                <li>付款方式僅採信用卡線上刷卡(VISA/MasterCard/JCB)，惟線上刷卡會需要些許時間進行作業，請勿關閉頁面或重新整理頁面，將導致入帳作業延遲或有誤。</li>
                                 <li>主辦單位保留接受報名與否之權利，倘因故無法接受報名，將會無息退還全額活動費用。</li>
                                 <li>主辦單位保留對活動內容調整的權力。</li>
                             </ul>
@@ -149,37 +149,45 @@
     </div>
 </div>
 
-@*TODO付款方式描述我們僅採取信用卡(直接跳轉藍新信用卡付款頁面)*@
+
 
 <script>
-    let lectureURL = window.location.search;
-    let targetvalue = lectureURL.split("=");
-    let lectureId = targetvalue[1];
+    
     
     let app = new Vue({
         el: '#app',
         data: {
-            amount: 0,
+            amount: 1,
             lecturedetail: [],
             lecture: {
                 count: '',
                 eventDate: '',
-                
+
             },
-           
+            amountShow:false
         },
         mounted: function () {
             let lectureURL = window.location.search;
             let targetvalue = lectureURL.split("=");
             let self = this;
             axios.get("/Lecture/GetLectureDetails/" + targetvalue[1]).then(function (res) {
-                self.lecturedetail = res.data;             
-            })
+                self.lecturedetail = res.data;
+            });
+
         },
         computed: {
-            eventDate: {
+            dateDiff: {
                 get() {
-                    return moment().countdown(app.lecturedetail[0].eventDate).days;
+                    let today = moment().format('L');
+                    let aDate;
+                    aDate = today.split("/");
+                    oDate1 = new Date(aDate[0] + '/' + aDate[1] + '/' + aDate[2])
+                    console.log(oDate1);
+                    aDate = app.lecturedetail[0].eventDate.split("/");
+                    oDate2 = new Date(aDate[1] + '/' + aDate[2] + '/' + aDate[0]);
+                    console.log(oDate2);
+                    iDays = parseInt(Math.abs(oDate1 - oDate2) / 1000 / 60 / 60 / 24); 
+                    return iDays;
                 },
             },
         },
@@ -190,25 +198,24 @@
                 
                 if (this.amount < 1) {
                     this.amount = 1;
-                }
-
-                document.getElementById('Buyercount').value = parseInt(app.amount);
-                document.getElementById('InputlectureId').value = lectureId;
+                };
+                               
 
             },
+            
+
             send: function () {
+                let lectureURL = window.location.search;
+                let targetvalue = lectureURL.split("=");
+                let lectureId = targetvalue[1];
+                document.getElementById('Buyercount').value = parseInt(app.amount);
+                document.getElementById('InputlectureId').value = lectureId;
                 var btnclick = document.getElementById('sendBuy');
                 btnclick.click();
-
-               
+  
             }
-           
-
 
         }
-
-
-
 
     })
 </script>

@@ -26,6 +26,8 @@ namespace TreeFriend.Models.Entity
         [Required]
         public bool PaymentStatus { get; set; } = false;
 
+        [Required]
+        public bool OrderStatus { get; set; } = false;
 
         [Required]
         public int UserId { get; set; }

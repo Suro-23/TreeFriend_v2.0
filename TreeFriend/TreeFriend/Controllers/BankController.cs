@@ -251,20 +251,24 @@ namespace TreeFriend.Controllers
                     var od = _db.OrderDetails.FirstOrDefault(x => x.OrderDetailId == Convert.ToInt32(convertModel.MerchantOrderNo));
                     od.PaymentStatus = true;
                     od.PayTime = Convert.ToDateTime(convertModel.PayTime);
-                    var lecture = _db.Lectures.FirstOrDefault(x => x.LectureId == od.LectureId);
+                  
                     _db.SaveChanges();
                 }
 
                 if (convertModel.Status != "SUCCESS")
                 {
                     var od = _db.OrderDetails.FirstOrDefault(x => x.OrderDetailId == Convert.ToInt32(convertModel.MerchantOrderNo));
-                    
+                    od.OrderStatus = true;
+                    var lecture = _db.Lectures.FirstOrDefault(x => x.LectureId == od.LectureId);
+                    lecture.Count += od.Count;
 
+                    _db.SaveChanges();
+                    //TODO撈出未付款訂單及訂單成立30分鐘或?的訂單 訂單狀態改為訂單取消 庫存回補
                 }
-                
 
 
-                    return Content(JsonConvert.SerializeObject(convertModel));
+
+                return Content(JsonConvert.SerializeObject(convertModel));
             }
 
             return Content(string.Empty); 

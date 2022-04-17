@@ -29,16 +29,12 @@ namespace TreeFriend.Controllers {
 
         //講座
         [AllowAnonymous]
-        public IActionResult ProductPage() {
-            return View();
-        }
-
-        //講座
         public IActionResult LectureList()
         {
             return View();
         }
 
+        [AllowAnonymous]
         public IActionResult LectureDetail(int? id)
         {
             if (id == null)

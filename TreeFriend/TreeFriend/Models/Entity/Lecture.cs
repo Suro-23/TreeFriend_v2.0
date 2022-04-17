@@ -29,21 +29,24 @@ namespace TreeFriend.Models.Entity
         public string Venue { get; set; }
         [Required]
         public string SpeakerImgPath { get; set; }
-
         [Required]
         public string Speaker { get; set; }
+        /// <summary>
+        /// 商品庫存
+        /// </summary>
         [Required]
         public int Count { get; set; }
         [Required]
         public decimal Price { get; set; }
         [Required]
         public string ImgPath { get; set; }
-
-
         [Required]
         public string Description { get; set; }
         [Required]
         public string Content { get; set; }
+        /// <summary>
+        /// 刪除狀態 未刪除0 已刪除1
+        /// </summary>
         [Required]
         public bool IsDelete { get; set; } = false;
         public DateTime? UpdateTime { get; set; }

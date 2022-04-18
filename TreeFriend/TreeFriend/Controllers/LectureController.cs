@@ -22,7 +22,7 @@ namespace TreeFriend.Controllers
         [AllowAnonymous]
         public List<LecturelistViewModel> GetAllLecture()
         {
-            //TODO 未過期日期篩選
+            //TODO未過期日期篩選
             var result = _db.Lectures.Where(x => x.IsDelete == false && x.Count > 0 ).Select(x => new LecturelistViewModel
             {
                 LectureId = x.LectureId,

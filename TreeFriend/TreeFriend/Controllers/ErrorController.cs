@@ -21,7 +21,7 @@ namespace TreeFriend.Controllers
             return View();
         }
 
-        public List<LecturelistViewModel> GetAllLecture()
+        public List<LecturelistViewModel> GetLecture()
         {
             var result = _db.Lectures.Where(x => x.IsDelete == false && x.Count > 0).OrderBy(x=>x.LectureId).Take(4).Select(x => new LecturelistViewModel
             {

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TreeFriend.Models;
 
 namespace TreeFriend.Migrations
 {
     [DbContext(typeof(TreeFriendDbContext))]
-    partial class TreeFriendDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220418172605_orderstatus")]
+    partial class orderstatus
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -219,6 +221,58 @@ namespace TreeFriend.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("PersonalPost");
+                });
+
+            modelBuilder.Entity("TreeFriend.Models.Entity.Product", b =>
+                {
+                    b.Property<int>("ProductId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Count")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Picture")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,4)");
+
+                    b.Property<string>("ProductName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("StarDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("getdate()");
+
+                    b.Property<string>("Subtitle")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ProductId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Product");
                 });
 
             modelBuilder.Entity("TreeFriend.Models.Entity.SkillPost", b =>
@@ -442,6 +496,17 @@ namespace TreeFriend.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("TreeFriend.Models.Entity.Product", b =>
+                {
+                    b.HasOne("TreeFriend.Models.Entity.User", "User")
+                        .WithMany("Products")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("TreeFriend.Models.Entity.SkillPost", b =>
                 {
                     b.HasOne("TreeFriend.Models.Entity.Category", "Category")
@@ -503,6 +568,8 @@ namespace TreeFriend.Migrations
                     b.Navigation("OrderDetails");
 
                     b.Navigation("Posts");
+
+                    b.Navigation("Products");
 
                     b.Navigation("SkillPosts");
 

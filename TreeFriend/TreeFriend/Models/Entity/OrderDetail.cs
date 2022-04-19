@@ -35,10 +35,12 @@ namespace TreeFriend.Models.Entity
         public bool PaymentStatus { get; set; } = false;
 
         /// <summary>
-        /// 訂單狀態 訂單成立0 訂單取消1
+        /// 訂單狀態 訂單不成立0 訂單成立1
         /// </summary>
         [Required]
-        public bool OrderStatus { get; set; } = false;
+        public bool OrderStatus { get; set; } = true;
+
+        public DateTime? UpdateTime { get; set; }
 
         [Required]
         public int UserId { get; set; }

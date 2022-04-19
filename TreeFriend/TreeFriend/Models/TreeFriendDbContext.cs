@@ -27,14 +27,6 @@ namespace TreeFriend.Models {
                 .Property(u => u.CreateDate)
                 .HasDefaultValueSql("getdate()");
 
-            modelBuilder.Entity<Product>()
-                .Property(p => p.Price)
-                .HasColumnType("decimal(18,4)");
-
-            modelBuilder.Entity<Product>()
-                .Property(p => p.StarDate)
-                .HasDefaultValueSql("getdate()");
-
             modelBuilder.Entity<UserDetail>()
                 .Property(u => u.UpdateTime)
                 .HasDefaultValueSql("getdate()");

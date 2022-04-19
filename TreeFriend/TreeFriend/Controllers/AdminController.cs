@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 
 namespace TreeFriend.Controllers {
+    [Authorize(Roles = "Admin")]
     public class AdminController : Controller {
-        [Authorize(Roles = "Admin")]
         //首頁
         public IActionResult AddCategory() {
             return View();
@@ -13,8 +13,12 @@ namespace TreeFriend.Controllers {
             return View();
         }
 
-        public IActionResult AddLecture()
-        {
+        public IActionResult AddLecture() {
+            return View();
+        }
+
+        //圖表頁面
+        public IActionResult ChartPage() {
             return View();
         }
     }

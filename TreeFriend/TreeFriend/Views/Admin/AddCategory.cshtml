@@ -4,64 +4,224 @@
 <link rel="stylesheet" href="~/css/Admin/addCategory.css">
 
 
-<div class="item" id="category">
-    <div class="item-head">
-        <label for="category-name">分類 :</label>
-        <input type="text" id="input-category" v-model="category.categoryName" v-on:blur="checkName">
-        <button id="btn-category" v-on:click="addCategory">新增</button>
-        <label id="error-msg" v-if="isExists">類別已存在</label>
-    </div>
-    <table>
-        <thead>
-            <tr>
-                <th class="tb-id">ID</th>
-                <th class="tb-name">分類名稱</th>
-                <th class="tb-user">管理員</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr v-for="item in resultList">
-                <td class="tb-id">{{item.categoryId}}</td>
-                <td class="tb-name">{{item.categoryName}}</td>
-                <td class="tb-user">{{item.userId}}</td>
-                <td class="tb-btn">
-                    <button>edit</button>
-                    <button v-on:click="deleteCategory" v-bind:value="item.categoryId">x</button>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</div>
-<div class="item" id="hashtag">
-    <div class="item-head">
-        <label for="input-hashtag">標籤 :</label>
-        <input type="text" id="input-hashtag" v-model="hashtag.hashtagName" v-on:blur="checkName">
-        <button id="btn-hashtag" v-on:click="addHashtag">新增</button>
-        <label id="error-msg" v-if="isExists">標籤已存在</label>
-    </div>
-    <table>
-        <thead>
-            <tr>
-                <th class="tb-id">ID</th>
-                <th class="tb-name">標籤名稱</th>
-                <th class="tb-user">管理員</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr v-for="item in resultList">
-                <td class="tb-id">{{item.hashtagId}}</td>
-                <td class="tb-name">{{item.hashtagName}}</td>
-                <td class="tb-user">{{item.userId}}</td>
-                <td class="tb-btn">
-                    <button>edit</button>
-                    <button v-on:click="deleteHashtag" v-bind:value="item.hashtagId">x</button>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</div>
+<div class="vue container-fluid">
+                <div class="row justify-content-around h-100">
+                    <div class="col-5 d-flex flex-column justify-content-between">
+                        <div class="input-div d-flex flex-column justify-content-center">
+                            <div class="d-flex fs-4 justify-content-center m-0">
+                                <select class="form-select w-auto border-0 item" aria-label="Default select example">
+                                    <option value="1">分類</option>
+                                    <option value="2">標籤</option>
+                                </select>
+                                <input class="w-50 ms-4 border-0 item" type="text">
+                                <button class="w-auto ms-4 btn btn-secondary">新增</button>
+                            </div>
+                        </div>
+                        <div class="result-category item">
+                            <div class="row justify-content-around m-0 list-header">
+                                <div class="col-1">ID</div>
+                                <div class="col-3">分類名稱</div>
+                                <div class="col-2">管理員</div>
+                                <div class="col-3"></div>
+                            </div>
+                            <div class="m-0 list-wrap">
+                                <div class="row justify-content-around align-items-center m-0 list-content">
+                                    <div class="col-1">1</div>
+                                    <div class="col-3">找學生</div>
+                                    <div class="col-2">1</div>
+                                    <div class="col-3 d-flex p-0 justify-content-center">
+                                        <button class="btn pt-0 pb-0"><img src="~/icon/pen.png" alt=""></button>
+                                        <button class="btn pt-0 pb-0"><img src="~/icon/delete.png" alt=""></button>
+                                    </div>
+                                </div>
+                                <div class="row justify-content-around align-items-center m-0 list-content">
+                                    <div class="col-1">2</div>
+                                    <div class="col-3">讀書會</div>
+                                    <div class="col-2">1</div>
+                                    <div class="col-3 d-flex p-0 justify-content-center">
+                                        <button class="btn pt-0 pb-0"><img src="~/icon/pen.png" alt=""></button>
+                                        <button class="btn pt-0 pb-0"><img src="~/icon/delete.png" alt=""></button>
+                                    </div>
+                                </div>
+                                <div class="row justify-content-around align-items-center m-0 list-content">
+                                    <div class="col-1">1</div>
+                                    <div class="col-3">找學生</div>
+                                    <div class="col-2">1</div>
+                                    <div class="col-3 d-flex p-0 justify-content-center">
+                                        <button class="btn pt-0 pb-0"><img src="~/icon/pen.png" alt=""></button>
+                                        <button class="btn pt-0 pb-0"><img src="~/icon/delete.png" alt=""></button>
+                                    </div>
+                                </div>
+                                <div class="row justify-content-around align-items-center m-0 list-content">
+                                    <div class="col-1">2</div>
+                                    <div class="col-3">讀書會</div>
+                                    <div class="col-2">1</div>
+                                    <div class="col-3 d-flex p-0 justify-content-center">
+                                        <button class="btn pt-0 pb-0"><img src="~/icon/pen.png" alt=""></button>
+                                        <button class="btn pt-0 pb-0"><img src="~/icon/delete.png" alt=""></button>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="result-hashtag item col-5 p-0">
+                        <div class="row justify-content-around m-0 list-header">
+                            <div class="col-1">ID</div>
+                            <div class="col-3">標籤名稱</div>
+                            <div class="col-2">管理員</div>
+                            <div class="col-3"></div>
+                        </div>
+                        <div class="m-0 list-wrap">
+                            <div class="row justify-content-around align-items-center m-0 list-content">
+                                <div class="col-1">1</div>
+                                <div class="col-3">找學生</div>
+                                <div class="col-2">1</div>
+                                <div class="col-3 d-flex p-0 justify-content-center">
+                                    <button class="btn pt-0 pb-0"><img src="~/icon/pen.png" alt=""></button>
+                                    <button class="btn pt-0 pb-0"><img src="~/icon/delete.png" alt=""></button>
+                                </div>
+                            </div>
+                            <div class="row justify-content-around align-items-center m-0 list-content">
+                                <div class="col-1">2</div>
+                                <div class="col-3">讀書會</div>
+                                <div class="col-2">1</div>
+                                <div class="col-3 d-flex p-0 justify-content-center">
+                                    <button class="btn pt-0 pb-0"><img src="~/icon/pen.png" alt=""></button>
+                                    <button class="btn pt-0 pb-0"><img src="~/icon/delete.png" alt=""></button>
+                                </div>
+                            </div>
+                            <div class="row justify-content-around align-items-center m-0 list-content">
+                                <div class="col-1">1</div>
+                                <div class="col-3">找學生</div>
+                                <div class="col-2">1</div>
+                                <div class="col-3 d-flex p-0 justify-content-center">
+                                    <button class="btn pt-0 pb-0"><img src="~/icon/pen.png" alt=""></button>
+                                    <button class="btn pt-0 pb-0"><img src="~/icon/delete.png" alt=""></button>
+                                </div>
+                            </div>
+                            <div class="row justify-content-around align-items-center m-0 list-content">
+                                <div class="col-1">2</div>
+                                <div class="col-3">讀書會</div>
+                                <div class="col-2">1</div>
+                                <div class="col-3 d-flex p-0 justify-content-center">
+                                    <button class="btn pt-0 pb-0"><img src="~/icon/pen.png" alt=""></button>
+                                    <button class="btn pt-0 pb-0"><img src="~/icon/delete.png" alt=""></button>
+                                </div>
+                            </div>
+                            <div class="row justify-content-around align-items-center m-0 list-content">
+                                <div class="col-1">1</div>
+                                <div class="col-3">找學生</div>
+                                <div class="col-2">1</div>
+                                <div class="col-3 d-flex p-0 justify-content-center">
+                                    <button class="btn pt-0 pb-0"><img src="~/icon/pen.png" alt=""></button>
+                                    <button class="btn pt-0 pb-0"><img src="~/icon/delete.png" alt=""></button>
+                                </div>
+                            </div>
+                            <div class="row justify-content-around align-items-center m-0 list-content">
+                                <div class="col-1">2</div>
+                                <div class="col-3">讀書會</div>
+                                <div class="col-2">1</div>
+                                <div class="col-3 d-flex p-0 justify-content-center">
+                                    <button class="btn pt-0 pb-0"><img src="~/icon/pen.png" alt=""></button>
+                                    <button class="btn pt-0 pb-0"><img src="~/icon/delete.png" alt=""></button>
+                                </div>
+                            </div>
+                            <div class="row justify-content-around align-items-center m-0 list-content">
+                                <div class="col-1">1</div>
+                                <div class="col-3">找學生</div>
+                                <div class="col-2">1</div>
+                                <div class="col-3 d-flex p-0 justify-content-center">
+                                    <button class="btn pt-0 pb-0"><img src="~/icon/pen.png" alt=""></button>
+                                    <button class="btn pt-0 pb-0"><img src="~/icon/delete.png" alt=""></button>
+                                </div>
+                            </div>
+                            <div class="row justify-content-around align-items-center m-0 list-content">
+                                <div class="col-1">2</div>
+                                <div class="col-3">讀書會</div>
+                                <div class="col-2">1</div>
+                                <div class="col-3 d-flex p-0 justify-content-center">
+                                    <button class="btn pt-0 pb-0"><img src="~/icon/pen.png" alt=""></button>
+                                    <button class="btn pt-0 pb-0"><img src="~/icon/delete.png" alt=""></button>
+                                </div>
+                            </div>
+                            <div class="row justify-content-around align-items-center m-0 list-content">
+                                <div class="col-1">1</div>
+                                <div class="col-3">找學生</div>
+                                <div class="col-2">1</div>
+                                <div class="col-3 d-flex p-0 justify-content-center">
+                                    <button class="btn pt-0 pb-0"><img src="~/icon/pen.png" alt=""></button>
+                                    <button class="btn pt-0 pb-0"><img src="~/icon/delete.png" alt=""></button>
+                                </div>
+                            </div>
+                            <div class="row justify-content-around align-items-center m-0 list-content">
+                                <div class="col-1">2</div>
+                                <div class="col-3">讀書會</div>
+                                <div class="col-2">1</div>
+                                <div class="col-3 d-flex p-0 justify-content-center">
+                                    <button class="btn pt-0 pb-0"><img src="~/icon/pen.png" alt=""></button>
+                                    <button class="btn pt-0 pb-0"><img src="~/icon/delete.png" alt=""></button>
+                                </div>
+                            </div>
+                            <div class="row justify-content-around align-items-center m-0 list-content">
+                                <div class="col-1">1</div>
+                                <div class="col-3">找學生</div>
+                                <div class="col-2">1</div>
+                                <div class="col-3 d-flex p-0 justify-content-center">
+                                    <button class="btn pt-0 pb-0"><img src="~/icon/pen.png" alt=""></button>
+                                    <button class="btn pt-0 pb-0"><img src="~/icon/delete.png" alt=""></button>
+                                </div>
+                            </div>
+                            <div class="row justify-content-around align-items-center m-0 list-content">
+                                <div class="col-1">2</div>
+                                <div class="col-3">讀書會</div>
+                                <div class="col-2">1</div>
+                                <div class="col-3 d-flex p-0 justify-content-center">
+                                    <button class="btn pt-0 pb-0"><img src="~/icon/pen.png" alt=""></button>
+                                    <button class="btn pt-0 pb-0"><img src="~/icon/delete.png" alt=""></button>
+                                </div>
+                            </div>
+                            <div class="row justify-content-around align-items-center m-0 list-content">
+                                <div class="col-1">1</div>
+                                <div class="col-3">找學生</div>
+                                <div class="col-2">1</div>
+                                <div class="col-3 d-flex p-0 justify-content-center">
+                                    <button class="btn pt-0 pb-0"><img src="~/icon/pen.png" alt=""></button>
+                                    <button class="btn pt-0 pb-0"><img src="~/icon/delete.png" alt=""></button>
+                                </div>
+                            </div>
+                            <div class="row justify-content-around align-items-center m-0 list-content">
+                                <div class="col-1">2</div>
+                                <div class="col-3">讀書會</div>
+                                <div class="col-2">1</div>
+                                <div class="col-3 d-flex p-0 justify-content-center">
+                                    <button class="btn pt-0 pb-0"><img src="~/icon/pen.png" alt=""></button>
+                                    <button class="btn pt-0 pb-0"><img src="~/icon/delete.png" alt=""></button>
+                                </div>
+                            </div>
+                            <div class="row justify-content-around align-items-center m-0 list-content">
+                                <div class="col-1">1</div>
+                                <div class="col-3">找學生</div>
+                                <div class="col-2">1</div>
+                                <div class="col-3 d-flex p-0 justify-content-center">
+                                    <button class="btn pt-0 pb-0"><img src="~/icon/pen.png" alt=""></button>
+                                    <button class="btn pt-0 pb-0"><img src="~/icon/delete.png" alt=""></button>
+                                </div>
+                            </div>
+                            <div class="row justify-content-around align-items-center m-0 list-content">
+                                <div class="col-1">2</div>
+                                <div class="col-3">讀書會</div>
+                                <div class="col-2">1</div>
+                                <div class="col-3 d-flex p-0 justify-content-center">
+                                    <button class="btn pt-0 pb-0"><img src="~/icon/pen.png" alt=""></button>
+                                    <button class="btn pt-0 pb-0"><img src="~/icon/delete.png" alt=""></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
 
 <script>
     let getAll= function (e,name) {

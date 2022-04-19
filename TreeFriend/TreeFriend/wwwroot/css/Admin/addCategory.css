@@ -60,3 +60,11 @@
     height: 94.3%;
     overflow: auto;
 }
+
+.input-div input{
+    border:none;
+}
+
+.inputErr {
+    border: 2px solid red !important;
+}

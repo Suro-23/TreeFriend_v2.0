@@ -19,21 +19,6 @@ namespace TreeFriend.Controllers.Api {
             _db = db;
         }
 
-        //新增使用者
-        //[AllowAnonymous]
-        //[Route("CreateUser")]
-        //[HttpPost]
-        //public string CreateUser([FromBody] User user) {
-        //    var AddUser = user;
-        //    try {
-        //        _db.users.Add(AddUser);
-        //        _db.SaveChanges();
-        //        return "新增成功";
-        //    } catch (System.Exception) {
-        //        return "新增失敗";
-        //    }
-        //}
-
         #region 類別功能
 
         //檢查是否有重複的類別

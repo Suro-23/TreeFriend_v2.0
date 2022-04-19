@@ -40,6 +40,8 @@ namespace TreeFriend.Models.Entity
         [Required]
         public bool OrderStatus { get; set; } = true;
 
+        public DateTime? UpdateTime { get; set; }
+
         [Required]
         public int UserId { get; set; }
         public virtual User User { get; set; }

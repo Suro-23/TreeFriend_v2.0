@@ -9,10 +9,7 @@ namespace TreeFriend.Controllers {
             return View();
         }
 
-        public IActionResult AddProduct() {
-            return View();
-        }
-
+        //講座頁面
         public IActionResult AddLecture() {
             return View();
         }

@@ -107,12 +107,6 @@
                             <p class="m-0">講座剩{{item.count}}位</p>
                         </div>
 
-                        <form id="form1" action="/Bank/SpgatewayPayBill" method="post" hidden="hidden">
-                            <input type="number" id="InputlectureId" name="InputlectureId" hidden="hidden" />
-                            <input type="number" id="Buyercount" name="Buyercount" hidden="hidden" />
-                            <button class="btn buybtn" type="submit" id="sendBuy" hidden="hidden"></button>
-                        </form>
-
                         <div class="flex-row d-flex align-items-center gap-2 qty  mt-3">
                             <span class="fs-5 text-center">購買數量</span>
                             <span class="material-icons-sharp qtyminus rounded-circle p-1"
@@ -202,17 +196,31 @@
                                
 
             },
-            
 
             send: function () {
                 let lectureURL = window.location.search;
                 let targetvalue = lectureURL.split("=");
                 let lectureId = targetvalue[1];
-                document.getElementById('Buyercount').value = parseInt(app.amount);
-                document.getElementById('InputlectureId').value = lectureId;
-                var btnclick = document.getElementById('sendBuy');
-                btnclick.click();
-  
+           
+                let form = document.createElement("form");
+                form.method = "post";
+                form.action = "/Bank/SpgatewayPayBill"
+
+                let inp1 = document.createElement("input");
+                inp1.type = "number";
+                inp1.name = "Buyercount";
+                inp1.value = parseInt(app.amount);
+                form.appendChild(inp1);
+
+                let inp2 = document.createElement("input");
+                inp2.type = "number";
+                inp2.name = "InputlectureId";
+                inp2.value = lectureId;
+                form.appendChild(inp2);
+
+                document.body.appendChild(form);
+                form.submit();
+
             }
 
         }

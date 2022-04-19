@@ -31,8 +31,6 @@ namespace TreeFriend.Controllers
         }
 
 
-      
-
 
         #region 渲染
         public List<AddLecturelistViewModel> GetAllLecture()

@@ -143,6 +143,7 @@ namespace TreeFriend.Controllers
                 speakerpic = $@"/SpeakerPicture/{speakerPicFileName}";
             }
 
+
             var picFileName = DateTime.Now.ToString("MMddHHmmss") + model.Picture[0].FileName;
             var picPath = $@"{_folder1}\{picFileName}";
             using (var stream = new FileStream(picPath, FileMode.Create))

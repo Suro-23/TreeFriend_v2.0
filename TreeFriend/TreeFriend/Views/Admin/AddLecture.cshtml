@@ -41,7 +41,7 @@
                     <div class="modal-body">
                         <div class="form-row">
                             <div class="form-title">講座主題:</div>
-                            <input type="text" v-model.trim="lecture.Theme" @@blur="CheckTheme" required v-bind:placeholder="theme">
+                            <input type="text" v-model.trim="lecture.Theme"  required v-bind:placeholder="theme">
                         </div>
 
                         <div class="form-row">
@@ -61,7 +61,7 @@
 
                         <div class="form-row">
                             <div class="form-title">講座地點:</div>
-                            <input type="text" v-model.trim="lecture.Venue" @@blur="CheckVenue" required v-bind:placeholder="venue">
+                            <input type="text" v-model.trim="lecture.Venue"  required v-bind:placeholder="venue">
 
                         </div>
                         <div class="form-row">
@@ -72,7 +72,7 @@
 
                         <div class="form-row">
                             <div class="form-title">講師:</div>
-                            <textarea cols="20" rows="5" v-model.trim="lecture.Speaker" required @@blur="CheckSpeaker" v-bind:placeholder="speaker"></textarea>
+                            <textarea cols="20" rows="5" v-model.trim="lecture.Speaker" required  v-bind:placeholder="speaker"></textarea>
                         </div>
 
                         <div class="form-row">
@@ -92,12 +92,12 @@
                         </div>
                         <div class="form-row">
                             <div class="form-title">講座規劃:</div>
-                            <textarea cols="20" rows="5" v-model.trim="lecture.Description" required @@blur="CheckDescription" v-bind:placeholder="description"></textarea>
+                            <textarea cols="20" rows="5" v-model.trim="lecture.Description" required  v-bind:placeholder="description"></textarea>
                         </div>
 
                         <div class="form-row">
                             <div class="form-title">講座內容:</div>
-                            <textarea cols="20" rows="5" v-model.trim="lecture.Content" required @@blur="CheckContent" v-bind:placeholder="content"></textarea>
+                            <textarea cols="20" rows="5" v-model.trim="lecture.Content" required  v-bind:placeholder="content"></textarea>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -467,7 +467,7 @@
             },
             target: null,
             date: new Date().toLocaleDateString('en-CA'),
-            isShow: false,
+            isShow: true,
             countOfPage: 5,
             currPage: 1,
             isSpeakerPhotoShow: true,
@@ -595,8 +595,8 @@
                 let lectureId = event.target.value;
                 self.target = self.lecturelist.find((sourceItem) => { return +sourceItem.lectureId === +lectureId });
                 self.lecture = target; //等於選取的講座
-                console.log(target);
-                console.log(lectureId);
+                console.log(this.target);
+                console.log(this.lectureId);
             },
 
             deletesend: function (event) {

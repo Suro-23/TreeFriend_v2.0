@@ -1,0 +1,40 @@
+.card-img {
+    height: 10rem;
+}
+
+.lecture {
+    text-decoration: none;
+}
+
+.card-img-top {
+    max-width: 100%;
+}
+
+.card {
+    height: 100%;
+}
+
+.lecture-border {
+    border-bottom: solid 0.5rem #fcd9b3;
+}
+
+.imgPath {
+    width: 60vw;
+    height: 60vh;
+}
+
+.sorryfleg-img {
+    z-index: 9900;
+    max-width: 100%;
+    top: -15%;
+    right: 10%;
+    width: 50%;
+}
+
+.sorryflegx-img {
+    z-index: 9900;
+    max-width: 100%;
+    top: -15%;
+    right: 40%;
+    width: 50%;
+}

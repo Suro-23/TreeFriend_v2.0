@@ -37,7 +37,6 @@ namespace TreeFriend.Models.Entity {
         public virtual UserDetail UserDetail { get; set; }
         public virtual ICollection<Category> Categories { get; set; }
         public virtual ICollection<Hashtag> Hashtags { get; set; }
-        public virtual ICollection<Product> Products { get; set; }
         public virtual ICollection<PersonalPost> Posts { get; set; }
 
         //public virtual ICollection<PersonalPostMessage> PostsMessages { get; set; }

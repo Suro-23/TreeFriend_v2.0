@@ -27,14 +27,6 @@ namespace TreeFriend.Models {
                 .Property(u => u.CreateDate)
                 .HasDefaultValueSql("getdate()");
 
-            modelBuilder.Entity<Product>()
-                .Property(p => p.Price)
-                .HasColumnType("decimal(18,4)");
-
-            modelBuilder.Entity<Product>()
-                .Property(p => p.StarDate)
-                .HasDefaultValueSql("getdate()");
-
             modelBuilder.Entity<UserDetail>()
                 .Property(u => u.UpdateTime)
                 .HasDefaultValueSql("getdate()");
@@ -61,8 +53,10 @@ namespace TreeFriend.Models {
                 .HasForeignKey(h => h.HashtagId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            modelBuilder.Entity<OrderDetail>(bulider => {
-                bulider.HasKey(x => new { x.UserId, x.LectureId });
+            modelBuilder.Entity<OrderDetail>(bulider =>
+            {
+                //bulider.HasKey(x => new { x.UserId, x.LectureId });
+                //.OnDelete(DeleteBehavior.NoAction)
                 bulider.HasOne(x => x.User).WithMany(x => x.OrderDetails).HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.NoAction);
                 bulider.HasOne(x => x.Lecture).WithMany(x => x.OrderDetails).HasForeignKey(x => x.LectureId).OnDelete(DeleteBehavior.NoAction);
             });

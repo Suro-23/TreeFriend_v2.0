@@ -29,14 +29,14 @@
                 <ul class="navbar-nav d-flex align-items-center">
                     @if (User.IsInRole("Admin")) {
                         <li class="nav-item">
-                            <a class="nav-link" href="@Url.Action("AddCategory","Admin")">管理員</a>
+                            <a class="nav-link" href="@Url.Action("ChartPage","Admin")">管理員</a>
                         </li>
                     }
                     <li class="nav-item">
                         <a class="nav-link" href="@Url.Action("AllSkillPostPage","Home")">技能貼文</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="@Url.Action("ProductPage","Home")">講座</a>
+                        <a class="nav-link" href="@Url.Action("LectureList","Home")">講座</a>
                     </li>
                     @{
                         if (Context.User.Identity.IsAuthenticated) {
@@ -76,6 +76,10 @@
                 </div>
                 <div class="row">
                     <a class="col text-center" href="@Url.Action("PersonalAllSkillPost","Home")">歷史貼文</a>
+                </div>
+                <!--欣宜新增-->
+                <div class="row">
+                    <a class="col text-center" href="@Url.Action("PersonalOrderHistory","Home")">講座票根</a>
                 </div>
             </div>
             <div class="member-div col-8 member-content">

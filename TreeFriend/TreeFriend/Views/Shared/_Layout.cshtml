@@ -16,8 +16,6 @@
     
     <!--欣宜引用時間相關CDN-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/countdown/2.6.0/countdown.min.js" integrity="sha512-FkM4ZGExuYz4rILLbNzw8f3HxTN9EKdXrQYcYfdluxJBjRLthYPxxZixV/787qjN3JLs2607yN5XknR/cQMU8w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="~/js/moment-countdown.min.js"></script>
     <!---->
 </head>
 <body>
@@ -34,7 +32,7 @@
                 <ul class="navbar-nav d-flex align-items-center">
                     @if (User.IsInRole("Admin")) {
                         <li class="nav-item">
-                            <a class="nav-link" href="@Url.Action("AddCategory","Admin")">管理員</a>
+                            <a class="nav-link" href="@Url.Action("ChartPage","Admin")">管理員</a>
                         </li>
                     }
                     <li class="nav-item">
@@ -70,17 +68,19 @@
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>
+
+
+</html>
 <script>
     new Vue({
-        el:"#header-nav",
-        methods:{
-            logout: function(){
+        el: "#header-nav",
+        methods: {
+            logout: function () {
                 axios.get("../Register/Logout")
-                .then(res => {
-                    window.location.href=res.data;
-                });
+                    .then(res => {
+                        window.location.href = res.data;
+                    });
             }
         }
     });
 </script>
-</html>

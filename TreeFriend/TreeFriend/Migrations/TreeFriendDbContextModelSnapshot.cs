@@ -147,11 +147,10 @@ namespace TreeFriend.Migrations
 
             modelBuilder.Entity("TreeFriend.Models.Entity.OrderDetail", b =>
                 {
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("LectureId")
-                        .HasColumnType("int");
+                    b.Property<int>("OrderDetailId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int>("Count")
                         .HasColumnType("int");
@@ -159,12 +158,32 @@ namespace TreeFriend.Migrations
                     b.Property<DateTime>("CreateDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("LectureId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("OrderStatus")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("PayTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("PaymentStatus")
+                        .HasColumnType("bit");
+
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
-                    b.HasKey("UserId", "LectureId");
+                    b.Property<DateTime?>("UpdateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("OrderDetailId");
 
                     b.HasIndex("LectureId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("OrderDetails");
                 });
@@ -203,58 +222,6 @@ namespace TreeFriend.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("PersonalPost");
-                });
-
-            modelBuilder.Entity("TreeFriend.Models.Entity.Product", b =>
-                {
-                    b.Property<int>("ProductId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Count")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Picture")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,4)");
-
-                    b.Property<string>("ProductName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("StarDate")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("getdate()");
-
-                    b.Property<string>("Subtitle")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("ProductId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Product");
                 });
 
             modelBuilder.Entity("TreeFriend.Models.Entity.SkillPost", b =>
@@ -478,17 +445,6 @@ namespace TreeFriend.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("TreeFriend.Models.Entity.Product", b =>
-                {
-                    b.HasOne("TreeFriend.Models.Entity.User", "User")
-                        .WithMany("Products")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("TreeFriend.Models.Entity.SkillPost", b =>
                 {
                     b.HasOne("TreeFriend.Models.Entity.Category", "Category")
@@ -550,8 +506,6 @@ namespace TreeFriend.Migrations
                     b.Navigation("OrderDetails");
 
                     b.Navigation("Posts");
-
-                    b.Navigation("Products");
 
                     b.Navigation("SkillPosts");
 

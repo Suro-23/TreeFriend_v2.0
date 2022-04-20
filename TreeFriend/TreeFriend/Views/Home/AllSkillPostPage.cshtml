@@ -4,11 +4,11 @@
 
 <link rel="stylesheet" href="~/css/YP/AllSkillPost.css" />
 
-<div id="app">
+<div id="allSkillPostApp">
     <div class="row mb-3">
         <div class="hashtag-group btn-group" role="group" aria-label="Basic checkbox toggle button group">
             <div class="w-auto" v-for="item in allHashTagList">
-                <input type="checkbox" class="btn-check" :id="`check-${item.hashtagId}`" :value="item.hashtagId" v-model="checkedHashtag" autocomplete="off">
+                <input type="checkbox" class="btn-check" :id="`check-${item.hashtagId}`" :value="item.hashtagId" v-model="checkedHashtag.hashtagIdList" autocomplete="off">
                 <label class="btn btn-outline-secondary rounded-pill" :for="`check-${item.hashtagId}`">#{{item.hashtagName}}</label>
             </div>
         </div>
@@ -74,12 +74,15 @@
         }
     }
 
-    let app = new Vue({
-        el:"#app",
+    let allSkillPostApp = new Vue({
+        el:"#allSkillPostApp",
         data:{
             allHashTagList:[],
             skillPostList:[],
-            checkedHashtag:[],
+            checkedHashtag:{
+                hashtagIdList:[],
+                checkId:0
+            },
             message: new msg(),
         },
         mounted: function(){
@@ -92,15 +95,32 @@
             .then(res => self.skillPostList = res.data);
         },
         watch:{
-            checkedHashtag: function(){
-                const self = this;
-                if(self.checkedHashtag.length !== 0){
-                    axios.post("../Api/SkillPost/GetSKillPostByHashtag",self.checkedHashtag)
-                    .then(res => self.skillPostList = res.data);
-                }else{
-                    axios.get("../Api/SkillPost/GetAllSkillPost")
-                    .then(res => self.skillPostList = res.data);
-                }
+            //checkedHashtag.hashtagIdList: function(){
+            //    const self = this;
+            //    self.checkedHashtag.checkId = category.checkId;
+            //    if(self.checkedHashtag.hashtagIdList.length !== 0){
+            //        axios.post("../Api/SkillPost/GetSKillPostByHashtag",self.checkedHashtag)
+            //        .then(res => self.skillPostList = res.data);
+            //    }else{
+            //        axios.get("../Api/SkillPost/GetAllSkillPost")
+            //        .then(res => self.skillPostList = res.data);
+            //    }
+            //}
+
+            //監聽物件中的屬性OR陣列要用深度監聽
+            checkedHashtag: {
+                handler(newValue,oldValue){
+                    console.log(newValue);
+                    const self = this;
+                    self.checkedHashtag.checkId = category.checkId;
+                    if(self.checkedHashtag.hashtagIdList.length !== 0){
+                        axios.post("../Api/SkillPost/GetSKillPostByHashtag",self.checkedHashtag)
+                        .then(res => self.skillPostList = res.data);
+                    }else{
+                        axios.get("../Api/SkillPost/GetAllSkillPost")
+                        .then(res => self.skillPostList = res.data);
+                    }
+                },deep: true
             }
         },
         methods:{

@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,6 +13,8 @@ using TreeFriend.Models.ViewModel;
 
 namespace TreeFriend.Controllers
 {
+    [Authorize(Roles = "Admin")]
+
     public class AddLectureController : Controller
     {
         private readonly IWebHostEnvironment _environment;
@@ -26,8 +30,6 @@ namespace TreeFriend.Controllers
             _db = db;
         }
 
-
-      
 
 
         #region 渲染

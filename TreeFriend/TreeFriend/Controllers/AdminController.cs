@@ -2,19 +2,20 @@
 using Microsoft.AspNetCore.Mvc;
 
 namespace TreeFriend.Controllers {
+    [Authorize(Roles = "Admin")]
     public class AdminController : Controller {
-        [Authorize(Roles = "Admin")]
         //首頁
         public IActionResult AddCategory() {
             return View();
         }
 
-        public IActionResult AddProduct() {
+        //講座頁面
+        public IActionResult AddLecture() {
             return View();
         }
 
-        public IActionResult AddLecture()
-        {
+        //圖表頁面
+        public IActionResult ChartPage() {
             return View();
         }
     }

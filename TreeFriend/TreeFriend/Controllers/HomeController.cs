@@ -29,16 +29,12 @@ namespace TreeFriend.Controllers {
 
         //講座
         [AllowAnonymous]
-        public IActionResult ProductPage() {
-            return View();
-        }
-
-        //講座
         public IActionResult LectureList()
         {
             return View();
         }
 
+        [AllowAnonymous]
         public IActionResult LectureDetail(int? id)
         {
             if (id == null)
@@ -60,16 +56,15 @@ namespace TreeFriend.Controllers {
             return View();
         }
 
-        //編輯個人資訊
-        [Authorize]
-        public IActionResult MemberInfo() {
+        //講座票根
+        public IActionResult PersonalOrderHistory()
+        {
             return View();
         }
 
-
-
-
-        public IActionResult Index() {
+        //編輯個人資訊
+        [Authorize]
+        public IActionResult MemberInfo() {
             return View();
         }
 

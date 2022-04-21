@@ -588,8 +588,8 @@
                 let self = this;
                 let lectureId = event.target.value;
                 self.target = self.lecturelist.find((sourceItem) => { return +sourceItem.lectureId === +lectureId });
-                self.lecture = target; //等於選取的講座
-                console.log(target);
+                self.lecture = self.target; //等於選取的講座
+                console.log(self.target);
                 console.log(lectureId);
             },
 

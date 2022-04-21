@@ -299,6 +299,36 @@ namespace TreeFriend.Migrations
                     b.ToTable("skillPostMessages");
                 });
 
+            modelBuilder.Entity("TreeFriend.Models.Entity.SystemPost", b =>
+                {
+                    b.Property<int>("ArticleID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("PicPath")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ArticleID");
+
+                    b.ToTable("SystemPost");
+                });
+
             modelBuilder.Entity("TreeFriend.Models.Entity.User", b =>
                 {
                     b.Property<int>("UserId")

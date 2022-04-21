@@ -2,7 +2,7 @@
 .content {
     background-color: aliceblue;
     border-radius: 2rem 0 0 2rem;
-    padding: 2rem 0;
+    padding: 1.5rem 0;
     display: flex;
 }
 
@@ -25,7 +25,7 @@
 }
 
 .result-hashtag {
-    height: 90.3vh;
+    height: 91.5vh;
 }
 
 .list-header {
@@ -52,12 +52,12 @@
 }
 
 .result-category .list-wrap {
-    height: 93%;
+    height: 86%;
     overflow: auto;
 }
 
 .result-hashtag .list-wrap {
-    height: 94.3%;
+    height: 93%;
     overflow: auto;
 }
 

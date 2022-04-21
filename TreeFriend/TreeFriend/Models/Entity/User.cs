@@ -14,6 +14,8 @@ namespace TreeFriend.Models.Entity {
         [Required]
         public string Password { get; set; }
 
+        public byte[] Salt { get; set; }
+
         /// <summary>
         /// 是否為啟用狀態? true = 啟用，false = 停用
         /// </summary>

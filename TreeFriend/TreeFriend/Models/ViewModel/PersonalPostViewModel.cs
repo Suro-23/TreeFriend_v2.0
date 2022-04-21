@@ -3,10 +3,12 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace TreeFriend.Models.Entity
+namespace TreeFriend.Models.ViewModel
 {
-    public class PersonalPost
+    public class PersonalPostViewModel
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -19,15 +21,11 @@ namespace TreeFriend.Models.Entity
         [Required]
         public string Content { get; set; }
 
+        [Required]
+        public List<IFormFile> Pic { get; set; }
+
 
         //使用getdate()
         public DateTime CreateDate { get; set; }
-
-
-        public virtual User User { get; set; }
-        //public virtual ICollection<PersonalPostMessage> PersonalPostMessages { get; set; }
-        public virtual ICollection<PersonalPostImage> PersonalPostImages { get; set; }
-
-
     }
 }

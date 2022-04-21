@@ -18,5 +18,11 @@ namespace TreeFriend.Controllers {
         public IActionResult ChartPage() {
             return View();
         }
+
+        //系統發文
+        public IActionResult AddSystem()
+        {
+            return View();
+        }
     }
 }

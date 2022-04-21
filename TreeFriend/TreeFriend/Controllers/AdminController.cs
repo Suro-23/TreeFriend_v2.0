@@ -14,12 +14,6 @@ namespace TreeFriend.Controllers {
             return View();
         }
 
-        //訂單明細
-        public IActionResult OrderDetails()
-        {
-            return View();
-        }
-
         //圖表頁面
         public IActionResult ChartPage() {
             return View();

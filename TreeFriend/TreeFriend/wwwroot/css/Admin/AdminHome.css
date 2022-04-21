@@ -8,10 +8,10 @@ body {
     height: 100vh;
 }
 
-    .wrap a {
-        text-decoration: none;
-        color: aliceblue;
-    }
+#admin-nav a {
+    text-decoration: none;
+    color: aliceblue;
+}
 
 .content {
     background-color: aliceblue;

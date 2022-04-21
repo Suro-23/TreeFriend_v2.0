@@ -7,6 +7,7 @@ using TreeFriend.Models.ViewModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using System.IO;
+using System.Collections.Generic;
 
 namespace TreeFriend.Controllers.Api {
     [Authorize]
@@ -78,6 +79,30 @@ namespace TreeFriend.Controllers.Api {
                 }
             }
             return "未選擇圖片";
+        }
+        [Route("GetOrderHistory")]
+        [HttpGet]
+        public List<OrderHistoryViewModel> GetOrderHistory() {
+            int userId = Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(u => u.Type == "UserId").Value);
+            var result = _db.OrderDetails.Where(od => od.UserId == userId).Select(od => new OrderHistoryViewModel
+            {
+                OrderDetailId=od.OrderDetailId,
+                CreateDate=od.CreateDate.ToString("yyyy-MM-dd"),
+                TotoalAmount = Convert.ToInt32(od.Price*od.Count),
+                PayTime=od.PayTime.HasValue ? od.PayTime.Value.ToString("yyyy-MM-dd HH:mm"):"",
+                PaymentStatus=od.PaymentStatus,
+                OrderStatus=od.OrderStatus,
+                Theme=od.Lecture.Theme,
+                EventDate= od.Lecture.EventDate.ToString("yyyy-MM-dd"),
+                EventTimeStart= od.Lecture.EventTimeStart.ToString("HH:mm"),
+                EventTimeEnd= od.Lecture.EventTimeEnd.ToString("HH:mm"),
+                Venue= od.Lecture.Venue,
+                Price=od.Price,
+                Count=od.Count,
+            }).ToList();
+
+            return result;
+
         }
     }
 }

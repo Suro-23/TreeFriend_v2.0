@@ -56,6 +56,12 @@ namespace TreeFriend.Controllers {
             return View();
         }
 
+        //講座票根
+        public IActionResult PersonalOrderHistory()
+        {
+            return View();
+        }
+
         //編輯個人資訊
         [Authorize]
         public IActionResult MemberInfo() {

@@ -110,12 +110,6 @@ namespace TreeFriend.Controllers
                 return RedirectToAction("Quantity", "Error", new { whatever = message });
             }
 
-            
-
-
-            
-
-
 
 
             TradeInfo tradeInfo = new TradeInfo()
@@ -263,7 +257,7 @@ namespace TreeFriend.Controllers
                     lecture.Count += od.Count;
 
                     _db.SaveChanges();
-                    //TODO撈出未付款訂單及訂單成立30分鐘或?的訂單 訂單狀態改為訂單取消 庫存回補
+                    
                 }
 
 

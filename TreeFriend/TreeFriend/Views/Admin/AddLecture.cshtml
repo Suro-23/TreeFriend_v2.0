@@ -5,21 +5,15 @@
 
 
 <style>
-    .page-link:hover {
-        color: aliceblue;
-        border-color: cadetblue;
-        text-decoration: none;
-        background-color: aliceblue;
-    }
-
     .page-item.active .page-link {
         color: aliceblue;
         background-color: cadetblue;
         border-color: aliceblue;
     }
-
+    .wrap a{
+        color:black;
+    }
     .page-link {
-        color: aliceblue;
         border-color: aliceblue;
     }
 </style>
@@ -140,7 +134,7 @@
                     <td>{{(currPage-1)*countOfPage + index + 1}}</td>
                     <td v-show="isShow">{{item.lectureId}}</td>
                     <td>{{item.createDate}}</td>
-                    <td style="text-overflow: ellipsis;">{{item.theme}}</td>
+                    <td>{{item.theme}}</td>
                     <td>{{item.eventDate}}</td>
                     @*<td>{{item.eventTimeStart}}</td>*@
                     @*<td>{{item.eventTimeEnd}}</td>*@
@@ -168,146 +162,146 @@
             </tbody>
         </table>
     </div>
+    <div class="d-flex justify-content-center">
+        <!--分頁-->
+        <nav aria-label="Page navigation example">
+            <ul class="pagination pagination-sm ">
+                <li class="page-item" v-bind:class="{'disabled': (currPage === 1)}"
+                    @@click.prevent="setPage(currPage-1)">
+                    <a class="page-link" href="#" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
 
-    <!--分頁-->
-    <nav aria-label="Page navigation example">
-        <ul class="pagination pagination-sm ">
-            <li class="page-item" v-bind:class="{'disabled': (currPage === 1)}"
-                @@click.prevent="setPage(currPage-1)">
-                <a class="page-link" href="#" aria-label="Previous">
-                    <span aria-hidden="true">&laquo;</span>
-                </a>
-            </li>
+                <li class="page-item" v-for="n in totalPage"
+                    v-bind:class="{'active': (currPage === (n))}"
+                    @@click.prevent="setPage(n)"><a class="page-link" href="#">{{n}}</a></li>
 
-            <li class="page-item" v-for="n in totalPage"
-                v-bind:class="{'active': (currPage === (n))}"
-                @@click.prevent="setPage(n)"><a class="page-link" href="#">{{n}}</a></li>
+                <li class="page-item" v-bind:class="{'disabled': (currPage === totalPage)}"
+                    @@click.prevent="setPage(currPage+1)">
+                    <a class="page-link" href="#" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
 
-            <li class="page-item" v-bind:class="{'disabled': (currPage === totalPage)}"
-                @@click.prevent="setPage(currPage+1)">
-                <a class="page-link" href="#" aria-label="Next">
-                    <span aria-hidden="true">&raquo;</span>
-                </a>
-            </li>
-
-        </ul>
-    </nav>
+            </ul>
+        </nav>
+    </div>
 
 
 
+        <!-- editModal -->
+        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel">Edit</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form v-on:submit.prevent="editsend">
+                        <div class="modal-body">
+                            <div class="form-row">
+                                <input disabled type="text" required v-model="lecture.lectureId">
+                                @*<input type="hidden" required v-model="lecture.lectureId"> 正式的時候要藏起來*@
+                            </div>
 
-    <!-- editModal -->
-    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="staticBackdropLabel">Edit</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            <div class="form-row">
+                                <div class="form-title">講座主題:</div>
+                                <input type="text" required v-model="lecture.theme">
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-title">講座日期:</div>
+                                <input type="date" required v-bind:min="date" v-model="eventDate">
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-title">講座開始時間:</div>
+                                <input type="time" required v-model="lecture.eventTimeStart">
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-title">講座結束時間:</div>
+                                <input type="Time" required v-model="lecture.eventTimeEnd">
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-title">講座地點:</div>
+                                <input type="text" required v-model="lecture.venue">
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-title">講師圖片:</div>
+                                <input type="file" v-on:change="speakerimgup($event)">
+                                <img v-if="lecture.SpeakerPreview" :src="lecture.SpeakerPreview" style="max-height:200px">
+
+                                <img :src="lecture.speakerImgPath" style="max-height:200px" v-show="isSpeakerPhotoShow" /> @*抓取原先圖片 *@
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-title">講師:</div>
+                                <textarea cols="20" rows="5" required v-model="lecture.speaker"></textarea>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-title">庫存數量:</div>
+                                <input type="number" min="0" required v-model="lecture.count">
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-title">票價:</div>
+                                <input type="number" min="0" required v-model="lecture.price">
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-title">封面圖片:</div>
+                                <input type="file" v-on:change="up($event)" />
+                                <img v-if="lecture.preview" :src="lecture.preview" style="max-height:200px">@*新照片顯示*@
+
+                                <img :src="lecture.imgPath" style="max-height:200px" v-show="isPhotoShow" /> @*抓取原先圖片 *@
+                            </div>
+                            <div class="form-row">
+                                <div class="form-title">講座規劃:</div>
+                                <textarea cols="20" rows="5" required v-model="lecture.description"></textarea>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-title">講座內容:</div>
+                                <textarea cols="20" rows="5" required v-model="lecture.content"></textarea>
+                            </div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary btn-sm">SaveChange</button>
+                        </div>
+                    </form>
                 </div>
-                <form v-on:submit.prevent="editsend">
+
+            </div>
+        </div>
+
+
+
+
+        <!-- deleteModal -->
+        <div class="modal fade" id="deleteModel" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="deleteLabel">Delete</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
                     <div class="modal-body">
-                        <div class="form-row">
-                            <input disabled type="text" required v-model="lecture.lectureId">
-                            @*<input type="hidden" required v-model="lecture.lectureId"> 正式的時候要藏起來*@
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-title">講座主題:</div>
-                            <input type="text" required v-model="lecture.theme">
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-title">講座日期:</div>
-                            <input type="date" required v-bind:min="date" v-model="eventDate">
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-title">講座開始時間:</div>
-                            <input type="time" required v-model="lecture.eventTimeStart">
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-title">講座結束時間:</div>
-                            <input type="Time" required v-model="lecture.eventTimeEnd">
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-title">講座地點:</div>
-                            <input type="text" required v-model="lecture.venue">
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-title">講師圖片:</div>
-                            <input type="file" v-on:change="speakerimgup($event)">
-                            <img v-if="lecture.SpeakerPreview" :src="lecture.SpeakerPreview" style="max-height:200px">
-
-                            <img :src="lecture.speakerImgPath" style="max-height:200px" v-show="isSpeakerPhotoShow" /> @*抓取原先圖片 *@
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-title">講師:</div>
-                            <textarea cols="20" rows="5" required v-model="lecture.speaker"></textarea>
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-title">庫存數量:</div>
-                            <input type="number" min="0" required v-model="lecture.count">
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-title">票價:</div>
-                            <input type="number" min="0" required v-model="lecture.price">
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-title">封面圖片:</div>
-                            <input type="file" v-on:change="up($event)" />
-                            <img v-if="lecture.preview" :src="lecture.preview" style="max-height:200px">@*新照片顯示*@
-
-                            <img :src="lecture.imgPath" style="max-height:200px" v-show="isPhotoShow" /> @*抓取原先圖片 *@
-                        </div>
-                        <div class="form-row">
-                            <div class="form-title">講座規劃:</div>
-                            <textarea cols="20" rows="5" required v-model="lecture.description"></textarea>
-                        </div>
-
-                        <div class="form-row">
-                            <div class="form-title">講座內容:</div>
-                            <textarea cols="20" rows="5" required v-model="lecture.content"></textarea>
-                        </div>
-
+                        確定刪除該筆資料?
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary btn-sm">SaveChange</button>
+                        <button type="button" class="btn btn-danger btn-sm" v-on:click="deletesend">Delete</button>
                     </div>
-                </form>
-            </div>
-
-        </div>
-    </div>
-
-
-
-
-    <!-- deleteModal -->
-    <div class="modal fade" id="deleteModel" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="deleteLabel">Delete</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    確定刪除該筆資料?
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-danger btn-sm" v-on:click="deletesend">Delete</button>
                 </div>
             </div>
         </div>
-    </div>
 
 </fieldset>
 
@@ -441,7 +435,7 @@
     });
 
 
-    let app = new Vue({
+    let listapp = new Vue({
         el: '#list',
         data: {
             lecturelist: [],

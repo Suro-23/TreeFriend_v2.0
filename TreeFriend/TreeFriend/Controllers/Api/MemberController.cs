@@ -80,6 +80,9 @@ namespace TreeFriend.Controllers.Api {
             }
             return "未選擇圖片";
         }
+
+        #region 歷史訂單
+
         [Route("GetOrderHistory")]
         [HttpGet]
         public List<OrderHistoryViewModel> GetOrderHistory() {
@@ -87,7 +90,7 @@ namespace TreeFriend.Controllers.Api {
             var result = _db.OrderDetails.Where(od => od.UserId == userId).Select(od => new OrderHistoryViewModel
             {
                 OrderDetailId=od.OrderDetailId,
-                CreateDate=od.CreateDate.ToString("yyyy-MM-dd"),
+                CreateDate=od.CreateDate.ToString("yyyy-MM-dd HH:mm"),
                 TotoalAmount = Convert.ToInt32(od.Price*od.Count),
                 PayTime=od.PayTime.HasValue ? od.PayTime.Value.ToString("yyyy-MM-dd HH:mm"):"",
                 PaymentStatus=od.PaymentStatus,
@@ -104,5 +107,6 @@ namespace TreeFriend.Controllers.Api {
             return result;
 
         }
+        #endregion
     }
 }

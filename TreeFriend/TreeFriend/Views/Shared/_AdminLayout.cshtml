@@ -23,8 +23,6 @@
 
     <!--欣宜引用時間相關CDN-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/countdown/2.6.0/countdown.min.js" integrity="sha512-FkM4ZGExuYz4rILLbNzw8f3HxTN9EKdXrQYcYfdluxJBjRLthYPxxZixV/787qjN3JLs2607yN5XknR/cQMU8w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="~/js/moment-countdown.min.js"></script>
     <!---->
 </head>
 <body>
@@ -37,7 +35,8 @@
             <div class="menu row p-0 fs-3 text-center flex-column">
                 <div><a href="@Url.Action("ChartPage","Admin")">圖表</a></div>
                 <div><a href="@Url.Action("AddCategory","Admin")">分類</a></div>
-                <div><a href="@Url.Action("AddLecture","Admin")">講座</a></div>
+                <div><a href="@Url.Action("AddLecture","Admin")">講座管理</a></div>
+                <div><a href="@Url.Action("OrderDetails","Admin")">訂單查詢</a></div>
                 <div><a href="@Url.Action("HomePage","Home")">首頁</a></div>
             </div>
             <div class="row logout fs-4">
@@ -46,7 +45,7 @@
                 </div>
             </div>
         </div>
-        <div class="content col-10">@RenderBody()</div>
+        <div class="content col-10 d-flex">@RenderBody()</div>
     </div>
 
     @await RenderSectionAsync("Scripts", required: false)

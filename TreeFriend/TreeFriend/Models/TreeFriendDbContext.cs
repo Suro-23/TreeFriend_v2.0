@@ -17,6 +17,7 @@ namespace TreeFriend.Models {
         
         public DbSet<SkillPostMessage> skillPostMessages{ get; set; }
         public DbSet<Lecture> Lectures { get; set; }
+        public DbSet<SystemPost> SystemPost { get; set; }
 
         public DbSet<OrderDetail> OrderDetails { get; set; }
 

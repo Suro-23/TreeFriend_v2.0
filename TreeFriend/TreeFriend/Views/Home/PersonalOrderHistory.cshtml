@@ -18,41 +18,42 @@
                 <tr>
                     <th scope="col">編號</th>
                     <th scope="col">訂單編號</th>
-                    <th scope="col">訂單日期</th>
+                    <th scope="col">購買日期</th>
                     <th scope="col">講座資訊</th>
                     <th scope="col">總金額</th>
                     <th scope="col">付款狀態</th>
                     <th scope="col">訂單狀態</th>
-    
+                    <th scope="col">使用方式</th>
                 </tr>
             </thead>
             <tbody>
                 <tr v-for="(item,index) in orderList.slice(pageStart, pageStart + countOfPage)" :key="index">
                     <td>{{(currPage-1)*countOfPage + index + 1}}</td> 
                     <td>{{item.orderDetailId}}</td>
-                    <td>{{item.createDate}}</td>
-                    <td>
+                    <td class="col-2">{{item.createDate}}</td>
+                    <td class="col-2">
                         <div class="d-flex align-items-center">
                             @*<span class="material-icons-outlined">category</span>*@{{item.theme}} @*<span class="material-icons-sharp " style="color:#db5a6b">location_on</span>{{item.venue}}*@
                         </div>
                         <div class="d-flex align-items-center">
-                            <span class="material-icons-sharp " style="color:#db5a6b">location_on</span>{{item.venue}}
+                            @*<span class="material-icons-sharp me-1">schedule</span>*@{{item.eventDate}} {{item.eventTimeStart}}-{{item.eventTimeEnd}}
                         </div>
                         <div class="d-flex align-items-center">
-                            <span class="material-icons-sharp me-1">schedule</span>{{item.eventDate}} {{item.eventTimeStart}}-{{item.eventTimeEnd}}
+                            <span class="material-icons-sharp " style="color:#db5a6b">location_on</span>{{item.venue}}
                         </div>
+
                         <div>
                             NT${{item.price}}×{{item.count}}
                         </div>
                     </td>
                     <td>NT${{item.totoalAmount}}</td>
                     <td v-if="item.paymentStatus">付款成功</td>
-                    <td v-else="item.paymentStatus">尚未付款</td>
+                    <td v-else="item.paymentStatus">未付款</td>
                     <td v-if="item.orderStatus">成立</td>
-                    <td v-else="item.orderStatus">訂單不成立<br/>(超過付款時間)</td>
+                    <td v-else="item.orderStatus">訂單不成立</td>
                     @*<td><img :src="item.speakerImgPath" style="max-height:50px" /></td>*@
-
-
+                    <td v-if="item.orderStatus">電子憑證已Email至信箱<br/>現場請出示該憑證</td>
+                    <td v-else="item.orderStatus"></td>
                 </tr>
             </tbody>
         </table>
@@ -92,9 +93,9 @@
         el: '#od',
         data: {
             orderList: [],
-            countOfPage: 8,
+            countOfPage: 10,
             currPage: 1,
-
+            
         },
         mounted: function () {
             let self = this;

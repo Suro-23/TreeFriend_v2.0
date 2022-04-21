@@ -1,70 +1,69 @@
-﻿/* 內容樣式 */
-.content {
-    background-color: aliceblue;
-    border-radius: 2rem 0 0 2rem;
-    padding: 1.5rem 0;
-    display: flex;
-}
-
+﻿/* 內容模組樣式 */
 .item {
-    background-color: white;
-    border-radius: 1rem;
-    box-shadow: 0 0 1rem 1rem rgb(233, 240, 248);
+    width: 40%;
+    height: 100%;
+    background-color: rgb(226, 233, 233);
+    border-radius: 0.3em;
+    /* box-shadow: 0 0 0.3em 0.3em rgb(245, 245, 245); */
 }
 
-.btn {
-    border-radius: 1rem;
-}
-
-.input-div {
-    height: 15vh;
-}
-
-.result-category {
-    height: 75vh;
-}
-
-.result-hashtag {
-    height: 91.5vh;
-}
-
-.list-header {
-    background-color: rgb(108, 141, 173);
-    color: white;
-    padding: .3rem 0;
-    border-radius: 1rem 1rem 0 0;
-}
-
-.list-content {
-    padding: .2rem 0;
-    height: 2.3rem;
-    /* display: flex;
-    align-items: center; */
-}
-
-    .list-content + .list-content {
-        border-top: 1px solid rgb(108, 141, 173);
+    .item + .item {
+        margin-left: 5%;
     }
 
-.btn img {
-    width: 1rem;
-    height: 1rem;
+    .item #error-msg {
+        font-size: 16px;
+        color: red;
+    }
+
+.item-head {
+    font-size: 1.5em;
+    height: 15%;
+    padding: 0.2em;
+    display: flex;
+    align-items: center;
 }
 
-.result-category .list-wrap {
-    height: 86%;
-    overflow: auto;
+    .item-head * + * {
+        margin-left: 0.5em;
+    }
+
+/* 資料表樣式 */
+table {
+    width: 100%;
+    text-align: left;
 }
 
-.result-hashtag .list-wrap {
-    height: 93%;
-    overflow: auto;
+.item .tb-head {
+    display: flex;
+    align-items: center;
+    padding-left: 0.3em;
+    height: 10%;
+    font-size: 1.3em;
 }
 
-.input-div input{
-    border:none;
+table thead {
+    background-color: rgb(155, 189, 252);
 }
 
-.inputErr {
-    border: 2px solid red !important;
+table th {
+    padding: 0.5em;
+}
+
+table td {
+    padding: 0.3em 0.5em;
+}
+
+table tbody tr:hover {
+    background-color: aliceblue;
+    transition: all 0.2s;
+}
+
+.tb-id,
+.tb-user {
+    width: 20%;
+}
+
+.tb-name {
+    width: 40%;
 }

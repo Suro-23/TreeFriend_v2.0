@@ -1,0 +1,79 @@
+﻿
+
+
+.btnimg {
+    width: 100px;
+    height: 100px;
+    background-color: lightgray;
+    opacity: 0.5;
+    margin: 16px;
+    position: relative;
+    text-align: center;
+    cursor: pointer;
+}
+
+.btnimg:hover {
+    opacity: 0.7;
+}
+
+.plus {
+    font-size: 45px;
+    line-height: 100px;
+}
+
+.clearbtn {
+    width: 14vmin;
+    font-size: 14px;
+}
+
+.filename {
+    width: 50%;
+    margin: 16px;
+}
+
+.imgbox {
+    display: flex;
+    align-items: center;
+}
+
+.btnsubmit {
+    margin: 0px 16px 16px 16px;
+}
+
+.imgupload {
+    display: flow;
+    height: 200px;
+    padding: 16px;
+    width: 200px;
+    object-fit: cover;
+}
+
+.eachimg {
+    position: relative;
+}
+
+.delect {
+    position: absolute;
+    right: 16px;
+    top: 16px;
+    width: 20px;
+    height: 20px;
+    text-align: center;
+    line-height: 20px;
+    font-size: 15px;
+    background-color: rgba(255, 255, 255,0.5);
+    user-select: none;
+    cursor: pointer;
+    opacity: 0;
+}
+
+    .delect:hover {
+        background-color: rgba(31, 31, 31, 0.5);
+        color: white;
+    }
+
+.eachimg:hover .delect {
+    opacity: 1;
+}
+
+

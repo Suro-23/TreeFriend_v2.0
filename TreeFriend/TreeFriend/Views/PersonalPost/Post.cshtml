@@ -1,0 +1,349 @@
+﻿
+@{
+    ViewData["Title"] = "Post";
+
+}
+@*<script src="https://cdn.jsdelivr.net/npm/vue@2.6.14"></script>*@
+<script src='https://cdnjs.cloudflare.com/ajax/libs/vue/2.2.6/vue.min.js' integrity='sha512-yNMXFsZbP+Hii2fM4n1EvhKbBCZ2NAfW1FvlN6yB1ZanH+1sEcNV2rPEg6qCMRT/4dY01ELCdD75WflfTHdKJg==' crossorigin='anonymous'></script>
+<link href="/css/KaiSu/Post.css" rel="stylesheet" />
+
+
+
+<div id="app" class="member-div ">
+    <div class="container mt-4">
+        <div class="row mx-auto ">
+            <div class="col-4 align-self-end">
+                <img src="/img/藝術青蛙.png" alt="Alternate Text" class="frog" />@*position-absolute*@
+            </div>
+
+            <div class="col-4 ">
+                <div class="text-center mt-2">
+                    <img src="https://i.pravatar.cc/150" class="rounded-circle size " alt="Alternate Text" />
+                </div>
+                <div class="text-center username">安安</div>
+            </div>
+            <div class="col-4 ">
+                <img src="/img/藝術兔子.png" alt="Alternate Text" class="rabbit " />@*position-absolute*@
+            </div>
+        </div>
+    </div>
+    <div class="text-center content ">
+        <p class="aboutme">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</p>
+    </div>
+
+    <div class="container col-lg-10 col-md-8 ">
+        <div class="row  row-cols-md-2  row-cols-lg-4  rol-cols-xl-4 g-4 m-1 ">
+            <div v-for="(item,num1) in MessageList">
+                <div class="col ">
+                    <div class="card h-100 cardw ">
+
+                        @*輪播圖*@
+                        <div :id='"carouselExampleIndicators"+num1' class="carousel " data-bs-ride="carousel">
+                            @*slide*@
+                            @*圖片*@
+                            <div class="carousel-inner">
+                                <div class="carousel-item" data-bs-interval="10000" v-for="(img,num) in item.postPhotoPath" v-bind:class="{'active': activeIndex === num}" @*v-if="num==0"*@>
+                                    <img class="d-block w-100 cardimagesizeOutside" alt="" v-bind:src="'/img/PostPicture/'+img">
+                                </div>
+                            </div>
+                            @*左右按鈕*@
+                            <button class="carousel-control-prev" :data-bs-target="'#carouselExampleIndicators'+num1" type="button" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Previous</span>
+                            </button>
+                            <button class="carousel-control-next" :data-bs-target="'#carouselExampleIndicators'+num1" type="button" data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Next</span>
+                            </button>
+                        </div>
+                        <div class="card-body imgsicon">
+                            @*<h5 class="card-title">Card title</h5>*@
+                            @*字太多要隱藏  內容*@
+                            <div class="imgs">
+                                <div v-if="!item.state">
+                                    <img class="iconheart" :id="item.personalPostId" src="/img/Blackheart.png" alt="Alternate Text" v-on:click="toggle(item.personalPostId,num1)" />
+                                </div>
+                                <div v-else>
+                                    <img class="iconheart" :id="item.personalPostId" src="/img/Redheart.png" alt="Alternate Text" v-on:click="toggle(item.personalPostId,num1)" />
+                                </div>
+                                <img class="iconmessage" src="/img/message.png" alt="Alternate Text" type="button" data-bs-toggle="modal" :data-bs-target="'#staticBackdrop'+num1" />
+                            </div>
+                            <p class="card-text">
+                                {{item.content}}
+                            </p>
+                        </div>
+
+
+                        <div class="modal fade" :id="'staticBackdrop'+num1" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdrop" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header" style="background-color:linen;">
+                                        <div>
+                                            <img src="https://i.pravatar.cc/50" alt="Alternate Text" class="rounded-circle msgsize" style="width:50px">
+                                        </div>
+                                        <div class="username">安安</div>
+                                        <h5 class="modal-title" id="staticBackdropLabel"></h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" v-on:click="reload"></button>
+                                    </div>
+                                    <div class="modal-body" style="background-color:linen;">
+
+
+                                        @*彈出視窗-旋轉木馬*@
+                                        <div class="text-center">
+                                            <div :id='"carouselExampleIndicators1"+num1' class="carousel " data-bs-ride="carousel" style="margin:0px; padding:0px; float:none">
+                                                <div class="carousel-inner" style="margin:0px; padding:0px; float:none">
+                                                    <div class="carousel-item " v-for="(img,num) in item.postPhotoPath" v-bind:class="{'active': activeIndex === num}" style="margin:0px; padding:0px; float:none">
+                                                        <img class="d-block w-100 cardimagesize card-img-top " alt="" v-bind:src="'/img/PostPicture/'+img" style="margin:0px; padding:0px; float:none">
+                                                    </div>
+                                                </div>
+                                                <button class="carousel-control-prev" :data-bs-target="'#carouselExampleIndicators1'+num1" type="button" data-bs-slide="prev">
+                                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                                    <span class="visually-hidden">Previous</span>
+                                                </button>
+                                                <button class="carousel-control-next" :data-bs-target="'#carouselExampleIndicators1'+num1" type="button" data-bs-slide="next">
+                                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                                    <span class="visually-hidden">Next</span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        @*彈出視窗 內容*@
+                                        <div class="card-body imgsicon">
+                                            @*彈出視窗 icon*@
+                                            <div class="imgs">
+                                                <div v-if="!item.state">
+                                                    <img class="iconheartInside" :id="item.personalPostId" src="/img/Blackheart.png" alt="Alternate Text" v-on:click="toggle(item.personalPostId,num1)" />
+                                                </div>
+                                                <div v-else>
+                                                    <img class="iconheartInside" :id="item.personalPostId" src="/img/Redheart.png" alt="Alternate Text" v-on:click="toggle(item.personalPostId,num1)" />
+                                                </div>
+                                                <img class="iconmessageInside" src="/img/message.png" alt="Alternate Text" @*type="button" data-bs-toggle="modal" data-bs-target="#staticBackdrop"*@ />
+                                            </div>
+                                            <div>
+                                                <p class="card-text">
+                                                    {{item.content}}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="msgbox" v-for="msg in item.message">
+                                            @*彈出視窗-使用者留言*@
+                                            <span>
+                                                <img :src="msg.headshotPath" class="rounded-circle msgsize" alt="Alternate Text" />
+                                            </span>
+                                            <span class="msgcontent">
+                                                {{msg.userMessage}}
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <div class="msgbox" v-for="(msg1,index2) in usercontent" :id="'msgren'+num1">
+                                                <span>
+                                                    <img src="https://i.pravatar.cc/50" class="rounded-circle msgsize" alt="Alternate Text" />
+                                                </span>
+                                                <span class="msgcontent">
+                                                    {{msg1.userMessage}}
+                                                </span>
+                                            </div>
+
+                                        </div>
+                                        <div class="msgbox">
+                                            <span>
+                                                <img src="https://i.pravatar.cc/50" class="rounded-circle msgsize" alt="Alternate Text" />
+                                            </span>
+                                            <span class="msgcontent">
+                                                This is a wider card with supporting text below as a natural lead-in to
+                                            </span>
+                                        </div>
+
+                                        <div class="mes">
+                                            <div class="input-group mb-3">
+                                                <input type="text" class="form-control" placeholder="留言" aria-label="Recipient's username" aria-describedby="button-addon2" v-model="post.message">
+                                                <button class="btn btn-outline-secondary" type="button" id="button-addon2" v-on:click="sendMessage($event,num1)" v-bind:value="item.personalPostId">送出</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <!--<div class="" v-for="(msg,index1) in item.message" v-if="index1 < 1">-->@*card-footer*@
+                        <!--{{msg.createDate}} mins ago
+                        </div>-->
+                        @*留言*@
+                        <!--<div class="msgboxout" >
+                                <span>
+                                    <img src="https://i.pravatar.cc/25/random" class="rounded-circle msgsize" alt="Alternate Text" />
+                                </span>
+                                <span class="msgcontent">
+                                    {{msg.userMessage}}
+
+                                    <small class="text-muted updatetime">3 mins ago{{msg.createDate}}</small>
+
+                                </span>
+                            </div>
+
+                        </div>-->
+                        @*<div v-else></div>*@
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+
+
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            isShow: true,
+
+            MessageList: [{
+                content: "",
+                message: [{
+                    createDate: "",
+                    headshotPath: "",
+                    personalPostId: "",
+                    userMessage: "",
+                    userName: "",
+                }],
+                personalPostId: "",
+                postPhotoPath: "",
+            }],
+            //Content:[],
+            activeIndex: 0,
+            post: {
+                personalpostid: "",
+                content: "",
+                postphotopath: "",
+                message: ""
+            },
+            content: [],
+            usercontent: [],
+
+
+
+        },
+        mounted: function () {
+            var self = this;
+            axios.get("/PersonalPost/GetAllContent").then(function (result) {
+                self.MessageList = result.data;
+                console.log(result.data);
+            })
+
+            //let personid = 0;
+            //for (let p in MessageList) {
+            //    for (let id in p) {
+            //        personid=id.
+            //    }
+            //}
+
+
+            ////最新文章 迴圈跑出渲染的東西
+            //for (let i = 0; i < result.data.length; i++) {
+            //    console.log(result.data[i]);
+            //    var contentobject = new content;
+            //    contentobject.content = result.data[i].content;
+            //    app.Content.push(contentobject);
+            //}
+
+
+            //    //axios.get("/PersonalPost/GetAllImage").then(function (result) {
+            //    //    self.MessageListPic = result.data;
+            //    //    console.log(result);
+            //    //})
+            //})
+        },
+        //watch: {
+        //    content: {
+        //        handler() {
+        //            for (let i = 0; i < this.content.length; ++i) {
+        //                this.$set(this.content[i], "son", []);
+        //            }
+        //        },
+        //        immediate: true,
+        //    },
+        //},
+        methods: {
+            toggle: function (id, index) { //愛心
+                console.log(id);
+                this.MessageList[index].state = !this.MessageList[index].state
+                id.state = true;
+                this.isShow = !this.isShow;
+            },
+            sendMessage: function (event, num) {
+                let personalpostid = event.target.value;
+                console.log(personalpostid);
+
+                let Bodyformdata = new FormData();
+                Bodyformdata.append('Message', this.post.message)
+                Bodyformdata.append('PersonalPostID', personalpostid)
+                let self = this;
+
+
+                axios({
+                    method: 'post',
+                    url: '/personalpost/createmessage',
+                    data: Bodyformdata,
+                    Headers: { 'Content-type': 'multipart/form-data' }
+                })
+                    .then(function (res) {
+                        if (res.data != "") {
+                            //console.log(res.data);
+                            //self.content = res.data;
+                            //console.log(self.content);
+                            let Bodyformdata = new FormData();
+                            let personalpostid = event.target.value;
+                            console.log(personalpostid);
+                            Bodyformdata.append('Message', self.post.message)
+                            Bodyformdata.append('PersonalPostID', personalpostid)
+
+                            axios({
+                                method: 'post',
+                                url: '/personalpost/PCreateMessage',
+                                data: Bodyformdata,
+                                Headers: { 'Content-type': 'multipart/form-data' }
+                            }).then(function (res) {
+                                if (res.data != "") {
+                                    console.log(res.data);
+                                    self.content = res.data;
+                                    console.log(self.content);
+                                    //console.log("#msgren" + self.num);
+                                    self.usercontent.push(self.content);
+                                    self.post.message = "";
+                                    //self.MessageList.message.push(self.usercontent)
+                                    //alert('渲染成功')
+                                } else { alert('渲染失敗') }
+                            })
+                            //("'#msgren'+num1").
+
+                            //window.location.replace(location.href);
+                            alert('留言成功');
+                        }
+                        else {
+                            alert('留言失敗');
+                        }
+                    })
+
+            },
+            reload: function () {
+                window.location.reload();
+            }
+            //msgren: function (i) {
+            //    return "msgren" + i
+            //}
+            //removeDuplicates() {
+            //    this.Content = [...new Set(this.Content)]
+            //}
+        },
+    });
+
+</script>
+<script>
+    //import VueMomentsAgo from './components/moments-ago.vue';
+    //export default VueMomentsAgo
+
+</script>

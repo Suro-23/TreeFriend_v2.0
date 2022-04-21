@@ -1,0 +1,262 @@
+﻿
+@{
+    ViewData["Title"] = "Postbackstage";
+}
+
+@*<script src="~/lib/jquery/dist/jquery.min.js"></script>*@
+<script src='https://cdnjs.cloudflare.com/ajax/libs/vue/2.2.6/vue.min.js' integrity='sha512-yNMXFsZbP+Hii2fM4n1EvhKbBCZ2NAfW1FvlN6yB1ZanH+1sEcNV2rPEg6qCMRT/4dY01ELCdD75WflfTHdKJg==' crossorigin='anonymous'></script>
+@*<script src="~/js/site.js" asp-append-version="true"></script>*@
+<link href="/css/KaiSu/PostBackstage.css" rel="stylesheet" />
+
+
+<div id="app" method="post">
+    <div class="imgbox">
+        <label class="btnimg " v-if='hello.sizeback > hello.imgback.length '>
+            <label class="plus ">
+                +
+                <input type="file" class="form-control" id='files' style="display: none" @@change='fileChangeback' name="name" value="" multiple>
+            </label>
+        </label>
+
+        <div v-if='hello.imgback.length>0' class="imgbox">
+            <div class="eachimg" v-for="(item, i) in hello.imgback" :key='i'>
+                <img class="imgupload" :src="item" alt="">
+                <div class="delect" @@click="delect(i)">x</div>
+            </div>
+        </div>
+    </div>
+
+
+    <div>
+        @*<div class="input-group filename">
+                <button type="button" class="btn btn-outline-secondary clearbtn" id="clear">清除圖片</button>
+            </div>*@
+        <div class="form-floating filename">
+            <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px" v-model="hello.content"></textarea>
+            <label for="floatingTextarea2">輸入內容</label>
+        </div>
+        <button type="button" class="btn btn-primary btnsubmit" id="createbtn" @@click="send">新增</button>
+    </div>
+
+</div>
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            hello: {
+                imgback: [],  //圖片預覽地址
+                Pic: [],  //圖片原文件
+                sizeback: 5,
+                content: ""
+            }
+        },
+        methods: {
+            fileChangeback(e) {  // 加入图片
+                // 图片预览部分
+                var vm=this
+                var event = event || window.event; //實現瀏覽器的相容
+                var file = event.target.files //指向最初觸發事件的 DOM 物件
+                var leng = file.length;
+                for (var i = 0; i < leng; i++) {
+                    var reader = new FileReader();    // 使用 FileReader 来获取图片路径及预览效果
+                     vm.hello.Pic.push(file[i])
+                    reader.readAsDataURL(file[i]);
+                    reader.onload = function (e) {  //onload讀取操作成功後調用
+                        vm.hello.imgback.push(e.target.result);   // base 64 图片地址形成预览
+
+                    };
+                }
+                //var aaa = vm.hello.Pic[0];
+                //console.log(aaa);
+                //let form = new FormData();
+                //form.append('Pic', aaa);
+                //    var bodyFormData = new FormData();
+                //    vm.hello.Pic.foreach((item, index) => {
+                //        bodyFormData.append('Pic', item)
+                //    })
+
+                //    axios({
+                //        method: "post",
+                //        url: "/personalpost/create",
+                //        data: form,
+                //        headers: { "Content-Type": "multipart/form-data" },
+
+                //    }).then(function (res) {
+                //        if (res.data == true) {
+                //            alert("成功");
+                //        } else {
+                //            alert("失敗");
+                //        }
+                //    })
+                //        .catch(function (response) {
+                //            /*handle error*/
+                //            console.log(response);
+                //        });
+            },
+            delect(index) {
+                console.log(index);
+                this.hello.imgback.splice(index, 1);
+                this.hello.Pic.splice(index, 1);
+            },
+            // 这是默认图片的方法，弹出默认图片无法删除
+            send: function () {
+                var bodyFormData = new FormData();
+
+                for (let item of this.hello.Pic) {
+                    bodyFormData.append('Pic', item);
+                }
+                bodyFormData.append('Content', this.hello.content);
+
+                axios({
+                        method: "post",
+                        url: "/personalpost/create",
+                        data: bodyFormData,
+                        headers: { "Content-Type": "multipart/form-data" },
+
+                    }).then(function (res) {
+                        if (res.data == true) {
+                            alert("成功");
+                            window.location.href = "/personalpost/editpost";
+                        } else {
+                            alert("失敗");
+                        }
+                    })
+                        .catch(function (response) {
+                            //handle error
+                            console.log(response);
+                        });
+             }
+           }
+
+    });
+</script>
+<script>
+    //const inputGroupFile04 = document.querySelector('#inputGroupFile04');
+    //$('#inputGroupFile04').on('change', function (e) {
+
+    //    var output = document.getElementById("result");
+
+    //    for (let i = 0; i < this.files.length; i++) {
+    //        const file = this.files[i];
+    //        if (!file.type.match('image'))
+    //            continue;
+    //        var picReader = new FileReader();
+    //        picReader.addEventListener("load", function (event) {
+    //            var picFile = event.target;
+    //            var div = document.createElement("div");
+    //            div.innerHTML = "<img class='imgupload' src='" + picFile.result + "'" +
+    //                "title='" + picFile.name + "'/>";
+    //            output.insertBefore(div, null);
+    //        });
+    //        picReader.readAsDataURL(file);
+    //    }
+
+    //});
+    //const clear = document.querySelector('#clear');
+    //clear.addEventListener('click', function () {
+    //    $("#result").html("");
+    //    //$("#inputGroupFile04").val("");
+    //})
+</script>
+
+<script>
+    //const createbtn = document.querySelector('#createbtn');
+    //createbtn.addEventListener("click", function () {
+    //    let inputimg = document.getElementById('inputGroupFile04').value;
+    //    let content = document.getElementById('floatingTextarea2').value;
+
+    //    var data = {};
+    //    data.Pic = inputimg;
+    //    data.Content = content;
+
+    //    $.ajax({
+    //        url: '/personalpost/create',
+    //        contentType: 'text/html',
+    //        type:'POST',
+    //        data: data,
+
+    //        error: function (xhr) {
+    //            alert('Ajax request 發生錯誤');
+    //        },
+    //        success: function (res) {
+    //            if (res == true) {
+
+    //                alert("成功");
+    //            }
+    //            else {
+    //                alert("失敗");
+
+    //            }
+    //        }
+    //    })
+    //})
+</script>
+<script>
+    //var app = new Vue({
+    //    el: "#app",
+    //    data: {
+    //        Pic: [],
+    //        content: '',
+    //        sizeback:5
+    //    },
+    //    methods: {
+    //        upload(e) {
+    //            //e.target指向事件执行时鼠标所点击区域的那个元素，那么为input的标签，
+    //            // 可以输出 e.target.files 看看，这个files对象保存着选中的所有的图片的信息。
+    //            console.log(e.target.files)
+    //            //------------------------------------------------------
+    //            // 既然如此，循环这个files对象，用for of 循环，
+    //            for (let item of e.target.files) {
+    //                //正则表达式，判断每个元素的type属性是否为图片形式，如图
+    //                if (!/image\/\w+/.test(item.type)) {
+    //                    // 提示只能是图片，return
+    //                    alert("只能选择图片");
+    //                    return;
+    //                }
+    //                // 保存下当前 this ，就是vue实例
+    //                var _this = this;
+    //                //  创建一个FileReader()对象，它里面有个readAsDataURL方法
+    //                let reader = new FileReader();
+    //                // readAsDataURL方法可以将上传的图片格式转为base64,然后在存入到图片路径,
+    //                //这样就可以上传电脑任意位置的图片
+    //                reader.readAsDataURL(item);
+    //                //文件读取成功完成时触发
+    //                reader.addEventListener('load', function () {
+    //                    //  reader.result返回文件的内容。
+    //                    //只有在读取操作完成后，此属性才有效，返回的数据的格式取决于是使用哪种读取方法来执行读取操作的。
+    //                    //给数组添加这个文件也就是图片的内容
+    //                    _this.Pic.push(this.result)
+    //                })
+    //            }
+    //            //------------------------------------------------------------
+    //        },
+    //        send: function () {
+    //            var bodyFormData = new FormData();
+    //            bodyFormData.append('Content', this.content);
+    //            bodyFormData.append('Content', this.Pic);
+
+
+    //            axios({
+    //                    method: "post",
+    //                    url: "/personalpost/create",
+    //                    data: bodyFormData,
+    //                headers: {
+    //                    "Content-Type": "multipart/form-data",
+    //                       transformRequest:[data=>data]
+    //                },
+
+    //                }).then(function (res) {
+    //                    if (res.data == true) {
+    //                        alert("成功");
+    //                    } else {
+    //                        alert("失敗");
+    //                    }
+    //                })
+    //                    .catch(function (response) {
+    //                        //handle error
+    //                        console.log(response);
+    //                    });
+    //        }
+    //    }
+    //})
+</script>

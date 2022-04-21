@@ -2,8 +2,10 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace TreeFriend.Models.Entity {
-    public class PersonalPostMessage {
+namespace TreeFriend.Models.Entity
+{
+    public class PersonalPostMessage
+    {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int MessageId { get; set; }
@@ -18,7 +20,7 @@ namespace TreeFriend.Models.Entity {
 
         [Required]
         public string Message { get; set; }
-        
+
         public DateTime CreateDate { get; set; }
 
 

@@ -21,6 +21,9 @@ namespace TreeFriend.Models {
 
         public DbSet<OrderDetail> OrderDetails { get; set; }
 
+        public DbSet<PersonalPost> personalPosts { get; set; }
+        public DbSet<PersonalPostMessage> PersonalPostMessages { get; set; }
+        public DbSet<PersonalPostImage> PersonalPostImages { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
             //指定日期使用SQL getdate() 自動取得當前時間
@@ -63,13 +66,13 @@ namespace TreeFriend.Models {
             });
             modelBuilder.Entity<Lecture>().HasOne(x => x.User).WithMany(x => x.Lectures).HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.Cascade);
 
-            //modelBuilder.Entity<PersonalPost>()
-            //    .Property(p => p.CreateDate)
-            //    .HasDefaultValueSql("getdate()");
+            modelBuilder.Entity<PersonalPost>()
+                .Property(p => p.CreateDate)
+                .HasDefaultValueSql("getdate()");
 
-            //modelBuilder.Entity <PersonalPostMessage>()
-            //    .Property(p => p.CreateDate)
-            //    .HasDefaultValueSql("getdate()");
+            modelBuilder.Entity<PersonalPostMessage>()
+                .Property(p => p.CreateDate)
+                .HasDefaultValueSql("getdate()");
         }
     }
 }

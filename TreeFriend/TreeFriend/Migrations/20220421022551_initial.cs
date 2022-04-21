@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace TreeFriend.Migrations
 {
-    public partial class v1 : Migration
+    public partial class initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -15,7 +15,9 @@ namespace TreeFriend.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     SkillPostId = table.Column<int>(type: "int", nullable: false),
                     UserId = table.Column<int>(type: "int", nullable: false),
+                    UserName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UserHeadshot = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Status = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -82,6 +84,40 @@ namespace TreeFriend.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Lectures",
+                columns: table => new
+                {
+                    LectureId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Theme = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    EventDate = table.Column<DateTime>(type: "date", nullable: false),
+                    EventTimeStart = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    EventTimeEnd = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Venue = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    SpeakerImgPath = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Speaker = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Count = table.Column<int>(type: "int", nullable: false),
+                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    ImgPath = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IsDelete = table.Column<bool>(type: "bit", nullable: false),
+                    UpdateTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    UserId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Lectures", x => x.LectureId);
+                    table.ForeignKey(
+                        name: "FK_Lectures_users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "users",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "PersonalPost",
                 columns: table => new
                 {
@@ -99,34 +135,6 @@ namespace TreeFriend.Migrations
                     table.PrimaryKey("PK_PersonalPost", x => x.PersonalPostId);
                     table.ForeignKey(
                         name: "FK_PersonalPost_users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "users",
-                        principalColumn: "UserId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Product",
-                columns: table => new
-                {
-                    ProductId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ProductName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Subtitle = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    StarDate = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "getdate()"),
-                    Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Count = table.Column<int>(type: "int", nullable: false),
-                    Price = table.Column<decimal>(type: "decimal(18,4)", nullable: false),
-                    Picture = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    UserId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Product", x => x.ProductId);
-                    table.ForeignKey(
-                        name: "FK_Product_users_UserId",
                         column: x => x.UserId,
                         principalTable: "users",
                         principalColumn: "UserId",
@@ -188,6 +196,37 @@ namespace TreeFriend.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "OrderDetails",
+                columns: table => new
+                {
+                    OrderDetailId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CreateDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Count = table.Column<int>(type: "int", nullable: false),
+                    PayTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    PaymentStatus = table.Column<bool>(type: "bit", nullable: false),
+                    OrderStatus = table.Column<bool>(type: "bit", nullable: false),
+                    UpdateTime = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    LectureId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OrderDetails", x => x.OrderDetailId);
+                    table.ForeignKey(
+                        name: "FK_OrderDetails_Lectures_LectureId",
+                        column: x => x.LectureId,
+                        principalTable: "Lectures",
+                        principalColumn: "LectureId");
+                    table.ForeignKey(
+                        name: "FK_OrderDetails_users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "users",
+                        principalColumn: "UserId");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "hashtagDetails",
                 columns: table => new
                 {
@@ -227,13 +266,23 @@ namespace TreeFriend.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PersonalPost_UserId",
-                table: "PersonalPost",
+                name: "IX_Lectures_UserId",
+                table: "Lectures",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Product_UserId",
-                table: "Product",
+                name: "IX_OrderDetails_LectureId",
+                table: "OrderDetails",
+                column: "LectureId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_OrderDetails_UserId",
+                table: "OrderDetails",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PersonalPost_UserId",
+                table: "PersonalPost",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
@@ -253,10 +302,10 @@ namespace TreeFriend.Migrations
                 name: "hashtagDetails");
 
             migrationBuilder.DropTable(
-                name: "PersonalPost");
+                name: "OrderDetails");
 
             migrationBuilder.DropTable(
-                name: "Product");
+                name: "PersonalPost");
 
             migrationBuilder.DropTable(
                 name: "skillPostMessages");
@@ -269,6 +318,9 @@ namespace TreeFriend.Migrations
 
             migrationBuilder.DropTable(
                 name: "skillPosts");
+
+            migrationBuilder.DropTable(
+                name: "Lectures");
 
             migrationBuilder.DropTable(
                 name: "categories");

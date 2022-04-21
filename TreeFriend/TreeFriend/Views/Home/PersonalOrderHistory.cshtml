@@ -2,27 +2,20 @@
 @{
     Layout = "_Member";
 }
-<link href="https://fonts.googleapis.com/css?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Two+Tone|Material+Icons+Round|Material+Icons+Sharp" rel="stylesheet">
-
-<style>
-    .page-item.active .page-link {
-        background-color: cadetblue;
-        border-color: aliceblue;
-    }
-    
-</style>
+<link rel="stylesheet" href="https://fonts.sandbox.google.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20,100,0,-25" />
+<link rel="stylesheet" href="~/css/Yie/PersonalOrderHistory.css">
 
 <fieldset id="od">
-    <nav>
+    <nav class="ms-5">
         <div class="nav nav-tabs" id="nav-tab" role="tablist">
             <button class="nav-link active" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">訂單明細</button>
-            <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false" >歷史訂單</button>
-            
+            <button class="nav-link" id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false">歷史訂單</button>
+
         </div>
     </nav>
-    <div class="tab-content" id="nav-tabContent">
+    <div class="tab-content " id="nav-tabContent">
         <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
-            <div class="table-responsive mt-5 me-5">
+            <div class="table-responsive ms-5">
                 <table class="table table-hover table-sm align-middle ">
                     <thead>
                         <tr>
@@ -38,30 +31,25 @@
                     </thead>
                     <tbody>
                         <tr v-for="(item,index) in orderList.slice(pageStart, pageStart + countOfPage)" :key="index">
-                            <td>{{(currPage-1)*countOfPage + index + 1}}</td>
-                            <td>{{item.orderDetailId}}</td>
-                            <td class="col-2">{{item.createDate}}</td>
-                            <td class="col-2">
-                                <div class="d-flex align-items-center">
-                                    @*<span class="material-icons-outlined">category</span>*@{{item.theme}} @*<span class="material-icons-sharp " style="color:#db5a6b">location_on</span>{{item.venue}}*@
+                            <td v-cloak>{{(currPage-1)*countOfPage + index + 1}}</td>
+                            <td v-cloak>{{item.orderDetailId}}</td>
+                            <td class="col-2" v-cloak>{{item.createDate}}</td>
+                            <td class="col-3">
+                                <div class="d-flex align-items-center position-absolute place" v-cloak>
+                                    <span class="material-symbols-outlined">
+                                        pin_drop
+                                    </span>{{item.venue}}
                                 </div>
-                                <div class="d-flex align-items-center">
-                                    @*<span class="material-icons-sharp me-1">schedule</span>*@{{item.eventDate}} {{item.eventTimeStart}}-{{item.eventTimeEnd}}
-                                </div>
-                                <div class="d-flex align-items-center">
-                                    <span class="material-icons-sharp " style="color:#db5a6b">location_on</span>{{item.venue}}
-                                </div>
-
                                 <div>
-                                    NT${{item.price}}×{{item.count}}
+                                    <img v-bind:src="item.imgPath" style="max-height:80px" class="pic"/>
                                 </div>
                             </td>
-                            <td>NT${{item.totoalAmount}}</td>
+                            <td v-cloak>${{item.price}}×{{item.count}}<br />NT${{item.totoalAmount}}</td>
                             <td v-if="item.paymentStatus">付款成功</td>
                             <td v-else="item.paymentStatus">未付款</td>
                             <td v-if="item.orderStatus">成立</td>
                             <td v-else="item.orderStatus">訂單不成立</td>
-                            <td v-if="item.orderStatus">電子憑證已Email至信箱<br />現場請出示該憑證</td>
+                            <td v-if="item.orderStatus">電子憑證已Email至信箱，現場請出示該憑證</td>
                             <td v-else="item.orderStatus"></td>
                         </tr>
                     </tbody>
@@ -80,7 +68,7 @@
 
                         <li class="page-item" v-for="n in orderTotalPage"
                             v-bind:class="{'active': (currPage === (n))}"
-                            @@click.prevent="setOrderTotalPage(n)"><a class="page-link" href="#">{{n}}</a></li>
+                            @@click.prevent="setOrderTotalPage(n)"><a class="page-link" href="#" v-cloak>{{n}}</a></li>
 
                         <li class="page-item" v-bind:class="{'disabled': (currPage === orderTotalPage)}"
                             @@click.prevent="setOrderTotalPage(currPage+1)">
@@ -94,7 +82,7 @@
             </div>
         </div>
         <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
-            <div class="table-responsive mt-5 me-5">
+            <div class="table-responsive  ms-5">
                 <table class="table table-hover table-sm align-middle ">
                     <thead>
                         <tr>
@@ -109,25 +97,20 @@
                     </thead>
                     <tbody>
                         <tr v-for="(item,index) in orderHistoryList.slice(hPageStart, hPageStart + hCountOfPage)" :key="index">
-                            <td>{{(hCurrPage-1)*hCountOfPage + index + 1}}</td>
-                            <td>{{item.orderDetailId}}</td>
-                            <td class="col-2">{{item.createDate}}</td>
-                            <td class="col-2">
-                                <div class="d-flex align-items-center">
-                                    @*<span class="material-icons-outlined">category</span>*@{{item.theme}} @*<span class="material-icons-sharp " style="color:#db5a6b">location_on</span>{{item.venue}}*@
+                            <td v-cloak>{{(hCurrPage-1)*hCountOfPage + index + 1}}</td>
+                            <td v-cloak>{{item.orderDetailId}}</td>
+                            <td class="col-2" v-cloak>{{item.createDate}}</td>
+                            <td class="col-3">
+                                <div class="d-flex align-items-center position-absolute place" v-cloak>
+                                    <span class="material-symbols-outlined">
+                                        pin_drop
+                                    </span>{{item.venue}}
                                 </div>
-                                <div class="d-flex align-items-center">
-                                    @*<span class="material-icons-sharp me-1">schedule</span>*@{{item.eventDate}} {{item.eventTimeStart}}-{{item.eventTimeEnd}}
-                                </div>
-                                <div class="d-flex align-items-center">
-                                    <span class="material-icons-sharp " style="color:#db5a6b">location_on</span>{{item.venue}}
-                                </div>
-
                                 <div>
-                                    NT${{item.price}}×{{item.count}}
+                                    <img v-bind:src="item.imgPath" style="max-height:80px" class="pic" />
                                 </div>
                             </td>
-                            <td>NT${{item.totoalAmount}}</td>
+                            <td v-cloak>${{item.price}}×{{item.count}}<br />NT${{item.totoalAmount}}</td>
                             <td v-if="item.paymentStatus">付款成功</td>
                             <td v-else="item.paymentStatus">未付款</td>
                             <td v-if="item.orderStatus">成立</td>
@@ -148,7 +131,7 @@
 
                         <li class="page-item" v-for="n in orderHistoryTotalPage"
                             v-bind:class="{'active': (hCurrPage === (n))}"
-                            @@click.prevent="setOrderHistoryTotal(n)"><a class="page-link" href="#">{{n}}</a></li>
+                            @@click.prevent="setOrderHistoryTotal(n)"><a class="page-link" href="#" v-cloak>{{n}}</a></li>
 
                         <li class="page-item" v-bind:class="{'disabled': (hCurrPage === orderHistoryTotalPage)}"
                             @@click.prevent="setOrderHistoryTotal(hCurrPage+1)">
@@ -161,7 +144,7 @@
                 </nav>
             </div>
         </div>
-      
+
     </div>
 
 
@@ -176,25 +159,25 @@
         el: '#od',
         data: {
             orderList: [],
-            orderHistoryList:[],
+            orderHistoryList: [],
             countOfPage: 10,
-            hCountOfPage:10,
+            hCountOfPage: 10,
             currPage: 1,
-            hCurrPage:1,
-            
+            hCurrPage: 1,
+
         },
         mounted: function () {
             let self = this;
             axios.get("../Api/Member/GetOrder").then(function (res) {
                 self.orderList = res.data;
                 console.log(res.data);
-                
+
             })
             axios.get("../Api/Member/GetOrderHistory").then(function (res) {
                 self.orderHistoryList = res.data;
                 console.log(res.data);
             })
-            
+
         },
         computed: {
             pageStart: function () {
@@ -214,7 +197,7 @@
         },
         methods: {
             setOrderTotalPage: function (idx) {
-                if (idx <= 0 || idx > this. orderTotalPage) {
+                if (idx <= 0 || idx > this.orderTotalPage) {
                     return;
                 }
                 this.currPage = idx;
@@ -225,9 +208,9 @@
                 }
                 this.currPage = idx;
             },
-           
-            
-          
+
+
+
         }
 
 

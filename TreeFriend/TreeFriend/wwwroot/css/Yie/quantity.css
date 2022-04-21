@@ -18,6 +18,10 @@
     border-bottom: solid 0.5rem #fcd9b3;
 }
 
+[v-cloak] {
+    display: none;
+}
+
 .imgPath {
     width: 60vw;
     height: 60vh;

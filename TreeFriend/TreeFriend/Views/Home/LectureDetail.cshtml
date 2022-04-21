@@ -27,7 +27,7 @@
             <div class="col">
                 <div class="d-flex gap-2 align-items-center ">
                     <span class="material-icons-sharp h4">school</span>
-                    <h3 class="fs-5">{{item.theme}}</h3>
+                    <h3 class="fs-5" v-cloak>{{item.theme}}</h3>
                 </div>
             </div>
         </div>
@@ -39,13 +39,13 @@
                     <div class="row ">
                         <div class="row border-left p-0 ">
                             <div class="">
-                                <div class="d-flex gap-1 mt-0 mb-0 align-items-center">
+                                <div class="d-flex gap-1 align-items-center">
                                     <span class="material-icons-sharp align-middle">location_on</span>
-                                    <p>活動地點:{{item.venue}}</p>
+                                    <p class="m-0" v-cloak>活動地點：{{item.venue}}</p>
                                 </div>
                                 <div class="d-flex gap-1 m-0 align-items-center">
                                     <span class="material-icons-sharp align-middle">date_range</span>
-                                    <p class="m-0">活動時間：{{item.eventDate}} {{item.eventTimeStart}}-{{item.eventTimeEnd}}</p>
+                                    <p class="m-0" v-cloak>活動時間：{{item.eventDate}} {{item.eventTimeStart}}-{{item.eventTimeEnd}}</p>
                                 </div>
                             </div>
                         </div>
@@ -56,7 +56,7 @@
                         </div>
                         <div class="row border-left p-0">
                             <div class="">
-                                <P class="m-0 ">
+                                <P class="m-0 " v-cloak>
                                     {{item.description}}
                                 </P>
                             </div>
@@ -72,7 +72,7 @@
                                 <div class="d-flex gap-3 m-0 ">
                                     <img :src="item.speakerImgPath" alt=""
                                          class="speaker-img rounded-circle" />
-                                    <P class="">
+                                    <P class="" v-cloak>
                                         {{item.speaker}}
                                     </P>
                                 </div>
@@ -86,7 +86,7 @@
                         </div>
                         <div class="row border-left p-0">
                             <div class="">
-                                <P class="m-0 ">
+                                <P class="m-0 " v-cloak>
                                     {{item.content}}
                                 </P>
                             </div>
@@ -96,22 +96,22 @@
                 <!--右側：價格&注意事項-->
                 <div class="col-12 col-md-4 ">
                     <div class="d-flex flex-column ">
-                        <span class="fs-2"><b>NT${{item.price}}</b></span>
+                        <span class="fs-2"><b v-cloak>NT${{item.price}}</b></span>
                         <div class="d-flex gap-1 mt-1 align-items-center">
                             <span class="material-icons-sharp align-middle">alarm</span>
 
-                        <p class="m-0">剩餘{{dateDiff}}天截止</p>
+                        <p class="m-0" v-cloak>剩餘{{dateDiff}}天截止</p>
                         </div>
                         <div class="d-flex gap-1 align-items-center">
                             <span class="material-icons-sharp align-middle">local_fire_department</span>
-                            <p class="m-0">講座剩{{item.count}}位</p>
+                            <p class="m-0" v-cloak>講座剩{{item.count}}位</p>
                         </div>
 
                         <div class="flex-row d-flex align-items-center gap-2 qty  mt-3">
                             <span class="fs-5 text-center">購買數量</span>
                             <span class="material-icons-sharp qtyminus rounded-circle p-1"
                                   v-on:click="changeIndex(-1)">remove</span>
-                            <span class="number">{{amount}}</span>
+                            <span class="number" v-cloak>{{amount}}</span>
                             <span class="material-icons-sharp qtyplus rounded-circle p-1 "
                                   v-on:click="changeIndex(+1)" v-if="item.count>=amount+1">add</span>
                         </div>
@@ -129,7 +129,7 @@
 
                     <div class="row border-left">
                         <div class="">
-                            <ul class="m-0 p-0  mb-1 fs-6">
+                            <ul class="m-0 p-0 ms-3 mb-1 fs-6">
                                 <li>付款方式僅採信用卡線上刷卡(VISA/MasterCard/JCB)，惟線上刷卡會需要些許時間進行作業，請勿關閉頁面或重新整理頁面，將導致入帳作業延遲或有誤。</li>
                                 <li>主辦單位保留接受報名與否之權利，倘因故無法接受報名，將會無息退還全額活動費用。</li>
                                 <li>主辦單位保留對活動內容調整的權力。</li>

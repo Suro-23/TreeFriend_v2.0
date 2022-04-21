@@ -12,8 +12,10 @@
         border-color: aliceblue;
     }
 
+    [v-cloak] {
+        display: none;
+    }
    
-
     .page-link {
         border-color: aliceblue;
     }
@@ -32,16 +34,16 @@
                         <th scope="col">訂單總金額</th>
                         <th scope="col">付款狀態</th>
                         <th scope="col">訂單狀態</th>
-                        <th scope="col">訂購資訊</th>
+                        <th scope="col">訂購詳情</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr v-for="(item,index) in orderList.slice(pageStart, pageStart + countOfPage)" :key="index">
-                        <td>{{(currPage-1)*countOfPage + index + 1}}</td>
-                        <td class="col-1">{{item.orderDetailId}}</td>
-                        <td class="col-2">{{item.createDate}}</td>
-                        <td>{{item.userName}}</td>
-                        <td>NT${{item.totoalAmount}}</td>
+                        <td v-cloak>{{(currPage-1)*countOfPage + index + 1}}</td>
+                        <td class="col-1" v-cloak>{{item.orderDetailId}}</td>
+                        <td class="col-2" v-cloak>{{item.createDate}}</td>
+                        <td v-cloak>{{item.userName}}</td>
+                        <td v-cloak>NT${{item.totoalAmount}}</td>
                         <td v-if="item.paymentStatus">付款成功</td>
                         <td v-else="item.paymentStatus">未付款</td>
                         <td v-if="item.orderStatus">成立</td>
@@ -70,7 +72,7 @@
 
                 <li class="page-item" v-for="n in totalPage"
                     v-bind:class="{'active': (currPage === (n))}"
-                    @@click.prevent="setPage(n)"><a class="page-link" href="#">{{n}}</a></li>
+                    @@click.prevent="setPage(n)"><a class="page-link" href="#" v-cloak>{{n}}</a></li>
 
                 <li class="page-item" v-bind:class="{'disabled': (currPage === totalPage)}"
                     @@click.prevent="setPage(currPage+1)">
@@ -108,23 +110,21 @@
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td >{{order.orderDetailId}}</td>
-                                            <td class="col-2">{{order.userName}} </td>
+                                            <td v-cloak>{{order.orderDetailId}}</td>
+                                            <td class="col-2" v-cloak>{{order.userName}} </td>
                                             <td class="col-3">
-                                                <div class="d-flex align-items-center">
+                                                <div class="d-flex align-items-center" v-cloak>
                                                     {{order.theme}}
                                                 </div>
-                                                <div class="d-flex align-items-center">
+                                                <div class="d-flex align-items-center" v-cloak>
                                                    {{order.eventDate}} {{order.eventTimeStart}}-{{order.eventTimeEnd}}
                                                 </div>
-                                                <div class="d-flex align-items-center">
+                                                <div class="d-flex align-items-center" v-cloak>
                                                     <span class="material-icons-sharp " style="color:#db5a6b">location_on</span>{{order.venue}}
                                                 </div>
-                                                <div>
-                                                    NT${{order.price}}×{{order.count}}
-                                                </div>
+                                               
                                             </td>
-                                            <td class="col-1">NT${{order.totoalAmount}}</td>
+                                            <td class="col-1" v-cloak>${{order.price}}×{{order.count}}<br/>NT${{order.totoalAmount}}</td>
                                             <td v-if="order.orderStatus">成立</td>
                                             <td v-else="order.orderStatus" class="col-3">訂單不成立</td>
                                         </tr>

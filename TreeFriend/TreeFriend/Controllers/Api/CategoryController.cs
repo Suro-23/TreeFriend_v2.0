@@ -15,7 +15,7 @@ namespace TreeFriend.Controllers.Api {
     public class CategoryController : ControllerBase {
         private readonly TreeFriendDbContext _db;
 
-        //注入DbContext
+        //注入DbContext test
         public CategoryController(TreeFriendDbContext db) {
             _db = db;
         }

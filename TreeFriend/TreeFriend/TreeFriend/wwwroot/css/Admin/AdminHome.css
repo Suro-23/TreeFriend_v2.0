@@ -1,0 +1,64 @@
+﻿@import url(https://fonts.googleapis.com/earlyaccess/cwtexyen.css);
+
+body {
+    background-color: cadetblue !important;
+}
+
+.wrap {
+    height: 100vh;
+}
+
+    .wrap a {
+        text-decoration: none;
+        color: aliceblue;
+    }
+
+.content {
+    background-color: aliceblue;
+    border-radius: 2rem 0 0 2rem;
+}
+
+.nav-list {
+    display: flex;
+    flex-direction: column;
+}
+
+    .nav-list .row {
+        margin: 0;
+    }
+
+.profile {
+    padding: 1rem 0;
+    height: 20%;
+}
+
+.nav-list .row img {
+    margin: auto;
+    padding: 0;
+    width: 70px;
+    height: 70px;
+    border-radius: 100%;
+    box-shadow: 0 0 .2rem .2rem #589294;
+    ;
+}
+
+.user-name {
+    text-align: center;
+    color: aliceblue;
+}
+
+.menu {
+    height: 70%;
+}
+
+    .menu div {
+        color: aliceblue;
+        padding: 1rem 0;
+    }
+
+
+
+.logout {
+    text-align: center;
+    color: aliceblue;
+}

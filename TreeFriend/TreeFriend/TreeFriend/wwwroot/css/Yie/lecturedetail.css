@@ -1,0 +1,58 @@
+.body {
+    background-color: #dce1eb;
+    font-size: 0.88rem;
+}
+
+.border-left{
+    border-left: solid 0.3rem #fcd9b3;
+}
+
+
+.speaker-img {
+    object-fit: contain;
+    object-position: center;
+    width: 5rem;
+    height: 5rem;
+}
+
+
+.qty {
+    font-size: 1.3rem;
+}
+
+.qtyminus {
+    background-color: #fcd9b3;
+    color: #fff;
+    cursor: pointer;
+}
+
+.qtyplus {
+
+    background-color: #fcd9b3;
+    color: #fff;
+    cursor: pointer;
+}
+
+.buybtn {
+    background-color: #fcd9b3;
+    color: #fff;
+}
+
+.flegsearch-img{
+    z-index: 1;
+    max-width: 100%;
+    top:85%;
+}
+
+/*.flegspeaker-img{
+    z-index: 1;
+    max-width: 100%;
+    right: 10%;
+    top:65%;
+}
+*/
+
+.imgpath {
+    width: 60vw;
+   /* height: 60vh;*/
+}

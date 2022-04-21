@@ -1,0 +1,44 @@
+﻿.member-content {
+    background-color: rgb(255, 255, 255);
+    padding: 2rem 0 2rem 0;
+    margin-left: 2rem;
+    border-radius: 1rem;
+    box-shadow: 0 0 .5rem .5rem rgb(221, 235, 247);
+}
+
+    .member-content input, textarea {
+        background-color: rgb(248, 248, 248);
+    }
+
+.profile-img {
+    width: 175px;
+    border-radius: 100%;
+}
+
+.img-file {
+    padding: 1rem 0;
+}
+
+.form-select {
+    width: 4rem;
+}
+
+.member-data .row {
+    margin: .6rem 0;
+}
+
+.input-area {
+    height: 10rem;
+}
+
+input[type="file"] {
+    display: none;
+}
+
+.custom-file-upload {
+    border: 0 solid #ccc;
+    display: inline-block;
+    padding: 6px 12px;
+    cursor: pointer;
+    width: 165px;
+}

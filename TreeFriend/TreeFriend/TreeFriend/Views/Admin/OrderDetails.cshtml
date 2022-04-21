@@ -1,0 +1,199 @@
+﻿
+@{
+    Layout = "_AdminLayout";
+}
+
+<link href="https://fonts.googleapis.com/css?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Two+Tone|Material+Icons+Round|Material+Icons+Sharp" rel="stylesheet">
+
+<style>
+    .page-item.active .page-link {
+        color: aliceblue;
+        background-color: cadetblue;
+        border-color: aliceblue;
+    }
+
+    .wrap a {
+        color: black;
+    }
+
+    .page-link {
+        border-color: aliceblue;
+    }
+</style>
+
+<fieldset id="od">
+    <div class="container">
+        <div class="table-responsive mt-5 ms-5 d-flex justify-content-center align-content-center ">
+            <table class="table table-hover table-sm align-middle  ">
+                <thead>
+                    <tr>
+                        <th scope="col">編號</th>
+                        <th scope="col">訂單編號</th>
+                        <th scope="col">訂購日期</th>
+                        <th scope="col">訂購人</th>
+                        <th scope="col">訂單總金額</th>
+                        <th scope="col">付款狀態</th>
+                        <th scope="col">訂單狀態</th>
+                        <th scope="col">訂購資訊</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(item,index) in orderList.slice(pageStart, pageStart + countOfPage)" :key="index">
+                        <td>{{(currPage-1)*countOfPage + index + 1}}</td>
+                        <td class="col-1">{{item.orderDetailId}}</td>
+                        <td class="col-2">{{item.createDate}}</td>
+                        <td>{{item.userName}}</td>
+                        <td>NT${{item.totoalAmount}}</td>
+                        <td v-if="item.paymentStatus">付款成功</td>
+                        <td v-else="item.paymentStatus">未付款</td>
+                        <td v-if="item.orderStatus">成立</td>
+                        <td v-else="item.orderStatus">訂單不成立</td>
+                        <td>
+                            <button type="button" class="btn-secondary btn-sm " data-bs-toggle="modal" data-bs-target="#deleteModel" v-bind:value="item.orderDetailId" v-on:click="gettarget($event)" >
+                                Detail
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!--分頁-->
+    <div class="d-flex justify-content-center">
+        <nav aria-label="Page navigation example">
+            <ul class="pagination pagination-sm ">
+                <li class="page-item" v-bind:class="{'disabled': (currPage === 1)}"
+                    @@click.prevent="setPage(currPage-1)">
+                    <a class="page-link" href="#" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+
+                <li class="page-item" v-for="n in totalPage"
+                    v-bind:class="{'active': (currPage === (n))}"
+                    @@click.prevent="setPage(n)"><a class="page-link" href="#">{{n}}</a></li>
+
+                <li class="page-item" v-bind:class="{'disabled': (currPage === totalPage)}"
+                    @@click.prevent="setPage(currPage+1)">
+                    <a class="page-link" href="#" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+
+            </ul>
+        </nav>
+    </div>
+
+
+    <!--  DetailModal -->
+    <div class="modal fade" id="deleteModel" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteLabel">Detail</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="table-responsive" >
+                                <table class="table table-sm align-middle">
+                                    <thead>
+                                        <tr>
+                                            <th>訂單編號</th>
+                                            <th>訂購人</th>
+                                            <th>訂單資訊</th>
+                                            <th>總金額</th>
+                                            <th>訂單狀態</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td >{{order.orderDetailId}}</td>
+                                            <td class="col-2">{{order.userName}} </td>
+                                            <td class="col-3">
+                                                <div class="d-flex align-items-center">
+                                                    {{order.theme}}
+                                                </div>
+                                                <div class="d-flex align-items-center">
+                                                   {{order.eventDate}} {{order.eventTimeStart}}-{{order.eventTimeEnd}}
+                                                </div>
+                                                <div class="d-flex align-items-center">
+                                                    <span class="material-icons-sharp " style="color:#db5a6b">location_on</span>{{order.venue}}
+                                                </div>
+                                                <div>
+                                                    NT${{order.price}}×{{order.count}}
+                                                </div>
+                                            </td>
+                                            <td class="col-1">NT${{order.totoalAmount}}</td>
+                                            <td v-if="order.orderStatus">成立</td>
+                                            <td v-else="order.orderStatus" class="col-3">訂單不成立</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                        </div>
+                    </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</fieldset>
+
+
+<script>
+    let odapp = new Vue({
+        el: '#od',
+        data: {
+            orderList: [],
+            order: {},
+            countOfPage: 10,
+            currPage: 1,
+            target:null,
+
+        },
+        mounted: function () {
+            let self = this;
+            axios.get("/OrderDetails/GetAllOrders").then(function (res) {
+                self.orderList = res.data;
+                console.log(res.data);
+            })
+        },
+        computed: {
+            pageStart: function () {
+                return (this.currPage - 1) * this.countOfPage;
+            },
+            totalPage: function () {
+                return Math.ceil((this.orderList.length / this.countOfPage))
+            }
+        },
+        methods: {
+            setPage: function (idx) {
+                if (idx <= 0 || idx > this.totalPage) {
+                    return;
+                }
+                this.currPage = idx;
+            },
+            gettarget: function (event) {
+                let self = this;
+                let orderId = event.target.value;
+                console.log(orderId);
+                self.target = self.orderList.find((sourceItem) => { return sourceItem.orderDetailId == orderId});
+                console.log(self.target);
+                self.order = self.target; //等於選取的講座
+                console.log(orderId);
+            },
+        }
+
+
+
+    });
+</script>
+
+
+

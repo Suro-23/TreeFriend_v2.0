@@ -2,6 +2,14 @@
     justify-content: flex-end;
 }
 
+.header-bg {
+    background-color: #9fb6a8;
+}
+
+.icon-img img {
+    width: 35px;
+}
+
 .logo {
     height: 40px;
 }

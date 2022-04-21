@@ -15,7 +15,7 @@ namespace TreeFriend.Controllers.Api {
     public class CategoryController : ControllerBase {
         private readonly TreeFriendDbContext _db;
 
-        //注入DbContext
+        //注入DbContext test
         public CategoryController(TreeFriendDbContext db) {
             _db = db;
         }
@@ -82,6 +82,7 @@ namespace TreeFriend.Controllers.Api {
             }
         }
 
+        [AllowAnonymous]
         //列出現有類別
         [Route("GetAllCategory")]
         [HttpGet]
@@ -119,6 +120,7 @@ namespace TreeFriend.Controllers.Api {
             }
         }
 
+        [AllowAnonymous]
         //列出現有類別
         [Route("GetAllHashtag")]
         [HttpGet]

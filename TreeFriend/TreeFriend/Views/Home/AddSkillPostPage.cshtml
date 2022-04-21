@@ -60,7 +60,7 @@
                 axios.post("../Api/SkillPost/AddSkillPost",self.skillPost)
                 .then(res => {
                     alert(res.data);
-                    window.location.href="./AllSkillPost";
+                    window.location.href="./AllSkillPostPage";
                 })
                 .catch(err => console.log(err.response.data));
             }

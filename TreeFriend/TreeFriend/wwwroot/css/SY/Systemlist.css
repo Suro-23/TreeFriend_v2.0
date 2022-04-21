@@ -1,0 +1,125 @@
+﻿.carousel-inner {
+    width: 70%;
+    margin: 0 auto;
+}
+
+.big {
+    width: 100vw;
+    margin: auto;
+}
+
+.ccc {
+    width: 85vw;
+    display: flex;
+}
+
+.ppp {
+    width: 40%;
+    padding: 20px 20px;
+}
+
+    .ppp h3 {
+        font-size: 16px;
+        text-transform: uppercase;
+        font-weight: 600;
+    }
+
+    .ppp p {
+        font-size: 10px;
+        border-top: solid 1px;
+        letter-spacing: 0.1rem;
+        line-height: 1.8;
+        color: rgba(0, 0, 0, 0.6);
+        margin-bottom: 1.8rem;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+.title {
+    width: 100%;
+}
+
+ul {
+    list-style-type: none;
+}
+
+
+.carousel-slide {
+    margin-top: 40px;
+    margin-bottom: 30px;
+}
+
+.Layout {
+    width: 100vw;
+}
+
+.content2 {
+    width: 570px;
+    grid-template-columns: minmax(0px,1fr)262px;
+    display: flex;
+}
+
+
+h4 {
+    text-align: center;
+}
+
+li {
+    margin-bottom: 11px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #dedede;
+    font-size: 12px;
+    color: black;
+}
+
+.message1 {
+    margin-bottom: 50px;
+    margin-top: 15px;
+}
+
+.carousel1 {
+    margin-bottom: 40px;
+    margin-top: 30px;
+}
+
+.ccc a {
+    text-decoration: none;
+    color: black;
+    transition: color .3s;
+    -webkit-transition: color .3s;
+    -moz-transition: color .3s;
+    outline: none;
+    cursor: pointer;
+    width: 30%;
+}
+
+.title a {
+    text-decoration: none;
+    color: black;
+    transition: color .3s;
+    -webkit-transition: color .3s;
+    -moz-transition: color .3s;
+    outline: none;
+    cursor: pointer;
+}
+
+a:hover {
+    color: #795548;
+}
+
+.title1 {
+    margin-bottom: 30px;
+    border: 1px black solid;
+    width: 160px;
+    margin-left: 60px;
+}
+
+.imgsize {
+    width: 100%;
+}
+
+.container-img {
+    height: 80%;
+}

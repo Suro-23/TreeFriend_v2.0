@@ -1,0 +1,122 @@
+﻿
+@{
+    ViewData["Title"] = "系統文章頁面";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link rel="stylesheet" href="~/css/SY/Systemlist.css" />
+
+<body>
+    @* 輪播的地方 *@
+
+
+    <div id="GetAll">
+        <div class="container">
+            <div>
+                <div id="carouselExampleDark" class="carousel carousel-dark slide" data-bs-ride="carousel">
+                    <div class="carousel-indicators">
+                        <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                        <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                        <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                    </div>
+                    <div class="carousel-inner">
+                        <template v-for="(item,num1) in MessageList">
+                            <div v-if="num1 == 0" class="carousel-item active">
+                                <img :src="item.picPath" class="d-block w-100" alt="" style="width:700px; height:400px;">
+                            </div>
+
+                            <div v-else class="carousel-item">
+                                <img :src="item.picPath" class="d-block w-100" alt="" style="width:700px; height:400px;">
+                            </div>
+                        </template>
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+            </div>
+
+            @* 畫面左半部: 圖片 標題 內容 *@
+            <div class="row justify-content-md-center" style="margin: auto;">
+                <div class="row" style="width:75%">
+                    <div class="col-xl-7 " style="margin: 20px 0 60px 0; padding: 0; " v-for="item in MessageList">
+                        <div class="contaner">
+
+                            <div class="ccc">
+
+                                <a :href="'/Content/FullContent/'+item.articleID"> <img v-bind:src="item.picPath" class="imgsize"> </a>
+                                <div class="ppp">
+                                    <h3>{{item.title}}</h3>
+                                    <p>{{item.description}}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-xl-1">
+                    </div>
+                </div>
+
+                @* message1 最新文章 *@
+                <div class="col-xl-3">
+                    <div class="message1">
+                        <aside class="title">
+                            <h4 class="title1">
+                                最新文章
+                            </h4>
+                            <ul v-for="item in MessageList">
+                                <li> <a :href="'/Home/SystemDetail/'+item.articleID">【技能分享】{{item.title}}</a> </li>
+                            </ul>
+                        </aside>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+<script>
+
+    class message {
+        title = '';
+        dscription = '';
+
+    }
+    class mesagge1 {
+        title = '';
+    }
+
+
+    var app = new Vue({
+        el: '#GetAll',
+        data: {
+            message1:new mesagge1(),
+            MessageList: [],
+            newMessage: [],
+            num:[],
+
+        },
+        mounted: function () {
+            var self = this;
+            axios.get("/SystemMessage/GetAllSystemMessage").then(function (result) {
+                self.MessageList = result.data;
+                console.log(result);
+
+                //最新文章 迴圈跑出渲染的東西
+                //for (let i = 0; i < result.data.length; i++) {
+                //    console.log(result.data[i]);
+                //    var newmessageobject = new mesagge1;
+                //    newmessageobject.title = result.data[i].title;
+                //    app.newMessage.push(newmessageobject);
+                //}
+                //console.log(app.newMessage);
+            })
+        }
+    });
+</script>
+

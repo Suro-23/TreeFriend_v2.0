@@ -82,6 +82,7 @@ namespace TreeFriend.Controllers.Api {
             }
         }
 
+        [AllowAnonymous]
         //列出現有類別
         [Route("GetAllCategory")]
         [HttpGet]
@@ -119,6 +120,7 @@ namespace TreeFriend.Controllers.Api {
             }
         }
 
+        [AllowAnonymous]
         //列出現有類別
         [Route("GetAllHashtag")]
         [HttpGet]

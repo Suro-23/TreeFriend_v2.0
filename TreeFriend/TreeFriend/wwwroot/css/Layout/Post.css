@@ -6,6 +6,10 @@
     justify-content: flex-end;
 }
 
+.header-bg {
+    background-color: #9fb6a8;
+}
+
 .logo {
     height: 40px;
 }

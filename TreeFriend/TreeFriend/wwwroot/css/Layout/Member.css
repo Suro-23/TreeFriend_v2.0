@@ -2,6 +2,10 @@
     background-color: rgb(232, 243, 252);
 }
 
+.header-bg {
+    background-color: #9fb6a8;
+}
+
 .navbar-collapse {
     justify-content: flex-end;
 }

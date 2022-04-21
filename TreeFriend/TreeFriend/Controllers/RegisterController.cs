@@ -20,15 +20,12 @@ using EmailService;
 using Microsoft.AspNetCore.Authentication.Facebook;
 using Microsoft.AspNetCore.Authentication.Google;
 
-namespace TreeFriend.Controllers
-{
-    public class RegisterController : Controller
-    {
+namespace TreeFriend.Controllers {
+    public class RegisterController : Controller {
         private readonly TreeFriendDbContext _context;
         private readonly IEmailSender _emailSender;
 
-        public RegisterController(TreeFriendDbContext context, IEmailSender emailSender)
-        {
+        public RegisterController(TreeFriendDbContext context, IEmailSender emailSender) {
             _context = context;
             _emailSender = emailSender;
 
@@ -36,55 +33,45 @@ namespace TreeFriend.Controllers
 
 
         // GET: Register
-        public async Task<IActionResult> Index()
-        {
+        public async Task<IActionResult> Index() {
             return View(await _context.users.ToListAsync());
         }
 
         // GET: Register/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
+        public async Task<IActionResult> Details(int? id) {
+            if (id == null) {
                 return NotFound();
             }
 
             var user = await _context.users
                 .FirstOrDefaultAsync(m => m.UserId == id);
-            if (user == null)
-            {
+            if (user == null) {
                 return NotFound();
             }
 
             return View(user);
         }
 
-        public bool SameEmail([FromBody] SameEmail sameEmail)
-        {
+        public bool SameEmail([FromBody] SameEmail sameEmail) {
             var check = _context.users.Where(x => x.Email == sameEmail.Email)
                .FirstOrDefault();
-            if (check == null)
-            {
+            if (check == null) {
                 return true;
-            }
-            else
-            {
+            } else {
                 return false;
             }
         }
 
         // GET: Register/Create
         [AllowAnonymous]
-        public IActionResult Create()
-        {
+        public IActionResult Create() {
             return View();
         }
         #region 加密解密
         static string encryptKey = "abcd";
         private string Encrypt(string str) //加密字符串
         {
-            try
-            {
+            try {
                 byte[] key = Encoding.Unicode.GetBytes(encryptKey);//密鑰
                 byte[] data = Encoding.Unicode.GetBytes(str);//待加密字符串
 
@@ -100,16 +87,13 @@ namespace TreeFriend.Controllers
                 MStream.Close();//關閉內存流
 
                 return Convert.ToBase64String(temp);//返回加密後的字符串
-            }
-            catch
-            {
+            } catch {
                 return str;
             }
         }
         private string Decrypt(string str) ////解密字符串
         {
-            try
-            {
+            try {
                 byte[] key = Encoding.Unicode.GetBytes(encryptKey);//密鑰
                 byte[] data = Convert.FromBase64String(str);//待解密字符串
 
@@ -125,9 +109,7 @@ namespace TreeFriend.Controllers
                 MStream.Close();//關閉內存流
 
                 return Encoding.Unicode.GetString(temp);//返回解密後的字符串
-            }
-            catch
-            {
+            } catch {
                 return str;
             }
         }
@@ -147,8 +129,7 @@ namespace TreeFriend.Controllers
             //    //return Content($"{randomNum}");
         }
         [HttpGetAttribute()]
-        public async Task<IActionResult> Get([FromQuery] string d)
-        {
+        public async Task<IActionResult> Get([FromQuery] string d) {
             string Mid = Decrypt(d);
             //Mid.Replace("-","-");
 
@@ -159,8 +140,7 @@ namespace TreeFriend.Controllers
             var id = idString;
             var identity = _context.users.Where(x => x.UserId.ToString() == id)
                .FirstOrDefault();
-            if (identity != null)
-            {
+            if (identity != null) {
                 identity.UserStatus = true;
                 _context.Attach(identity);
                 _context.Entry(identity).Property(p => p.UserStatus).IsModified = true;
@@ -171,18 +151,13 @@ namespace TreeFriend.Controllers
         // POST: Register/Create
         //[ValidateAntiForgeryToken]
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] User user)
-        {
-            if (user.Email != "" && user.Password != "")
-            {
+        public async Task<IActionResult> Create([FromBody] User user) {
+            if (user.Email != "" && user.Password != "") {
                 var register = _context.users.Where(x => x.Email == user.Email).FirstOrDefault();
-                if (register == null)
-                {
-                    if (ModelState.IsValid)
-                    {
+                if (register == null) {
+                    if (ModelState.IsValid) {
                         byte[] salt = new byte[128 / 8];
-                        using (var rngCsp = new RNGCryptoServiceProvider())
-                        {
+                        using (var rngCsp = new RNGCryptoServiceProvider()) {
                             rngCsp.GetNonZeroBytes(salt);
                         }
                         //Console.WriteLine($"Salt: {Convert.ToBase64String(salt)}");
@@ -213,45 +188,61 @@ namespace TreeFriend.Controllers
                         //return RedirectToAction(nameof(AfterRegister));
                     }
                     return View(user);
-                }
-                else
-                {
+                } else {
                     return Content("成功");
                 }
-            }
-            else
-            {
+            } else {
                 return Content("資料有誤");
             }
         }
 
-        public IActionResult AfterRegister()
-        {
+        #region 補加鹽用
+        [AllowAnonymous]
+        [HttpPost]
+        public bool getSalt([FromBody] User user) {
+            var _user = _context.users.FirstOrDefault(x => x.Email == user.Email);
+            try {
+                byte[] salt = new byte[128 / 8];
+                using (var rngCsp = new RNGCryptoServiceProvider()) {
+                    rngCsp.GetNonZeroBytes(salt);
+                }
+                byte[] passwordAndSaltBytes = System.Text.Encoding.UTF8.GetBytes(user.Password + salt);
+                byte[] hashBytes = new SHA256Managed().ComputeHash(passwordAndSaltBytes);
+                string hashed = Convert.ToBase64String(hashBytes);
+
+
+                _user.Salt = salt;
+                _user.Password = hashed;
+                _context.SaveChanges();
+                return true;
+            } catch (Exception) {
+
+                throw;
+            }
+        }
+        #endregion
+
+        public IActionResult AfterRegister() {
             //YP :測試時修改過路徑
             return View("../Home/HomePage");
         }
 
         [HttpPost]
         //[Authorize(Roles="admin")]
-        public async Task<IActionResult> Login([FromBody] UserLoginViewModel model)
-        {
+        public async Task<IActionResult> Login([FromBody] UserLoginViewModel model) {
             var check = _context.users.Where(x => x.Email == model.Email)
                 .FirstOrDefault();
 
-            if (check == null && (model.Email == "" || model.Password == ""))
-            {
+            if (check == null && (model.Email == "" || model.Password == "")) {
                 return View("帳號或密碼錯誤");
-            }
-            else
-            {
+            } else {
                 string salt = check.Salt.ToString();
 
                 byte[] passwordAndSaltBytes = System.Text.Encoding.UTF8.GetBytes(model.Password + salt);
                 byte[] hashBytes = new SHA256Managed().ComputeHash(passwordAndSaltBytes);
                 string hashString = Convert.ToBase64String(hashBytes);
 
-                if (hashString == check.Password)
-                {
+                if (hashString == check.Password) {
                     //YP : 登入時順便檢查身分，並獲得頭像
                     var user = _context.usersDetail.Where(u => u.UserId == check.UserId).FirstOrDefault();
                     var UserLevel = check.UserLevel == true ? "Admin" : "Member";
@@ -272,34 +263,28 @@ namespace TreeFriend.Controllers
                     await HttpContext.SignInAsync(
                     CookieAuthenticationDefaults.AuthenticationScheme,
                     new ClaimsPrincipal(claimsIdentity),
-                    new AuthenticationProperties
-                    {
+                    new AuthenticationProperties {
                         IsPersistent = true,
                         ExpiresUtc = DateTime.UtcNow.AddMinutes(20)
                     });
 
                     //YP : 登入成功後轉跳回首頁
                     return Json(Url.Action("HomePage", "Home"));
-                }
-                else
-                {
+                } else {
                     return Content("帳號或密碼錯誤");
                 }
             }
         }
 
-        public IActionResult FBLogin()
-        {
-            var p = new AuthenticationProperties()
-            {
+        public IActionResult FBLogin() {
+            var p = new AuthenticationProperties() {
                 RedirectUri = Url.Action("Response")
             };
             return Challenge(p, FacebookDefaults.AuthenticationScheme);
 
         }
 
-        public async Task<IActionResult> ResponseAsync(User user)
-        {
+        public async Task<IActionResult> ResponseAsync(User user) {
             var res = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             //var data = res.Principal.Claims.Select(x => new
             //{
@@ -309,19 +294,16 @@ namespace TreeFriend.Controllers
             //    x.OriginalIssuer
             //});
             //var value= data.Select(x => x.Value);
-            foreach (Claim claim in res.Principal.Claims)
-            {
+            foreach (Claim claim in res.Principal.Claims) {
                 var fbemail = "";
                 //var fbId = "";
-                if (claim.Type.Contains("emailaddress"))
-                {
+                if (claim.Type.Contains("emailaddress")) {
                     fbemail = claim.Value;
                     user.Email = fbemail;
                     user.Password = Guid.NewGuid().ToString("d").Substring(0, 7);
                     var sameEmail = _context.users.Where(x => x.Email == user.Email).FirstOrDefault();
 
-                    if (sameEmail == null)
-                    {
+                    if (sameEmail == null) {
 
                         _context.Add(user);
                         await _context.SaveChangesAsync();
@@ -350,15 +332,12 @@ namespace TreeFriend.Controllers
                         await HttpContext.SignInAsync(
                         CookieAuthenticationDefaults.AuthenticationScheme,
                         new ClaimsPrincipal(claimsIdentity),
-                        new AuthenticationProperties
-                        {
+                        new AuthenticationProperties {
                             IsPersistent = true,
                             ExpiresUtc = DateTime.UtcNow.AddMinutes(20)
                         });
                         return LocalRedirect("/Home/HomePage");
-                    }
-                    else
-                    {
+                    } else {
                         var userFbG = _context.usersDetail.Where(u => u.UserId == sameEmail.UserId).FirstOrDefault();
                         var UserLevel = sameEmail.UserLevel == true ? "Admin" : "Member";
                         var claims = new List<Claim>()
@@ -376,8 +355,7 @@ namespace TreeFriend.Controllers
                         await HttpContext.SignInAsync(
                         CookieAuthenticationDefaults.AuthenticationScheme,
                         new ClaimsPrincipal(claimsIdentity),
-                        new AuthenticationProperties
-                        {
+                        new AuthenticationProperties {
                             IsPersistent = true,
                             ExpiresUtc = DateTime.UtcNow.AddMinutes(20)
                         });
@@ -391,18 +369,15 @@ namespace TreeFriend.Controllers
 
             return Content("1");
         }
-        public IActionResult GoogleLogin()
-        {
-            var p = new AuthenticationProperties()
-            {
+        public IActionResult GoogleLogin() {
+            var p = new AuthenticationProperties() {
                 RedirectUri = Url.Action("Response")
             };
             return Challenge(p, GoogleDefaults.AuthenticationScheme);
         }
         //YP : 改成GET方法，沒有傳入參數
         [HttpGet]
-        public async Task<IActionResult> Logout()
-        {
+        public async Task<IActionResult> Logout() {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return Json(Url.Action("HomePage", "Home"));
         }
@@ -410,16 +385,13 @@ namespace TreeFriend.Controllers
 
 
         // GET: Register/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
+        public async Task<IActionResult> Edit(int? id) {
+            if (id == null) {
                 return NotFound();
             }
 
             var user = await _context.users.FindAsync(id);
-            if (user == null)
-            {
+            if (user == null) {
                 return NotFound();
             }
             return View(user);
@@ -430,28 +402,19 @@ namespace TreeFriend.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("UserId,Email,Password")] User user)
-        {
-            if (id != user.UserId)
-            {
+        public async Task<IActionResult> Edit(int id, [Bind("UserId,Email,Password")] User user) {
+            if (id != user.UserId) {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
+            if (ModelState.IsValid) {
+                try {
                     _context.Update(user);
                     await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!MembersExists(user.UserId))
-                    {
+                } catch (DbUpdateConcurrencyException) {
+                    if (!MembersExists(user.UserId)) {
                         return NotFound();
-                    }
-                    else
-                    {
+                    } else {
                         throw;
                     }
                 }
@@ -461,17 +424,14 @@ namespace TreeFriend.Controllers
         }
 
         // GET: Register/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
+        public async Task<IActionResult> Delete(int? id) {
+            if (id == null) {
                 return NotFound();
             }
 
             var user = await _context.users
                 .FirstOrDefaultAsync(m => m.UserId == id);
-            if (user == null)
-            {
+            if (user == null) {
                 return NotFound();
             }
 
@@ -481,16 +441,14 @@ namespace TreeFriend.Controllers
         // POST: Register/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
+        public async Task<IActionResult> DeleteConfirmed(int id) {
             var user = await _context.users.FindAsync(id);
             _context.users.Remove(user);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool MembersExists(int id)
-        {
+        private bool MembersExists(int id) {
             return _context.users.Any(e => e.UserId == id);
         }
 

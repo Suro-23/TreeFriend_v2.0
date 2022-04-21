@@ -56,8 +56,8 @@ namespace TreeFriend {
 
             services.AddScoped<IEmailSender, EmailSender>();
 
-            services.AddDbContext<TreeFriendDbContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("SkillChange")));
-            //services.AddDbContext<TreeFriendDbContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("TreeFriend")));
+            //services.AddDbContext<TreeFriendDbContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("SkillChange")));
+            services.AddDbContext<TreeFriendDbContext>(opt => opt.UseSqlServer(Configuration.GetConnectionString("TreeFriend")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

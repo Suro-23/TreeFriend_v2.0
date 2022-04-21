@@ -14,7 +14,7 @@
                         <option value="2">標籤</option>
                     </select>
                     <input v-model="addItem.input" class="w-50 ps-2 pe-2 ms-4 item" :class="{inputErr: isExists}" type="text">
-                    <button class="w-auto ms-4 btn btn-secondary">新增</button>
+                    <button @@click="addCategory" class="w-auto ms-4 btn btn-secondary" :disabled="isExists">新增</button>
                 </div>
             </div>
             <div class="result-category item">
@@ -30,8 +30,8 @@
                         <div class="col-3">{{item.categoryName}}</div>
                         <div class="col-2">{{item.userId}}</div>
                         <div class="col-3 d-flex p-0 justify-content-center">
-                            <button class="btn pt-0 pb-0"><img src="~/icon/pen.png" alt=""></button>
-                            <button class="btn pt-0 pb-0"><img src="~/icon/delete.png" alt=""></button>
+                            <button @@click="setCategoryId(1,item.categoryId)" class="btn pt-0 pb-0"><img src="~/icon/pen.png" alt=""></button>
+                            <button @@click="deleteCategory(item.categoryId)" class="btn pt-0 pb-0"><img src="~/icon/delete.png" alt=""></button>
                         </div>
                     </div>
                 </div>
@@ -50,24 +50,58 @@
                     <div class="col-3">{{item.hashtagName}}</div>
                     <div class="col-2">{{item.userId}}</div>
                     <div class="col-3 d-flex p-0 justify-content-center">
-                        <button class="btn pt-0 pb-0"><img src="~/icon/pen.png" alt=""></button>
-                        <button class="btn pt-0 pb-0"><img src="~/icon/delete.png" alt=""></button>
+                        <button @@click="setCategoryId(2,item.hashtagId)" class="btn pt-0 pb-0" class="btn pt-0 pb-0"><img src="~/icon/pen.png" alt=""></button>
+                        <button @@click="deleteHashtag(item.hashtagId)" class="btn pt-0 pb-0"><img src="~/icon/delete.png" alt=""></button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
+    @*修改視窗*@
+    <div class="modal fade" id="editItem" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title" id="exampleModalLabel">修改</h3>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3 d-flex">
+                        <label for="recipient-name" class="col-form-label col-2 fs-4">名稱:</label>
+                        <input v-model="editItem.input" type="text" class="form-control">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button @@click="editCategory" type="button" class="btn btn-primary">儲存</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
+
+
 <script>
+    class edit{
+        id= "";
+        cId= "";
+        input= "";
+    }
+    let editItem;
+
     let resultDiv = new Vue({
         el:"#resultDiv",
         data:{
             addItem:{
-                id:1,
+                id:"1",
                 input:""
             },
+            editItem: new edit(),
+            //editItem:{
+            //    id: "",
+            //    cId: "",
+            //    input:""
+            //},
             category:{
                 resultList:[],
                 name:""
@@ -79,17 +113,10 @@
             isExists: false
         },
         mounted: function(){
-            const self = this;
-
-            axios.get("../Api/Category/GetAllCategory")
-            .then(res => {
-                self.category.resultList = res.data;
-                console.log(self.category.resultList);
-            });
-            axios.get("../Api/Category/GetAllHashtag")
-            .then(res => {
-                self.hashtag.resultList = res.data;
-                console.log(self.hashtag.resultList);
+            this.getCategoryList();
+            this.getHashtagList();
+            editItem = new bootstrap.Modal(document.getElementById('editItem'), {
+              keyboard: false
             });
         },
         watch:{
@@ -119,151 +146,62 @@
                 },deep: true}
         },
         methods:{
-
+            getCategoryList: function(){
+                const self = this;
+                axios.get("../Api/Category/GetAllCategory")
+                .then(res => {
+                    self.category.resultList = res.data;
+                    console.log(self.category.resultList);
+                });
+            },
+            getHashtagList: function(){
+                const self = this;
+                axios.get("../Api/Category/GetAllHashtag")
+                .then(res => {
+                    self.hashtag.resultList = res.data;
+                    console.log(self.hashtag.resultList);
+                });
+            },
+            addCategory: function(){
+                const self = this;
+                axios.post("../Api/Category/AddCategory",self.addItem)
+                .then(res => {
+                    if(res.data === true){
+                        self.addItem.input="";
+                        if(self.addItem.id === "1"){self.getCategoryList();}
+                        else {self.getHashtagList();}
+                    }
+                });
+            },
+            setCategoryId: function(id,cId){
+                this.editItem.id = id;
+                this.editItem.cId = cId;
+                editItem.show();
+            },
+            editCategory: function(){
+                const self = this;
+                axios.put("../Api/Category/EditCategory",self.editItem)
+                .then(res => {
+                    if(self.editItem.id === 1) {self.getCategoryList();}
+                    else{self.getHashtagList()}
+                    self.editItem = new edit();
+                });
+                editItem.hide();
+            },
+            deleteCategory: function(id){
+                const self = this;
+                axios.delete(`../Api/Category/DeleteCategory/?categoryId=${id}`)
+                .then(res => {
+                    res.data? self.getCategoryList() : alert("刪除失敗");
+                });
+            },
+            deleteHashtag: function(id){
+                const self = this;
+                axios.delete(`../Api/Category/DeleteHashtag/?hashtagId=${id}`)
+                .then(res => {
+                    res.data? self.getHashtagList() : alert("刪除失敗");
+                });
+            }
         }
     });
 </script>
-
-
-@*<script>
-    let getAll= function (e,name) {
-    const self = e;
-    axios.get(`../Api/Category/GetAll${name}`)
-    .then(res => {
-    self.resultList = res.data;
-    console.log(self.resultList);
-    })
-    }
-
-
-    //分類區塊
-    let appCategory = new Vue({
-    el: "#category",
-    data: {
-    resultList:[],
-    category:{
-    categoryName: "",
-    //userId: "4",
-    },
-    isExists: false
-    },
-    mounted:function(){
-    getAll(this,"category");
-    },
-    methods:{
-    //驗證類別是否存在
-    checkName: function(){
-    const btn = document.querySelector("#btn-category")
-    const self = this;
-    axios.get(`../Api/Category/CheckCategory/?categoryName=${self.category.categoryName}`)
-    .then(res =>{
-    console.log(res);
-    if(res.data === true){
-    //如果存在的話把按鈕禁用
-    self.isExists = true;
-    btn.disabled = true;
-    }else {
-    self.isExists = false;
-    btn.disabled = false;
-    }
-    })
-    .catch(err => console.log(err));
-    },
-    addCategory: function(){
-    const self = this;
-    axios.post("../Api/Category/AddCategory",self.category)
-    .then(res =>{
-    if(res.data === true){
-    alert(`類別 : ${self.category.categoryName}，新增成功`)
-    getAll(self,"category");
-    self.category.categoryName =""
-    }else {
-    alert("新增失敗");
-    }
-    })
-    .catch(err => console.log(err));
-    },
-    deleteCategory: function (event) {
-    const self = this;
-    const categoryId = event.target.value;
-    console.log(categoryId);
-    axios.delete(`../Api/Category/DeleteCategory/?categoryId=${categoryId}`)
-    .then(res => {
-    if (res.data === true) {
-    alert("類別刪除成功!");
-    getAll(self,"category");
-    }else {
-    alert("類別刪除失敗!");
-    }
-    }
-    ).catch(err => console.log(err));
-    }
-    }
-    });
-
-
-    //標籤區塊
-    let appHashtag = new Vue({
-    el: "#hashtag",
-    data: {
-    resultList:[],
-    hashtag:{
-    hashtagName: "",
-    //userId: "4",
-    },
-    isExists: false
-    },
-    mounted: function(){
-    getAll(this,"hashTag");
-    },
-    methods:{
-    //驗證類別是否存在
-    checkName: function(){
-    const btn = document.querySelector("#btn-hashtag")
-    const self = this;
-    axios.get(`../Api/Category/CheckHashTag/?hashtagName=${self.hashtag.hashtagName}`)
-    .then(res =>{
-    console.log(res);
-    if(res.data === true){
-    //如果存在的話把按鈕禁用
-    self.isExists = true;
-    btn.disabled = true;
-    }else {
-    self.isExists = false;
-    btn.disabled = false;
-    }
-    })
-    .catch(err => console.log(err));
-    },
-    addHashtag: function(){
-    const self = this;
-    axios.post("../Api/Category/AddHashtag",self.hashtag)
-    .then(res =>{
-    if(res.data === true){
-    alert(`類別 : ${self.hashtag.hashtagName}，新增成功`)
-    getAll(self,"hashtag");
-    self.hashtag.hashtagName ="";
-    }else {
-    alert("新增失敗");
-    }
-    })
-    .catch(err => console.log(err));
-    },
-    deleteHashtag: function (event) {
-    const self = this;
-    const hashtagId = event.target.value;
-    console.log(hashtagId);
-    axios.delete(`../Api/Category/DeleteHashtag/?hashtagId=${hashtagId}`)
-    .then(res => {
-    if (res.data === true) {
-    alert("類別刪除成功!");
-    getAll(self,"hashTag");
-    }else {
-    alert("類別刪除失敗!");
-    }
-    }
-    ).catch(err => console.log(err));
-    }
-    }
-    });
-    </script>*@

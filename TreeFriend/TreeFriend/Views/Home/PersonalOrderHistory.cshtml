@@ -35,14 +35,16 @@
                             <td v-cloak>{{item.orderDetailId}}</td>
                             <td class="col-2" v-cloak>{{item.createDate}}</td>
                             <td class="col-3">
-                                <div class="d-flex align-items-center position-absolute place" v-cloak>
-                                    <span class="material-symbols-outlined">
-                                        pin_drop
-                                    </span>{{item.venue}}
-                                </div>
-                                <div>
-                                    <img v-bind:src="item.imgPath" style="max-height:80px" class="pic"/>
-                                </div>
+                                <a :href="'/home/lectureDetail?id='+ item.lectureId">
+                                    <div class="d-flex align-items-center position-absolute place" v-cloak>
+                                        <span class="material-symbols-outlined">
+                                            pin_drop
+                                        </span>{{item.venue}}
+                                    </div>
+                                    <div>
+                                        <img v-bind:src="item.imgPath" style="max-height:80px" class="pic" />
+                                    </div>
+                                </a>
                             </td>
                             <td v-cloak>${{item.price}}×{{item.count}}<br />NT${{item.totoalAmount}}</td>
                             <td v-if="item.paymentStatus">付款成功</td>

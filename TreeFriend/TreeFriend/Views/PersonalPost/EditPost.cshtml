@@ -66,7 +66,7 @@
                     </div>
 
                     <!-- 確定刪除的Modal -->
-                    <div class="modal fade" id="mmm" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal fade" :id="'mmm'+num1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                         <div class="modal-dialog modal-sm">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -78,7 +78,7 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">否</button>
-                                    <button type="button" class="btn" style="background-color: #BDA684; color:white" v-on:click="deletepost($event)" v-bind:value="item.personalPostId" href="#">是</button>
+                                    <button type="button" class="btn" style="background-color: #BDA684; color:white" v-on:click="deletepost($event)" v-bind:value="item.personalPostId" >是</button>
                                 </div>
                             </div>
                         </div>
@@ -92,7 +92,7 @@
                                 <div class="modal-content">
                                     <div class="modal-header" style="background-color:linen;">
                                         @*<h5 class="modal-title" id="exampleModalLabel">Modal title</h5>*@
-                                        <button type="button" class="btn btn-danger me-1" @*data-bs-target="#exampleModal"*@ data-bs-toggle="modal" href="#mmm">刪除</button>
+                                        <button type="button" class="btn btn-danger me-1" @*data-bs-target="#exampleModal"*@ data-bs-toggle="modal" :href="'#mmm'+num1">刪除</button>
                                         <button type="button" class="btn btn-primary" v-on:click="edit($event)" v-bind:value="item.personalPostId">儲存</button>
                                         <label id="saveOk"></label>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" v-on:click="reload"></button>
@@ -241,6 +241,8 @@
                 let personalpostid = event.target.value;
                 let Bodyformdata = new FormData();
                 Bodyformdata.append('postId', personalpostid)
+
+                //console.log(personalpostid);
 
                 //axios.delete(`/personalpost/deletepost/?personalpostId = ${self.target.personalpostId}`)
 

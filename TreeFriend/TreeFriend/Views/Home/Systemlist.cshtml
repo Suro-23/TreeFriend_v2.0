@@ -186,7 +186,7 @@
 
                             <div class="ccc">
 
-                                <a :href="'/Content/FullContent/'+item.articleID"> <img v-bind:src="item.picPath" class="imgsize"> </a>
+                                <a :href="'/Home/SystemDetail/'+item.articleID"> <img v-bind:src="item.picPath" class="imgsize"> </a>
                                 <div class="ppp">
                                     <h3>{{item.title}}</h3>
                                     <p>{{item.description}}</p>
@@ -207,7 +207,7 @@
                                 最新文章
                             </h4>
                             <ul v-for="item in MessageList">
-                                <li> <a :href="'/Content/FullContent/'+item.articleID">【技能分享】{{item.title}}</a> </li>
+                                <li> <a :href="'/Home/SystemDetail/'+item.articleID">【技能分享】{{item.title}}</a> </li>
                             </ul>
                         </aside>
                     </div>
@@ -241,7 +241,7 @@
         },
         mounted: function () {
             var self = this;
-            axios.get("/SystemPageRender/GetAllSystemMessage").then(function (result) {
+            axios.get("/SystemMessage/GetAllSystemMessage").then(function (result) {
                 self.MessageList = result.data;
                 console.log(result);
 

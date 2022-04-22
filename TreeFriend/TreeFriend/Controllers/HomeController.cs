@@ -46,6 +46,7 @@ namespace TreeFriend.Controllers
             return View();
         }
 
+        //完整文章內容頁面
         public IActionResult SystemDetail()
         {
             return View();

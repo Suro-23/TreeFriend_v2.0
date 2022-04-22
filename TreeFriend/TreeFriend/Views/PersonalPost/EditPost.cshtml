@@ -39,7 +39,7 @@
                     @*圖片*@
                     <div class="carousel-inner" @*:data-bs-target="'#exampleModal'+num1"*@ data-bs-toggle="modal" type="button" :data-bs-target="'#staticBackdrop'+num1" href="#staticBackdrop">
                         <div class="carousel-item showwords" v-for="(img,num) in item.postPhotoPath" v-bind:class="{'active': activeIndex === num}">
-                            <img class="d-block w-100 cardimagesize" alt="" v-bind:src="'/img/PostPicture/'+img">
+                            <img class="d-block w-100 cardimagesize" alt="" v-bind:src="'/PostPicture/'+img">
                             <button>
                                 編輯貼文
                             </button>
@@ -104,7 +104,7 @@
                                         @*內容*@
                                         @*圖片*@
                                         <div class="text-center" v-for="(img,num) in item.postPhotoPath" v-bind:class="{'active': activeIndex === num}" v-if="num<1">
-                                            <img v-bind:src="'/img/PostPicture/'+img" class="card-img-top imgsize " alt="...">
+                                            <img v-bind:src="'/PostPicture/'+img" class="card-img-top imgsize " alt="...">
                                         </div>
                                         <div class="card-body imgsicon">
                                             <p class="card-text">

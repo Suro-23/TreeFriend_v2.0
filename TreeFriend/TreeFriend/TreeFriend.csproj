@@ -28,7 +28,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\img\PostPicture\" />
+    <Folder Include="wwwroot\PostPicture\" />
     <Folder Include="wwwroot\LecturePicture\" />
     <Folder Include="wwwroot\SpeakerPicture\" />
     <Folder Include="wwwroot\UploadHeadshot\" />

@@ -43,7 +43,7 @@
                             @*圖片*@
                             <div class="carousel-inner">
                                 <div class="carousel-item" data-bs-interval="10000" v-for="(img,num) in item.postPhotoPath" v-bind:class="{'active': activeIndex === num}" @*v-if="num==0"*@>
-                                    <img class="d-block w-100 cardimagesizeOutside" alt="" v-bind:src="'/img/PostPicture/'+img">
+                                    <img class="d-block w-100 cardimagesizeOutside" alt="" v-bind:src="'/PostPicture/'+img">
                                 </div>
                             </div>
                             @*左右按鈕*@
@@ -93,7 +93,7 @@
                                             <div :id='"carouselExampleIndicators1"+num1' class="carousel " data-bs-ride="carousel" style="margin:0px; padding:0px; float:none">
                                                 <div class="carousel-inner" style="margin:0px; padding:0px; float:none">
                                                     <div class="carousel-item " v-for="(img,num) in item.postPhotoPath" v-bind:class="{'active': activeIndex === num}" style="margin:0px; padding:0px; float:none">
-                                                        <img class="d-block w-100 cardimagesize card-img-top " alt="" v-bind:src="'/img/PostPicture/'+img" style="margin:0px; padding:0px; float:none">
+                                                        <img class="d-block w-100 cardimagesize card-img-top " alt="" v-bind:src="'/PostPicture/'+img" style="margin:0px; padding:0px; float:none">
                                                     </div>
                                                 </div>
                                                 <button class="carousel-control-prev" :data-bs-target="'#carouselExampleIndicators1'+num1" type="button" data-bs-slide="prev">

@@ -36,7 +36,7 @@ namespace TreeFriend.Controllers.Api
         //[Route("AddPersonalPost")]
         public bool Create(PersonalPostViewModel post)
         {
-            var path = _environment.WebRootPath + "/img/PostPicture";
+            var path = _environment.WebRootPath + "/PostPicture";
             var pic = post.Pic.ToArray(); //取出照片的陣列
             var UserId = Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(u => u.Type == "UserId").Value);
 

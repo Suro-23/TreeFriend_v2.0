@@ -67,15 +67,15 @@
                             <img :src="item.imgPath" class="card-img">
                             <div class="card-body ">
                                 <div class="row">
-                                    <h5 class="card-title">{{item.theme}}</h5>
+                                    <h5 class="card-title" v-cloak>{{item.theme}}</h5>
                                     <div class="d-flex gap-1 align-items-center">
                                         <span class="material-icons-sharp align-middle">date_range</span>
-                                        <span class="align-middles">{{item.eventDate}}  {{item.eventTimeStart}}-{{item.eventTimeEnd}}</span>
+                                        <span class="align-middles" v-cloak>{{item.eventDate}}  {{item.eventTimeStart}}-{{item.eventTimeEnd}}</span>
                                     </div>
-                                    <p class="card-text mt-1 mb-0">{{item.description}}</p>
+                                    <p class="card-text mt-1 mb-0" v-cloak>{{item.description}}</p>
                                     <div class="container mt-2">
                                         <div class="float-end ">
-                                            <span>NT${{item.price}}</span>
+                                            <span v-cloak>NT${{item.price}}</span>
                                         </div>
                                     </div>
                                 </div>

@@ -102,6 +102,7 @@ namespace TreeFriend.Controllers.Api {
                 Venue= od.Lecture.Venue,
                 Price=od.Price,
                 Count=od.Count,
+                ImgPath=od.Lecture.ImgPath
             }).ToList();
 
             return result;
@@ -128,6 +129,7 @@ namespace TreeFriend.Controllers.Api {
                 Venue = od.Lecture.Venue,
                 Price = od.Price,
                 Count = od.Count,
+                ImgPath = od.Lecture.ImgPath
             }).ToList();
 
             return result;

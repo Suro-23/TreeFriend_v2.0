@@ -1,0 +1,30 @@
+.page-item.active .page-link {
+    background-color: cadetblue;
+    border-color: aliceblue;
+}
+
+[v-cloak] {
+    display: none;
+}
+
+.place {
+    font-size:8px;
+    z-index:1;
+}
+
+.pic {
+    transform: scale(1,1);
+    transition: all 1s ease-out;
+}
+
+img:hover {
+    transform: scale(1.5,1.5);
+}
+
+.nav-link{
+    color:black;
+}
+
+.nav-link:hover{
+    color:black;
+}

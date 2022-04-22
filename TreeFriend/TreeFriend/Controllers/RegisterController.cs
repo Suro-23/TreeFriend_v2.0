@@ -234,22 +234,6 @@ namespace TreeFriend.Controllers {
             //YP :測試時修改過路徑
             return View("../Home/HomePage");
         }
-        #region 登入驗證
-        public IActionResult ConfirmUserStatus([FromBody] User user)
-        {
-            var status = _context.users.Where(x => x.Email == user.Email).FirstOrDefault();
-            if (status != null)
-            {
-                if (status.UserStatus == true)
-                {
-                    return Content("成功");
-                }
-                return Content("請至信箱開通帳號");
-            }
-            return Content("無此帳號");
-
-        }
-        #endregion
 
         #region 登入
         [HttpPost]
@@ -267,7 +251,11 @@ namespace TreeFriend.Controllers {
                 byte[] hashBytes = new SHA256Managed().ComputeHash(passwordAndSaltBytes);
                 string hashString = Convert.ToBase64String(hashBytes);
 
+
+
                 if (hashString == check.Password) {
+                    if (check.UserStatus == true)
+                    {
                     //YP : 登入時順便檢查身分，並獲得頭像
                     var user = _context.usersDetail.Where(u => u.UserId == check.UserId).FirstOrDefault();
                     var UserLevel = check.UserLevel == true ? "Admin" : "Member";
@@ -292,9 +280,12 @@ namespace TreeFriend.Controllers {
                         IsPersistent = true,
                         ExpiresUtc = DateTime.UtcNow.AddMinutes(20)
                     });
-
-                    //YP : 登入成功後轉跳回首頁
-                    return Json(Url.Action("HomePage", "Home"));
+                        //YP : 登入成功後轉跳回首頁
+                        return Json(Url.Action("HomePage", "Home"));
+                    }
+                    return Content("請至信箱開通帳號");
+                    
+                    
                 } else {
                     return Content("帳號或密碼錯誤");
                 }

@@ -144,7 +144,7 @@
 
         $.ajax(
             {
-                url: '/register/login',
+                url: '/register/ConfirmUserStatus',
                 /*dataType: 'JSON',*/
                 contentType: "application/json",
                 type: 'POST',
@@ -154,10 +154,31 @@
                     alert('Ajax request 發生錯誤');
                 },
                 success: function (res) {
-                    console.log(res);
-                    window.location.href = "/Home/HomePage";
+                    if (res == "成功") {
+                        $.ajax(
+                            {
+                                url: '/register/login',
+                                /*dataType: 'JSON',*/
+                                contentType: "application/json",
+                                type: 'POST',
+                                data:
+                                    JSON.stringify(data),
+                                error: function (xhr) {
+                                    alert('Ajax request 發生錯誤');
+                                },
+                                success: function (res) {
+                                    console.log(res);
+                                    window.location.href = "/Home/HomePage";
+                                }
+                            });
+                    } else if (res == "請至信箱開通帳號") {
+                        alert("請至信箱開通帳號");
+                    } else {
+                        alert("帳號密碼錯誤");
+                    }
                 }
             });
+
     });
 </script>
 

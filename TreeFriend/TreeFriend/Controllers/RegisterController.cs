@@ -132,7 +132,7 @@ namespace TreeFriend.Controllers {
         }
         #endregion
 
-        #region 確認是否有開通
+        #region 信箱開通連結
         [HttpGetAttribute()]
         public async Task<IActionResult> Get([FromQuery] string d) {
             string Mid = Decrypt(d);
@@ -234,6 +234,22 @@ namespace TreeFriend.Controllers {
             //YP :測試時修改過路徑
             return View("../Home/HomePage");
         }
+        #region 登入驗證
+        public IActionResult ConfirmUserStatus([FromBody] User user)
+        {
+            var status = _context.users.Where(x => x.Email == user.Email).FirstOrDefault();
+            if (status != null)
+            {
+                if (status.UserStatus == true)
+                {
+                    return Content("成功");
+                }
+                return Content("請至信箱開通帳號");
+            }
+            return Content("無此帳號");
+
+        }
+        #endregion
 
         #region 登入
         [HttpPost]

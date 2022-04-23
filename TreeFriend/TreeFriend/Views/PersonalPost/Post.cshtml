@@ -10,25 +10,27 @@
 
 
 <div id="app" class="member-div ">
-    <div class="container mt-4">
-        <div class="row mx-auto ">
-            <div class="col-4 align-self-end">
-                <img src="/img/藝術青蛙.png" alt="Alternate Text" class="frog" />@*position-absolute*@
-            </div>
-
-            <div class="col-4 ">
-                <div class="text-center mt-2">
-                    <img src="https://i.pravatar.cc/150" class="rounded-circle size " alt="Alternate Text" />
+    <div v-for="item1 in userList">
+        <div class="container mt-4" >
+            <div class="row mx-auto ">
+                <div class="col-4 align-self-end">
+                    <img src="/img/藝術青蛙.png" alt="Alternate Text" class="frog" />@*position-absolute*@
                 </div>
-                <div class="text-center username">安安</div>
-            </div>
-            <div class="col-4 ">
-                <img src="/img/藝術兔子.png" alt="Alternate Text" class="rabbit " />@*position-absolute*@
+
+                <div class="col-4 ">
+                    <div class="text-center mt-2">
+                        <img :src="item1.headshotPath" class="rounded-circle size " alt="Alternate Text" />
+                    </div>
+                    <div class="text-center username">{{item1.userName}}</div>
+                </div>
+                <div class="col-4 ">
+                    <img src="/img/藝術兔子.png" alt="Alternate Text" class="rabbit " />@*position-absolute*@
+                </div>
             </div>
         </div>
-    </div>
-    <div class="text-center content ">
-        <p class="aboutme">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</p>
+        <div class="text-center content ">
+            <p class="aboutme">{{item1.selfIntrodution}}</p>
+        </div>
     </div>
 
     <div class="container col-lg-10 col-md-8 ">
@@ -210,9 +212,11 @@
                     userMessage: "",
                     userName: "",
                 }],
+
                 personalPostId: "",
                 postPhotoPath: "",
             }],
+            userList:[],
             //Content:[],
             activeIndex: 0,
             post: {
@@ -228,9 +232,16 @@
 
         },
         mounted: function () {
+            let postURL = window.location.search;
+            let targetvalue = postURL.split("=");
+            console.log(postURL);
             var self = this;
-            axios.get("/PersonalPost/GetAllContent").then(function (result) {
+            axios.get("/PersonalPost/GetAllContent/" + targetvalue[1]).then(function (result) {
                 self.MessageList = result.data;
+                console.log(result.data);
+            }),
+            axios.get("/PersonalPost/GetUser/" + targetvalue[1]).then(function (result) {
+                self.userList = result.data;
                 console.log(result.data);
             })
 

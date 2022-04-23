@@ -17,7 +17,7 @@
         <div class="catgory w-auto fs-5">{{item.categoryName}}</div>
         <div class="row">
             <div class="uer-info d-flex fs-5 align-items-center">
-                <img :src="item.userHeadshot" alt="">
+                <a :href="'/personalpost/post?id='+ item.userId"><img :src="item.userHeadshot" @*v-on:click="topersonalpost(item.userId)"*@ ></a>
                 <span class="ms-2">{{item.userName}}</span>
             </div>
         </div>
@@ -53,7 +53,7 @@
         <div class="row user-msg ms-2 pe-4">
             <div class="user-msg-div" v-for="msg in item.message">
                 <div class="user-msg-img">
-                    <img :src="msg.userHeadshot" alt="">
+                    <img :src="msg.userHeadshot" alt="" >
                 </div>
                 <div class="user-msg-content">
                     <span class="fw-bold">{{msg.userName}}</span>
@@ -92,7 +92,8 @@
             .then(res => self.allHashTagList = res.data);
             //取得所有貼文
             axios.get("../Api/SkillPost/GetAllSkillPost")
-            .then(res => self.skillPostList = res.data);
+                .then(res => { self.skillPostList = res.data; console.log(res.data); });
+            
         },
         watch:{
             //checkedHashtag.hashtagIdList: function(){
@@ -137,6 +138,17 @@
                     })
                     .catch(err => err.response);
                 }
+            },
+            topersonalpost: function (event) {
+                const self = this;
+                var headId = event;
+                console.log(headId);
+                axios.post("/personalpost/GetAllContent", headId)
+                    .then(res => {
+                        alert("跳轉至個人動態");
+                        window.location.href = "/personalpost/post";
+                    })
+                    .catch(err => err.response);
             }
         }
     });

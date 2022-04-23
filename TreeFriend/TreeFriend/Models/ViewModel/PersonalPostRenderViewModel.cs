@@ -15,6 +15,11 @@ namespace TreeFriend.Models.ViewModel
         public List<string> PostPhotoPath { get; set; }
         public List<PersonalPostMessageViewModel> Message { get; set; }
         public bool State { get; set; }
+        public string HeadshotPath { get; set; } 
+        public string UserName { get; set; }
+        public string SelfIntrodution { get; set; }
+
+
 
 
 

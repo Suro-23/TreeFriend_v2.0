@@ -12,8 +12,8 @@
 }
 <script src='https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.6/vue.js' integrity='sha512-ZD7CJYgtekQVIaDp8LVTYWPenxvyC1wpPwnXFm9N1YdyPmQnX/yMweUQVAPcrLte7Z4jSCp2MW+8KW6/zK7tYQ==' crossorigin='anonymous'></script>
 @*<script src='https://cdnjs.cloudflare.com/ajax/libs/vue/2.2.6/vue.min.js' integrity='sha512-yNMXFsZbP+Hii2fM4n1EvhKbBCZ2NAfW1FvlN6yB1ZanH+1sEcNV2rPEg6qCMRT/4dY01ELCdD75WflfTHdKJg==' crossorigin='anonymous'></script>*@
+@*<link href="/css//KaiSu/bootstrap.css" rel="stylesheet" />*@
 <link href="/css/KaiSu/EditPost.css" rel="stylesheet" />
-
 
 @*頭像/暱稱/自我介紹/*@
 
@@ -78,7 +78,7 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">否</button>
-                                    <button type="button" class="btn" style="background-color: #BDA684; color:white" v-on:click="deletepost($event)" v-bind:value="item.personalPostId" >是</button>
+                                    <button type="button" class="btn " style="background-color: #BDA684; color:white" v-on:click="deletepost($event)" v-bind:value="item.personalPostId">是</button>
                                 </div>
                             </div>
                         </div>
@@ -93,7 +93,7 @@
                                     <div class="modal-header" style="background-color:linen;">
                                         @*<h5 class="modal-title" id="exampleModalLabel">Modal title</h5>*@
                                         <button type="button" class="btn btn-danger me-1" @*data-bs-target="#exampleModal"*@ data-bs-toggle="modal" :href="'#mmm'+num1">刪除</button>
-                                        <button type="button" class="btn btn-primary" v-on:click="edit($event)" v-bind:value="item.personalPostId">儲存</button>
+                                        <button type="button" class="btn " style="background-color: #BDA684; color: #fff" v-on:click="edit($event)" v-bind:value="item.personalPostId">儲存</button>
                                         <label id="saveOk"></label>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" v-on:click="reload"></button>
                                     </div>
@@ -327,7 +327,7 @@
 
         mounted: function () {
             var self = this;
-            axios.get("/PersonalPost/GetAllContent").then(function (result) {
+            axios.get("/PersonalPost/GetUserContent").then(function (result) {
                 console.log(result.data)
                 self.MessageList = result.data;
                 console.log(result.data);

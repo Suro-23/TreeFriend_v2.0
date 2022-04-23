@@ -18,17 +18,18 @@
 @*頭像/暱稱/自我介紹/*@
 
 <div id="app" class="member-div">
-    <div class="addpostbtn">
-        <button class="addPost" onclick="location.href='/personalpost/postbackstage'">新增動態貼文</button>
+    <div v-for="user in userList">
+        <div class="addpostbtn">
+            <button class="addPost" onclick="location.href='/personalpost/postbackstage'">新增動態貼文</button>
+        </div>
+        <div class="text-center mt-2">
+            <img :src="user.headshotPath" class="rounded-circle size" alt="Alternate Text" />
+        </div>
+        <div class="text-center username">{{user.userName}}</div>
+        <div class="text-center contentaboutme">
+            <p class="aboutme">{{user.selfIntrodution}}</p>
+        </div>
     </div>
-    <div class="text-center mt-2">
-        <img src="https://i.pravatar.cc/150" class="rounded-circle size" alt="Alternate Text" />
-    </div>
-    <div class="text-center username">安安</div>
-    <div class="text-center contentaboutme">
-        <p class="aboutme">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</p>
-    </div>
-
     @*個人動態*@
     <div class="row  row-cols-md-2  row-cols-lg-3 g-4 m-1">
         <div v-for="(item,num1) in MessageList">
@@ -178,7 +179,7 @@
             activeIndex: 0,
 
             MessageList: [],
-
+            userList:[],
 
             post: {
                 personalpostid: "",
@@ -331,7 +332,12 @@
                 console.log(result.data)
                 self.MessageList = result.data;
                 console.log(result.data);
-
+            }),
+                axios.get("/PersonalPost/GetUserEdit").then(function (result) {
+                    console.log(result.data)
+                    self.userList = result.data;
+                    console.log(result.data);
+                })
 
                 ////最新文章 迴圈跑出渲染的東西
                 //for (let i = 0; i < result.data.length; i++) {
@@ -341,7 +347,7 @@
                 //    app.Content.push(contentobject);
                 //}
                 //console.log(app.Content);
-            })
+            
 
         }
     });

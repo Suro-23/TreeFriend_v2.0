@@ -107,6 +107,8 @@ namespace TreeFriend.Controllers.Api
         //}
         //渲染個人動態到前端  渲染的資料不能抓cookie的使用者，id因為這個頁面是給其他人看的
         //[AllowAnonymous]
+
+        //post的user
         [HttpGet]
         [Route("[controller]/[action]/{UserId}")]
         public List<PersonalPostRenderViewModel> GetUser([FromRoute] int UserId)  //id要等於下面的Userid
@@ -195,7 +197,23 @@ namespace TreeFriend.Controllers.Api
         {
             return View();
         }
+        //edit的user
+        [HttpGet]
+        public List<PersonalPostRenderViewModel> GetUserEdit()  //id要等於下面的Userid
+        {
+            var UserId = Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(u => u.Type == "UserId").Value);
 
+            var user = _context.usersDetail.Where(n => n.UserId == UserId)
+            .Select(x => new PersonalPostRenderViewModel()
+            {
+                HeadshotPath = x.HeadshotPath,
+                UserName = x.UserName,
+                SelfIntrodution = x.SelfIntrodution
+
+            }).ToList();
+            return user;
+        }
+        //edit 的貼文
         public List<PersonalPostRenderViewModel> GetUserContent()  //id要等於下面的Userid
         {
             var UserId = Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(u => u.Type == "UserId").Value);

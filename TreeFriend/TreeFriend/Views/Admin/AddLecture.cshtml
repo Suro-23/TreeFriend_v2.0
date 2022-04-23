@@ -179,7 +179,7 @@
 
                 <li class="page-item" v-for="n in totalPage"
                     v-bind:class="{'active': (currPage === (n))}"
-                    @@click.prevent="setPage(n)"><a class="page-link" href="#">{{n}}</a></li>
+                    @@click.prevent="setPage(n)"><a :id=`page-${n}` class="page-link" href="#">{{n}}</a></li>
 
                 <li class="page-item" v-bind:class="{'disabled': (currPage === totalPage)}"
                     @@click.prevent="setPage(currPage+1)">
@@ -442,6 +442,7 @@
     let listapp = new Vue({
         el: '#list',
         data: {
+            searchList: [""],
             lecturelist: [],
             lecture: {
                 lectureId: "",
@@ -485,7 +486,7 @@
                 var filter_name = this.filter_name.toLowerCase();
 
                 return (this.filter_name.trim() !== '') ?
-                    this.lecturelist.filter(function (d) { return d.theme.toLowerCase().indexOf(filter_name) > -1; }) :
+                    this.searchList =this.lecturelist.filter(function (d) { return d.theme.toLowerCase().indexOf(filter_name) > -1; }) :
                     this.lecturelist;
             },
 
@@ -625,6 +626,11 @@
             }
 
         },
+        watch: {
+            searchList: function () {
+                document.querySelector("#page-1").click();
+            }
+        }
 
     });
 

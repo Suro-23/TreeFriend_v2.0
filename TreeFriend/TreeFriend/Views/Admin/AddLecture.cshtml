@@ -216,7 +216,7 @@
 
                         <div class="form-row">
                             <div class="form-title">講座日期:</div>
-                            <input type="date" required v-bind:min="date" v-model="eventDate">
+                            <input type="date" required v-bind:min="date" v-model="lecture.eventDate">
                         </div>
 
                         <div class="form-row">
@@ -480,15 +480,6 @@
             })
         },
         computed: {
-            eventDate: {
-                get() {
-                    return moment(this.lecture.eventDate).format('YYYY-MM-DD');
-                },
-                set(value) {
-                    return this.lecture.eventDate = moment(value).format('YYYY-MM-DD');
-                }
-            },
-
             filteredLectureList: function () {
 
                 var filter_name = this.filter_name.toLowerCase();

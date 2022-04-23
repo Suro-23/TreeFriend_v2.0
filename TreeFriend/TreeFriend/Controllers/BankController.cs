@@ -254,8 +254,9 @@ namespace TreeFriend.Controllers
                     var mails = new string[] { user.Email };
 
                     var mailhelper = new MailHelper();
-                    mailhelper.CreateMail(mails, "TreeFriend講座入場資訊", "感謝您購買講座，入場時出示該則Mail");
+                    mailhelper.CreateMail(mails, "TreeFriend講座入場資訊", "感謝您購買講座，入場時請出示此則Mail");
                     mailhelper.Send();
+                    return Content("寄信成功");
                 }
 
                 if (convertModel.Status != "SUCCESS")

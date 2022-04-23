@@ -13,7 +13,7 @@ namespace TreeFriend.Models.ViewModel
         public string Content { get; set; }
         [Required]
         public List<string> PostPhotoPath { get; set; }
-        public object Message { get; set; }
+        public List<PersonalPostMessageViewModel> Message { get; set; }
         public bool State { get; set; }
 
 

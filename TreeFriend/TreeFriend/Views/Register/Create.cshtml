@@ -155,9 +155,57 @@
                 },
                 success: function (res) {
                     console.log(res);
+                    if (res == "帳號或密碼錯誤") {
+                        alert("帳號或密碼錯誤");
+                    } else if (res =="請至信箱開通帳號") {
+                        alert("請至信箱開通帳號");
+                    } else {
                     window.location.href = "/Home/HomePage";
-                }
+                    }
+                    }
             });
+        //$.ajax(
+        //    {
+        //        url: '/register/ConfirmUserStatus',
+        //        /*dataType: 'JSON',*/
+        //        contentType: "application/json",
+        //        type: 'POST',
+        //        data:
+        //            JSON.stringify(data),
+        //        error: function (xhr) {
+        //            alert('Ajax request 發生錯誤');
+        //        },
+        //        success: function (res) {
+        //            if (res == "成功") {
+        //                $.ajax(
+        //                    {
+        //                        url: '/register/login',
+        //                        /*dataType: 'JSON',*/
+        //                        contentType: "application/json",
+        //                        type: 'POST',
+        //                        data:
+        //                            JSON.stringify(data),
+        //                        error: function (xhr) {
+        //                            alert('Ajax request 發生錯誤');
+        //                        },
+        //                        success: function (res) {
+        //                            console.log(res);
+        //                            if (res == "帳號或密碼錯誤") {
+        //                                alert("帳號或密碼錯誤");
+        //                            } else if ("請至信箱開通帳號") {
+        //                                alert("請至信箱開通帳號");
+        //                            }
+        //                            window.location.href = "/Home/HomePage";
+        //                        }
+        //                    });
+        //            } else if (res == "請至信箱開通帳號") {
+        //                alert("請至信箱開通帳號");
+        //            } else {
+        //                alert("帳號密碼錯誤");
+        //            }
+        //        }
+        //    });
+
     });
 </script>
 

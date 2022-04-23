@@ -51,7 +51,7 @@ namespace TreeFriend.Controllers {
 
             return View(user);
         }
-
+        #region 判斷email是否重複
         public bool SameEmail([FromBody] SameEmail sameEmail) {
             var check = _context.users.Where(x => x.Email == sameEmail.Email)
                .FirstOrDefault();
@@ -61,7 +61,7 @@ namespace TreeFriend.Controllers {
                 return false;
             }
         }
-
+        #endregion
         // GET: Register/Create
         [AllowAnonymous]
         public IActionResult Create() {
@@ -114,13 +114,15 @@ namespace TreeFriend.Controllers {
             }
         }
         #endregion
+
+        #region 信箱開通 寄信
         public ActionResult GetNum(User members) //寄信方法
         {
             //string ranNum = randomNum;
             var secretcode = Encrypt(members.UserId.ToString() + "&y=true");
             //string g = Guid.NewGuid().ToString("d").Substring(0, 7);
             var message = new Message(new string[] { $"{members.Email}" }, "技能交換網站驗證碼", "親愛的" + $"{ members.Email }" + "先生/小姐" +
-                "您好，請點擊以下網址註冊:" + "https://localhost:5001/register/get?d=" + secretcode);
+                "您好，請點擊以下網址註冊:" + "https://localhost:44341/register/get?d=" + secretcode);
             _emailSender.SendEmail(message);
 
             return Content("信已寄出");
@@ -128,6 +130,9 @@ namespace TreeFriend.Controllers {
             //    //Console.WriteLine(randomNum);
             //    //return Content($"{randomNum}");
         }
+        #endregion
+
+        #region 信箱開通連結
         [HttpGetAttribute()]
         public async Task<IActionResult> Get([FromQuery] string d) {
             string Mid = Decrypt(d);
@@ -148,8 +153,10 @@ namespace TreeFriend.Controllers {
             }
             return Content("帳號已開通");
         }
+        #endregion
         // POST: Register/Create
         //[ValidateAntiForgeryToken]
+        #region 註冊
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] User user) {
             if (user.Email != "" && user.Password != "") {
@@ -195,6 +202,7 @@ namespace TreeFriend.Controllers {
                 return Content("資料有誤");
             }
         }
+        #endregion
 
         #region 補加鹽用
         [AllowAnonymous]
@@ -227,6 +235,7 @@ namespace TreeFriend.Controllers {
             return View("../Home/HomePage");
         }
 
+        #region 登入
         [HttpPost]
         //[Authorize(Roles="admin")]
         public async Task<IActionResult> Login([FromBody] UserLoginViewModel model) {
@@ -242,7 +251,11 @@ namespace TreeFriend.Controllers {
                 byte[] hashBytes = new SHA256Managed().ComputeHash(passwordAndSaltBytes);
                 string hashString = Convert.ToBase64String(hashBytes);
 
+
+
                 if (hashString == check.Password) {
+                    if (check.UserStatus == true)
+                    {
                     //YP : 登入時順便檢查身分，並獲得頭像
                     var user = _context.usersDetail.Where(u => u.UserId == check.UserId).FirstOrDefault();
                     var UserLevel = check.UserLevel == true ? "Admin" : "Member";
@@ -267,15 +280,20 @@ namespace TreeFriend.Controllers {
                         IsPersistent = true,
                         ExpiresUtc = DateTime.UtcNow.AddMinutes(20)
                     });
-
-                    //YP : 登入成功後轉跳回首頁
-                    return Json(Url.Action("HomePage", "Home"));
+                        //YP : 登入成功後轉跳回首頁
+                        return Json(Url.Action("HomePage", "Home"));
+                    }
+                    return Content("請至信箱開通帳號");
+                    
+                    
                 } else {
                     return Content("帳號或密碼錯誤");
                 }
             }
         }
+        #endregion
 
+        #region 第三方登入
         public IActionResult FBLogin() {
             var p = new AuthenticationProperties() {
                 RedirectUri = Url.Action("Response")
@@ -381,7 +399,7 @@ namespace TreeFriend.Controllers {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return Json(Url.Action("HomePage", "Home"));
         }
-
+        #endregion
 
 
         // GET: Register/Edit/5

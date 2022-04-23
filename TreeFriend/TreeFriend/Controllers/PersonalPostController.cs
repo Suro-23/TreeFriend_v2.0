@@ -142,7 +142,7 @@ namespace TreeFriend.Controllers.Api
                 else
                 {
                     //如果貼文內沒有留言，留言為空值
-                    object mes = null;
+                    List<PersonalPostMessageViewModel> mes = null;
                     var a = _context.personalPosts.Where(x => x.PersonalPostId == F).OrderByDescending(x => x.CreateDate).Take(6)
                     .Select(y => new PersonalPostRenderViewModel()
                     {
@@ -182,13 +182,22 @@ namespace TreeFriend.Controllers.Api
 
             foreach (var F in p.ToList())
             {
-                var a = _context.personalPosts.Where(x => x.PersonalPostId == F).OrderByDescending(x => x.CreateDate).Take(6)
+                var mes = _context.PersonalPostMessages.Where(x => x.PersonalPostId == F)
+                .Select(y => new PersonalPostMessageViewModel()
+                {
+                    PersonalPostId = F,
+                    UserMessage = y.Message,
+                    //HeadshotPath = h.HeadshotPath,
+                    CreateDate = y.CreateDate
+                    //TODO 加暱稱
+                }).ToList();
+                        var a = _context.personalPosts.Where(x => x.PersonalPostId == F).OrderByDescending(x => x.CreateDate).Take(6)
                 .Select(y => new PersonalPostRenderViewModel()
                 {
                     PersonalPostId = F,
                     Content = y.Content,
                     PostPhotoPath = _context.PersonalPostImages.Where(w => w.PersonalPostId == F).Select(s => s.PostPhotoPath).Take(1).ToList(),
-                    Message = _context.PersonalPostMessages.Where(D => D.PersonalPostId == F).ToList(),
+                    Message = mes,
                     State = false
                 }).ToList();
 

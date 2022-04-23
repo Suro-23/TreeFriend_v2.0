@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
+using TreeFriend.Extensions;
 using TreeFriend.Models;
 using TreeFriend.Models.Bank;
 using TreeFriend.Models.Bank.Util;
@@ -247,14 +248,24 @@ namespace TreeFriend.Controllers
                     od.PayTime = Convert.ToDateTime(convertModel.PayTime);
                   
                     _db.SaveChanges();
+                    //我要找出該筆訂單的使用者的Email
+                    var user = _db.users.SingleOrDefault(x => x.UserId == od.UserId);
+
+                    var mails = new string[] { user.Email };
+
+                    var mailhelper = new MailHelper();
+                    mailhelper.CreateMail(mails, "TreeFriend講座入場資訊", "感謝您購買講座，入場時出示該則Mail");
+                    mailhelper.Send();
                 }
 
                 if (convertModel.Status != "SUCCESS")
                 {
                     var od = _db.OrderDetails.FirstOrDefault(x => x.OrderDetailId == Convert.ToInt32(convertModel.MerchantOrderNo));
-                    od.OrderStatus = true;
+                    od.OrderStatus = false;
+                    od.UpdateTime = DateTime.Now;
                     var lecture = _db.Lectures.FirstOrDefault(x => x.LectureId == od.LectureId);
                     lecture.Count += od.Count;
+                    lecture.UpdateTime = DateTime.Now;
 
                     _db.SaveChanges();
                     

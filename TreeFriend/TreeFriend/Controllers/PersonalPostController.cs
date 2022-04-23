@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -21,7 +22,7 @@ namespace TreeFriend.Controllers.Api
             _environment = environment;
             _context = context;
         }
-        public IActionResult Post()
+        public IActionResult Post(int? id)
         {
             return View();
         }
@@ -98,14 +99,38 @@ namespace TreeFriend.Controllers.Api
         #endregion
 
         #region 渲染
-        
+        //public string GetId(int id)
+        //{
+        //    var userid = "https://localhost:44341/personalpost/post?d=" + id;
+        //    GetAllContent(userid);
+        //    return userid;
+        //}
         //渲染個人動態到前端  渲染的資料不能抓cookie的使用者，id因為這個頁面是給其他人看的
-        public List<PersonalPostRenderViewModel> GetAllContent(int id)  //id要等於下面的Userid
+        //[AllowAnonymous]
+        [HttpGet]
+        [Route("[controller]/[action]/{UserId}")]
+        public List<PersonalPostRenderViewModel> GetUser([FromRoute] int UserId)  //id要等於下面的Userid
         {
-            var UserId = Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(u => u.Type == "UserId").Value);  //這裡要更改
-            var p = _context.personalPosts.Where(x => x.UserId == UserId).OrderByDescending(y => y.PersonalPostId).Take(6).Select(z => z.PersonalPostId); //抓登入userId的所有貼文 反序列personalPosts表 取前三筆PersonalPostId
+            var user = _context.usersDetail.Where(n => n.UserId == UserId)
+            .Select(x => new PersonalPostRenderViewModel()
+            {
+                HeadshotPath = x.HeadshotPath,
+                UserName = x.UserName,
+                SelfIntrodution = x.SelfIntrodution
 
+            }).ToList();
+        return user;
+        }
+
+            [HttpGet]
+       [Route("[controller]/[action]/{UserId}")]
+        public List<PersonalPostRenderViewModel> GetAllContent([FromRoute] int UserId)  //id要等於下面的Userid
+        {
+
+            //var UserId = _context.users.Where(n=>n.UserId);  //這裡要更改
+            var p = _context.personalPosts.Where(x => x.UserId == UserId).OrderByDescending(y => y.PersonalPostId).Take(6).Select(z => z.PersonalPostId); //抓登入userId的所有貼文 反序列personalPosts表 取前三筆PersonalPostId
             var L = new List<PersonalPostRenderViewModel>();
+              
             foreach (var F in p.ToList())
             {
 
@@ -134,8 +159,8 @@ namespace TreeFriend.Controllers.Api
                         Content = y.Content,
                         PostPhotoPath = _context.PersonalPostImages.Where(w => w.PersonalPostId == F).Select(s => s.PostPhotoPath).ToList(),
                         Message = mes
-                        //UserName=username
                     }).ToList();
+                    
 
                     L.AddRange(a);
                 }
@@ -149,8 +174,8 @@ namespace TreeFriend.Controllers.Api
                         PersonalPostId = F,
                         Content = y.Content,
                         PostPhotoPath = _context.PersonalPostImages.Where(w => w.PersonalPostId == F).Select(s => s.PostPhotoPath).ToList(),
-                        Message = mes
-                        //UserName=username
+                        Message = mes,
+
 
                     }).ToList();
 
@@ -169,6 +194,70 @@ namespace TreeFriend.Controllers.Api
         public IActionResult EditPost()
         {
             return View();
+        }
+
+        public List<PersonalPostRenderViewModel> GetUserContent()  //id要等於下面的Userid
+        {
+            var UserId = Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(u => u.Type == "UserId").Value);
+
+            //var UserId = _context.users.Where(n=>n.UserId);  //這裡要更改
+            var p = _context.personalPosts.Where(x => x.UserId == UserId).OrderByDescending(y => y.PersonalPostId).Take(6).Select(z => z.PersonalPostId); //抓登入userId的所有貼文 反序列personalPosts表 取前三筆PersonalPostId
+            var L = new List<PersonalPostRenderViewModel>();
+
+            foreach (var F in p.ToList())
+            {
+
+                //取出跟6筆貼文PersonalPostId一樣的PersonalPostMessages
+                var head = _context.PersonalPostMessages.FirstOrDefault(x => x.PersonalPostId == F);
+
+                if (head != null)
+                {
+                    //選出跟usersDetail一樣的userid 取出頭像路徑
+                    var h = _context.usersDetail.FirstOrDefault(n => n.UserId == head.UserId);
+                    //建立一個留言區物件
+                    var mes = _context.PersonalPostMessages.Where(x => x.PersonalPostId == F)
+                    .Select(y => new PersonalPostMessageViewModel()
+                    {
+                        PersonalPostId = F,
+                        UserMessage = y.Message,
+                        HeadshotPath = h.HeadshotPath,
+                        CreateDate = y.CreateDate
+                        //TODO 加暱稱
+                    }).ToList();
+                    //建立貼文內容物件渲染
+                    var a = _context.personalPosts.Where(x => x.PersonalPostId == F).OrderByDescending(x => x.CreateDate).Take(6)
+                    .Select(y => new PersonalPostRenderViewModel()
+                    {
+                        PersonalPostId = F,
+                        Content = y.Content,
+                        PostPhotoPath = _context.PersonalPostImages.Where(w => w.PersonalPostId == F).Select(s => s.PostPhotoPath).ToList(),
+                        Message = mes
+                    }).ToList();
+
+
+                    L.AddRange(a);
+                }
+                else
+                {
+                    //如果貼文內沒有留言，留言為空值
+                    List<PersonalPostMessageViewModel> mes = null;
+                    var a = _context.personalPosts.Where(x => x.PersonalPostId == F).OrderByDescending(x => x.CreateDate).Take(6)
+                    .Select(y => new PersonalPostRenderViewModel()
+                    {
+                        PersonalPostId = F,
+                        Content = y.Content,
+                        PostPhotoPath = _context.PersonalPostImages.Where(w => w.PersonalPostId == F).Select(s => s.PostPhotoPath).ToList(),
+                        Message = mes,
+
+
+                    }).ToList();
+
+                    L.AddRange(a);
+                }
+            }
+            Console.WriteLine(L);
+            return L;
+
         }
 
         //渲染個人動態到編輯的前端

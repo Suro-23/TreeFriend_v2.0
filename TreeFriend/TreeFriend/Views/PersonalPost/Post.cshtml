@@ -79,16 +79,16 @@
                         <div class="modal fade" :id="'staticBackdrop'+num1" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdrop" aria-hidden="true">
                             <div class="modal-dialog">
                                 <div class="modal-content">
-                                    <div class="modal-header" style="background-color:linen;">
+                                    <div class="modal-header" style="background-color:linen; "v-for="item1 in userList">
                                         <div>
-                                            <img src="https://i.pravatar.cc/50" alt="Alternate Text" class="rounded-circle msgsize" style="width:50px">
+                                            <img :src="item1.headshotPath" alt="Alternate Text" class="rounded-circle msgsize" style="width:50px">
                                         </div>
-                                        <div class="username">安安</div>
+                                        <div class="username">{{item1.userName}}</div>
                                         <h5 class="modal-title" id="staticBackdropLabel"></h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" v-on:click="reload"></button>
                                     </div>
-                                    <div class="modal-body" style="background-color:linen;">
 
+                                    <div class="modal-body" style="background-color:linen;">
 
                                         @*彈出視窗-旋轉木馬*@
                                         <div class="text-center">
@@ -138,21 +138,13 @@
                                         <div>
                                             <div class="msgbox" v-for="(msg1,index2) in usercontent" :id="'msgren'+num1">
                                                 <span>
-                                                    <img src="https://i.pravatar.cc/50" class="rounded-circle msgsize" alt="Alternate Text" />
+                                                    <img :src="msg1.headshotPath" class="rounded-circle msgsize" alt="Alternate Text" />
                                                 </span>
                                                 <span class="msgcontent">
                                                     {{msg1.userMessage}}
                                                 </span>
                                             </div>
 
-                                        </div>
-                                        <div class="msgbox">
-                                            <span>
-                                                <img src="https://i.pravatar.cc/50" class="rounded-circle msgsize" alt="Alternate Text" />
-                                            </span>
-                                            <span class="msgcontent">
-                                                This is a wider card with supporting text below as a natural lead-in to
-                                            </span>
                                         </div>
 
                                         <div class="mes">
@@ -325,6 +317,7 @@
                                     //console.log("#msgren" + self.num);
                                     self.usercontent.push(self.content);
                                     self.post.message = "";
+                                    console.log(self.usercontent);
                                     //self.MessageList.message.push(self.usercontent)
                                     //alert('渲染成功')
                                 } else { alert('渲染失敗') }

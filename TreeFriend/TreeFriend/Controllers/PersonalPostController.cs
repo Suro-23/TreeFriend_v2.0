@@ -387,8 +387,10 @@ namespace TreeFriend.Controllers.Api
         #endregion
 
         #region 留言即時渲染
-        public object PCreateMessage(PersonalPostMessageViewModel mes)
+        public PersonalPostMessageViewModel PCreateMessage(PersonalPostMessageViewModel mes)
         {
+            var UserId = Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(u => u.Type == "UserId").Value);
+            var headshot = _context.usersDetail.Where(x => x.UserId == UserId).FirstOrDefault();
             //var list = new List<PersonalPostMessageViewModel>();
             var personalp = _context.PersonalPostMessages.Where(x => x.PersonalPostId == mes.PersonalPostId).OrderBy(x => x.CreateDate)
                                     .LastOrDefault();
@@ -396,7 +398,7 @@ namespace TreeFriend.Controllers.Api
             {
                 PersonalPostId = mes.PersonalPostId,
                 UserMessage = personalp.Message,
-                // HeadshotPath = n.HeadshotPath,
+                HeadshotPath = headshot.HeadshotPath,
                 CreateDate = personalp.CreateDate
                 //TODO 加暱稱
             };

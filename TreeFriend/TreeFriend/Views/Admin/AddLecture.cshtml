@@ -179,7 +179,7 @@
 
                 <li class="page-item" v-for="n in totalPage"
                     v-bind:class="{'active': (currPage === (n))}"
-                    @@click.prevent="setPage(n)"><a class="page-link" href="#">{{n}}</a></li>
+                    @@click.prevent="setPage(n)"><a :id=`page-${n}` class="page-link" href="#">{{n}}</a></li>
 
                 <li class="page-item" v-bind:class="{'disabled': (currPage === totalPage)}"
                     @@click.prevent="setPage(currPage+1)">
@@ -425,10 +425,9 @@
                 })
                     .then(function (response) {
                         if (response.data == true) {
-                            alert("成功");
-                            window.location.reload();
+                            successAlert("新增成功");
                         } else {
-                            alert("失敗");
+                            errorAlert("刪除失敗");
                         }
                     })
                     .catch(function (response) {
@@ -442,6 +441,7 @@
     let listapp = new Vue({
         el: '#list',
         data: {
+            searchList: [""],
             lecturelist: [],
             lecture: {
                 lectureId: "",
@@ -485,7 +485,7 @@
                 var filter_name = this.filter_name.toLowerCase();
 
                 return (this.filter_name.trim() !== '') ?
-                    this.lecturelist.filter(function (d) { return d.theme.toLowerCase().indexOf(filter_name) > -1; }) :
+                    this.searchList =this.lecturelist.filter(function (d) { return d.theme.toLowerCase().indexOf(filter_name) > -1; }) :
                     this.lecturelist;
             },
 
@@ -499,22 +499,22 @@
 
         },
         methods: {
-            add: function () {
-                window.location.href = "/AddLecture/Upload";
-            },
+            //add: function () {
+            //    window.location.href = "/AddLecture/Upload";
+            //},
 
             speakerimgup: function (event) {
                 console.log(event);
 
-                app.lecture.SpeakerPreview = null;
+                listapp.lecture.SpeakerPreview = null;
                 if (event.target.files) {
                     let reader = new FileReader();
                     reader.onload = function (e) {
                         console.log("callback");
-                        console.log(app.lecture);
-                        app.lecture.SpeakerPreview = e.target.result;
+                        console.log(listapp.lecture);
+                        listapp.lecture.SpeakerPreview = e.target.result;
                         console.log(e.target.result);
-                        app.isSpeakerPhotoShow = false;
+                        listapp.isSpeakerPhotoShow = false;
                     }
                     reader.readAsDataURL(event.target.files[0]);
 
@@ -525,15 +525,15 @@
 
             up: function (event) {
                 console.log(event);
-                app.lecture.preview = null;
+                listapp.lecture.preview = null;
                 if (event.target.files) {
                     let reader = new FileReader();
                     reader.onload = function (e) {
                         console.log("callback");
-                        console.log(app.lecture);
-                        app.lecture.preview = e.target.result;
+                        console.log(listapp.lecture);
+                        listapp.lecture.preview = e.target.result;
                         console.log(e.target.result);
-                        app.isPhotoShow = false;
+                        listapp.isPhotoShow = false;
                     }
                     reader.readAsDataURL(event.target.files[0]);
 
@@ -541,7 +541,6 @@
 
                 this.lecture.picture = event.target.files[0]
             },
-
 
             //load: function () {
             //    window.location.reload();
@@ -580,10 +579,9 @@
                 })
                     .then(function (response) {
                         if (response.data == true) {
-                            alert("修改成功");
-                            window.location.reload();
+                            successAlert("修改成功");
                         } else {
-                            alert("修改失敗");
+                            errorAlert("刪除失敗");
                         }
                     })
                     .catch(function (response) {
@@ -607,10 +605,9 @@
                 axios.delete(`/AddLecture/DeleteLecture/?lectureId=${self.target.lectureId}`)
                     .then(res => {
                         if (res.data == true) {
-                            alert("刪除成功");
-                            window.location.reload();
+                            successAlert("刪除成功");
                         } else {
-                            alert("刪除失敗");
+                            errorAlert("刪除失敗");
                         }
                     }
                     ).catch(err => console.log(err));
@@ -625,6 +622,11 @@
             }
 
         },
+        watch: {
+            searchList: function () {
+                document.querySelector("#page-1").click();
+            }
+        }
 
     });
 

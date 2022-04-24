@@ -1,10 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Net.Mail;
+using System.Net.Mime;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
@@ -248,14 +251,31 @@ namespace TreeFriend.Controllers
                     od.PayTime = Convert.ToDateTime(convertModel.PayTime);
                   
                     _db.SaveChanges();
-                    //我要找出該筆訂單的使用者的Email
+                    
                     var user = _db.users.SingleOrDefault(x => x.UserId == od.UserId);
 
-                    var mails = new string[] { user.Email };
+                    //var mails = new string[] {user.Email};
 
                     var mailhelper = new MailHelper();
-                    mailhelper.CreateMail(mails, "TreeFriend講座入場資訊", "感謝您購買講座，入場時請出示此則Mail");
-                    mailhelper.Send();
+                    //部署後確認可不可以寄發圖片再更改
+                    //mailhelper.CreateMail(mails,"TreeFriend講座入場資訊", $@"親愛會員您好，感謝您購買TreeFriend講座，活動當日請出示此憑證即可確認入場。<div><img src='img/LecturePic/T1.png' width='500'/ ></div><div><img src='img/LecturePic/T2.png' width='500'/></div>"<div>此為系統主動發送信函，請勿直接回覆此封信件。</div>);
+                    //mailhelper.Send();
+                    //return Content("寄信成功");
+                    //電腦上傳圖片
+                    var mail = new MailMessage();
+                    mail.IsBodyHtml = true;
+                    var res = new LinkedResource($@"C:\Users\Tibame_T14\Documents\GitHub\TreeFriend_v2.0\TreeFriend\TreeFriend\wwwroot\img\LecturePic\T1.Png");
+                    res.ContentId = Guid.NewGuid().ToString();
+                    var htmlBody = $@"親愛會員您好，感謝您購買TreeFriend講座，活動當日請出示此憑證即可確認入場。<div><img src='cid:{res.ContentId}'/></div><div>此為系統主動發送信函，請勿直接回覆此封信件。</div>";
+                    var altView = AlternateView.CreateAlternateViewFromString(htmlBody, null, MediaTypeNames.Text.Html);
+
+                    altView.LinkedResources.Add(res);
+
+                    mail.AlternateViews.Add(altView);
+                    mail.To.Add(user.Email);
+                    mail.From = new MailAddress("tfm104.2@gmail.com");
+                    mail.Subject = "TreeFriend講座入場資訊";
+                    mailhelper.Send(mail);
                     return Content("寄信成功");
                 }
 

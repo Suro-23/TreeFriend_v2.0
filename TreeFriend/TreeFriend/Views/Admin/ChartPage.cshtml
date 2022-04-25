@@ -42,20 +42,11 @@
     let chartApp = new Vue({
         el:"#chartDiv",
         data:{
-            todayInfo:{}
-        },
-        mounted: function() {
-            const self = this;
-            axios.get("../Api/Chart/GetTodayInfo")
-            .then(res => self.todayInfo = res.data);
-        },
-        methods:{
-            getPieData: function(){
-                //圓餅
-                const data = {
-                    labels: [
+            todayInfo:{},
+            pieData:{
+                labels: [
                     ],
-                    datasets: [{
+                datasets: [{
                         label: '分類貼文總數',
                         data: [],
                         backgroundColor: [
@@ -64,50 +55,61 @@
                             'rgb(255, 205, 86)'
                         ],
                         hoverOffset: 4
-                    }]
-                };
-
+                }]
+            },
+            pieChart:""
+        },
+        mounted: function() {
+            const self = this;
+            const pie = this.pieData;
+            const data = pie.datasets;
+            axios.get("../Api/Chart/GetTodayInfo")
+            .then(res => {
+                self.todayInfo = res.data;
+                for(let d of res.data.categoryPostCount){
+                    pie.labels[pie.labels.length] = d.category;
+                    data[0].data[data[0].data.length] = d.count;
+                }
                 const config = {
                     type: 'doughnut',
-                    data: data,
+                    data: self.pieData,
                 };
 
                 const myChart = new Chart(
                     document.getElementById('myPie'),
                     config
                 );
-            },
+            });
+
+        },
+        methods:{
         }
     });
 
 
     //圓餅
-    const data = {
-        labels: [
-            'Red',
-            'Blue',
-            'Yellow'
-        ],
-        datasets: [{
-            label: 'My First Dataset',
-            data: [300, 50, 100],
-            backgroundColor: [
-                'rgb(255, 99, 132)',
-                'rgb(54, 162, 235)',
-                'rgb(255, 205, 86)'
-            ],
-            hoverOffset: 4
-        }]
-    };
-    const config = {
-        type: 'doughnut',
-        data: data,
-    };
+    //const data = {
+    //    labels: chartApp.pieData.labels,
+    //    datasets: [{
+    //        label: 'My First Dataset',
+    //        data: chartApp.pieData.datasets[0].data,
+    //        backgroundColor: [
+    //            'rgb(255, 99, 132)',
+    //            'rgb(54, 162, 235)',
+    //            'rgb(255, 205, 86)'
+    //        ],
+    //        hoverOffset: 4
+    //    }]
+    //};
+    //const config = {
+    //    type: 'doughnut',
+    //    data: chartApp.pieData,
+    //};
 
-    const myChart = new Chart(
-        document.getElementById('myPie'),
-        config
-    );
+    //const myChart = new Chart(
+    //    document.getElementById('myPie'),
+    //    config
+    //);
 
     //長條
     const labels = [

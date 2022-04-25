@@ -63,11 +63,15 @@
             margin-bottom: 10px;
         }
 
+        .message-title-box{
+            width:80%
+        }
+
         .message-title-box li {
             margin-bottom: 11px;
             padding-bottom: 12px;
             border-bottom: 1px solid #dedede;
-            font-size: 12px;
+            font-size: 14px;
             color: black;
             list-style-type: none;
         }
@@ -101,11 +105,11 @@
                         <div class="carousel-inner">
                             <template v-for="(item,num1) in Content">
                                 <div v-if="num1 == 0" class="carousel-item active">
-                                    <img :src="item.picPath" class="d-block w-100" alt="" style="width:700px; height:400px;">
+                                    <img :src="item.picPath" class="d-block w-100" alt="" style="width:700px; height:500px;">
                                 </div>
 
                                 <div v-else class="carousel-item">
-                                    <img :src="item.picPath" class="d-block w-100" alt="" style="width:700px; height:400px;">
+                                    <img :src="item.picPath" class="d-block w-100" alt="" style="width:700px; height:500px;">
                                 </div>
                             </template>
                         </div>

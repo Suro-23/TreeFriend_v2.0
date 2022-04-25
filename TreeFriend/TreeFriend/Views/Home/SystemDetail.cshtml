@@ -85,6 +85,10 @@
         .message-title-box ul {
             padding-left: 0;
         }
+
+        .description{
+            white-space:pre-line;
+        }
     </style>
 </head>
 
@@ -95,7 +99,7 @@
                 <div class="carousel1">
                     <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
                         <div class="carousel-inner">
-                            <template v-for="(item,num1) in MessageList">
+                            <template v-for="(item,num1) in Content">
                                 <div v-if="num1 == 0" class="carousel-item active">
                                     <img :src="item.picPath" class="d-block w-100" alt="" style="width:700px; height:400px;">
                                 </div>
@@ -132,7 +136,7 @@
                         <img v-bind:src="MessageList.picPath" alt="" style="width: 85%;">
                     </div>
 
-                    <div>
+                    <div class="description">
                         @*文章內容*@
                         {{MessageList.description}}
 
@@ -178,7 +182,11 @@
 </body>
 </html>
 
+
+
 <script>
+
+
     let getUrlString = location.search; //URL 解析
     console.log(getUrlString);
     let articleId = getUrlString.replace("?id=", ""); // 取代?id=

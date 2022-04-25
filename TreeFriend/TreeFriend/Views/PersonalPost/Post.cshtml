@@ -10,25 +10,27 @@
 
 
 <div id="app" class="member-div ">
-    <div class="container mt-4">
-        <div class="row mx-auto ">
-            <div class="col-4 align-self-end">
-                <img src="/img/藝術青蛙.png" alt="Alternate Text" class="frog" />@*position-absolute*@
-            </div>
-
-            <div class="col-4 ">
-                <div class="text-center mt-2">
-                    <img src="https://i.pravatar.cc/150" class="rounded-circle size " alt="Alternate Text" />
+    <div v-for="item1 in userList">
+        <div class="container mt-4" >
+            <div class="row mx-auto ">
+                <div class="col-4 align-self-end">
+                    <img src="/img/藝術青蛙.png" alt="Alternate Text" class="frog" />@*position-absolute*@
                 </div>
-                <div class="text-center username">安安</div>
-            </div>
-            <div class="col-4 ">
-                <img src="/img/藝術兔子.png" alt="Alternate Text" class="rabbit " />@*position-absolute*@
+
+                <div class="col-4 ">
+                    <div class="text-center mt-2">
+                        <img :src="item1.headshotPath" class="rounded-circle size " alt="Alternate Text" />
+                    </div>
+                    <div class="text-center username">{{item1.userName}}</div>
+                </div>
+                <div class="col-4 ">
+                    <img src="/img/藝術兔子.png" alt="Alternate Text" class="rabbit " />@*position-absolute*@
+                </div>
             </div>
         </div>
-    </div>
-    <div class="text-center content ">
-        <p class="aboutme">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</p>
+        <div class="text-center content ">
+            <p class="aboutme">{{item1.selfIntrodution}}</p>
+        </div>
     </div>
 
     <div class="container col-lg-10 col-md-8 ">
@@ -43,7 +45,7 @@
                             @*圖片*@
                             <div class="carousel-inner">
                                 <div class="carousel-item" data-bs-interval="10000" v-for="(img,num) in item.postPhotoPath" v-bind:class="{'active': activeIndex === num}" @*v-if="num==0"*@>
-                                    <img class="d-block w-100 cardimagesizeOutside" alt="" v-bind:src="'/img/PostPicture/'+img">
+                                    <img class="d-block w-100 cardimagesizeOutside" alt="" v-bind:src="'/PostPicture/'+img">
                                 </div>
                             </div>
                             @*左右按鈕*@
@@ -77,23 +79,23 @@
                         <div class="modal fade" :id="'staticBackdrop'+num1" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdrop" aria-hidden="true">
                             <div class="modal-dialog">
                                 <div class="modal-content">
-                                    <div class="modal-header" style="background-color:linen;">
+                                    <div class="modal-header" style="background-color:linen; "v-for="item1 in userList">
                                         <div>
-                                            <img src="https://i.pravatar.cc/50" alt="Alternate Text" class="rounded-circle msgsize" style="width:50px">
+                                            <img :src="item1.headshotPath" alt="Alternate Text" class="rounded-circle msgsize" style="width:50px">
                                         </div>
-                                        <div class="username">安安</div>
+                                        <div class="username">{{item1.userName}}</div>
                                         <h5 class="modal-title" id="staticBackdropLabel"></h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" v-on:click="reload"></button>
                                     </div>
-                                    <div class="modal-body" style="background-color:linen;">
 
+                                    <div class="modal-body" style="background-color:linen;">
 
                                         @*彈出視窗-旋轉木馬*@
                                         <div class="text-center">
                                             <div :id='"carouselExampleIndicators1"+num1' class="carousel " data-bs-ride="carousel" style="margin:0px; padding:0px; float:none">
                                                 <div class="carousel-inner" style="margin:0px; padding:0px; float:none">
                                                     <div class="carousel-item " v-for="(img,num) in item.postPhotoPath" v-bind:class="{'active': activeIndex === num}" style="margin:0px; padding:0px; float:none">
-                                                        <img class="d-block w-100 cardimagesize card-img-top " alt="" v-bind:src="'/img/PostPicture/'+img" style="margin:0px; padding:0px; float:none">
+                                                        <img class="d-block w-100 cardimagesize card-img-top " alt="" v-bind:src="'/PostPicture/'+img" style="margin:0px; padding:0px; float:none">
                                                     </div>
                                                 </div>
                                                 <button class="carousel-control-prev" :data-bs-target="'#carouselExampleIndicators1'+num1" type="button" data-bs-slide="prev">
@@ -136,21 +138,13 @@
                                         <div>
                                             <div class="msgbox" v-for="(msg1,index2) in usercontent" :id="'msgren'+num1">
                                                 <span>
-                                                    <img src="https://i.pravatar.cc/50" class="rounded-circle msgsize" alt="Alternate Text" />
+                                                    <img :src="msg1.headshotPath" class="rounded-circle msgsize" alt="Alternate Text" />
                                                 </span>
                                                 <span class="msgcontent">
                                                     {{msg1.userMessage}}
                                                 </span>
                                             </div>
 
-                                        </div>
-                                        <div class="msgbox">
-                                            <span>
-                                                <img src="https://i.pravatar.cc/50" class="rounded-circle msgsize" alt="Alternate Text" />
-                                            </span>
-                                            <span class="msgcontent">
-                                                This is a wider card with supporting text below as a natural lead-in to
-                                            </span>
                                         </div>
 
                                         <div class="mes">
@@ -188,7 +182,9 @@
             </div>
         </div>
     </div>
-
+    @*<div class="text-center">
+        <p>顯示更多</p>
+    </div>*@
 </div>
 
 
@@ -210,9 +206,11 @@
                     userMessage: "",
                     userName: "",
                 }],
+
                 personalPostId: "",
                 postPhotoPath: "",
             }],
+            userList:[],
             //Content:[],
             activeIndex: 0,
             post: {
@@ -228,9 +226,16 @@
 
         },
         mounted: function () {
+            let postURL = window.location.search;
+            let targetvalue = postURL.split("=");
+            console.log(postURL);
             var self = this;
-            axios.get("/PersonalPost/GetAllContent").then(function (result) {
+            axios.get("/PersonalPost/GetAllContent/" + targetvalue[1]).then(function (result) {
                 self.MessageList = result.data;
+                console.log(result.data);
+            }),
+            axios.get("/PersonalPost/GetUser/" + targetvalue[1]).then(function (result) {
+                self.userList = result.data;
                 console.log(result.data);
             })
 
@@ -314,6 +319,7 @@
                                     //console.log("#msgren" + self.num);
                                     self.usercontent.push(self.content);
                                     self.post.message = "";
+                                    console.log(self.usercontent);
                                     //self.MessageList.message.push(self.usercontent)
                                     //alert('渲染成功')
                                 } else { alert('渲染失敗') }

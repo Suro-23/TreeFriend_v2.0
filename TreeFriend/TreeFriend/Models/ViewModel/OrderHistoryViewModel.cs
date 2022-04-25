@@ -23,6 +23,6 @@ namespace TreeFriend.Models.ViewModel
         public string Venue { get; set; }
         public string UserName { get; set; }
         public string ImgPath { get; set; }
-
+        public int LectureId { get; set; }
     }
 }

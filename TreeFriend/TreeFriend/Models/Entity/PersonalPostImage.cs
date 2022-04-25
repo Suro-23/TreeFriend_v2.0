@@ -14,7 +14,7 @@ namespace TreeFriend.Models.Entity
         public int PersonalPostImageId { get; set; }
         [Required]
         public string PostPhotoPath { get; set; }
-        public DateTime CreateDate { get; set; }
+        public DateTime CreateDate { get; set; } = DateTime.UtcNow.AddHours(8);
         [ForeignKey("PersonalPost")]
         [Required]
         public int PersonalPostId { get; set; }

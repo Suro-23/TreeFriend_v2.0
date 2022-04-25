@@ -12,23 +12,24 @@
 }
 <script src='https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.6/vue.js' integrity='sha512-ZD7CJYgtekQVIaDp8LVTYWPenxvyC1wpPwnXFm9N1YdyPmQnX/yMweUQVAPcrLte7Z4jSCp2MW+8KW6/zK7tYQ==' crossorigin='anonymous'></script>
 @*<script src='https://cdnjs.cloudflare.com/ajax/libs/vue/2.2.6/vue.min.js' integrity='sha512-yNMXFsZbP+Hii2fM4n1EvhKbBCZ2NAfW1FvlN6yB1ZanH+1sEcNV2rPEg6qCMRT/4dY01ELCdD75WflfTHdKJg==' crossorigin='anonymous'></script>*@
+@*<link href="/css//KaiSu/bootstrap.css" rel="stylesheet" />*@
 <link href="/css/KaiSu/EditPost.css" rel="stylesheet" />
-
 
 @*頭像/暱稱/自我介紹/*@
 
 <div id="app" class="member-div">
-    <div class="addpostbtn">
-        <button class="addPost" onclick="location.href='/personalpost/postbackstage'">新增動態貼文</button>
+    <div v-for="user in userList">
+        <div class="addpostbtn">
+            <button class="addPost" onclick="location.href='/personalpost/postbackstage'">新增動態貼文</button>
+        </div>
+        <div class="text-center mt-2">
+            <a :href="'/personalpost/post?id='+ user.userId"><img :src="user.headshotPath" class="rounded-circle size" alt="Alternate Text" /></a>
+</div>
+        <div class="text-center username">{{user.userName}}</div>
+        <div class="text-center contentaboutme">
+            <p class="aboutme">{{user.selfIntrodution}}</p>
+        </div>
     </div>
-    <div class="text-center mt-2">
-        <img src="https://i.pravatar.cc/150" class="rounded-circle size" alt="Alternate Text" />
-    </div>
-    <div class="text-center username">安安</div>
-    <div class="text-center contentaboutme">
-        <p class="aboutme">xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</p>
-    </div>
-
     @*個人動態*@
     <div class="row  row-cols-md-2  row-cols-lg-3 g-4 m-1">
         <div v-for="(item,num1) in MessageList">
@@ -39,7 +40,7 @@
                     @*圖片*@
                     <div class="carousel-inner" @*:data-bs-target="'#exampleModal'+num1"*@ data-bs-toggle="modal" type="button" :data-bs-target="'#staticBackdrop'+num1" href="#staticBackdrop">
                         <div class="carousel-item showwords" v-for="(img,num) in item.postPhotoPath" v-bind:class="{'active': activeIndex === num}">
-                            <img class="d-block w-100 cardimagesize" alt="" v-bind:src="'/img/PostPicture/'+img">
+                            <img class="d-block w-100 cardimagesize" alt="" v-bind:src="'/PostPicture/'+img">
                             <button>
                                 編輯貼文
                             </button>
@@ -60,29 +61,29 @@
                             </div>
                             <img class="iconmessage" src="/img/message.png" alt="Alternate Text" />
                         </div>
-                        <p class="card-text">
+                        <p class="card-text ellipsis1 " >
                             {{item.content}}
                         </p>
                     </div>
-
-                    <!-- 確定刪除的Modal -->
-                    <div class="modal fade" id="mmm" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                        <div class="modal-dialog modal-sm">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    @*<h5 class="modal-title" id="exampleModalLabel">Modal title</h5>*@
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                @*確定刪除 彈出視窗*@
+                                <!-- 確定刪除的Modal -->
+                                <div class="modal fade" :id="'mmm'+num1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-sm">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                @*<h5 class="modal-title" id="exampleModalLabel">Modal title</h5>*@
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                確定刪除?
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">否</button>
+                                                <button type="button" class="btn " style="background-color: #BDA684; color:white" v-on:click="deletepost($event)" v-bind:value="item.personalPostId">是</button>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="modal-body">
-                                    確定刪除?
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">否</button>
-                                    <button type="button" class="btn" style="background-color: #BDA684; color:white" v-on:click="deletepost($event)" v-bind:value="item.personalPostId" href="#">是</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
 
                     <div class="">
                         @*card-footer*@
@@ -92,23 +93,21 @@
                                 <div class="modal-content">
                                     <div class="modal-header" style="background-color:linen;">
                                         @*<h5 class="modal-title" id="exampleModalLabel">Modal title</h5>*@
-                                        <button type="button" class="btn btn-danger me-1" @*data-bs-target="#exampleModal"*@ data-bs-toggle="modal" href="#mmm">刪除</button>
-                                        <button type="button" class="btn btn-primary" v-on:click="edit($event)" v-bind:value="item.personalPostId">儲存</button>
+                                        <button type="button" class="btn btn-danger me-1" @*data-bs-target="#exampleModal"*@ data-bs-toggle="modal" :href="'#mmm'+num1">刪除</button>
+                                        <button type="button" class="btn " style="background-color: #BDA684; color: #fff" v-on:click="edit($event,num1)" v-bind:value="item.personalPostId">儲存</button>
                                         <label id="saveOk"></label>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" v-on:click="reload"></button>
                                     </div>
-                                    @*確定刪除 彈出視窗*@
-                                    <div>
-                                    </div>
+
                                     <div class="modal-body" style="background-color:linen;">
                                         @*內容*@
                                         @*圖片*@
                                         <div class="text-center" v-for="(img,num) in item.postPhotoPath" v-bind:class="{'active': activeIndex === num}" v-if="num<1">
-                                            <img v-bind:src="'/img/PostPicture/'+img" class="card-img-top imgsize " alt="...">
+                                            <img v-bind:src="'/PostPicture/'+img" class="card-img-top imgsize " alt="...">
                                         </div>
                                         <div class="card-body imgsicon">
                                             <p class="card-text">
-                                                <textarea id="content" class="msgEdit" v-model="post.content" @@blur="textnull" v-bind:placeholder="textnonull">
+                                                <textarea id="content" class="msgEdit" v-model="item.content" @@blur="textnull(num1)" v-bind:placeholder="textnonull">
                                                 </textarea>
                                             </p>
 
@@ -116,20 +115,20 @@
                                         <div class="msgbox" v-for="msg in item.message">
                                             @*彈出視窗-使用者留言*@
                                             <span>
-                                                <img :src="msg.headshotPath" class="rounded-circle msgsize" alt="Alternate Text" />
+                                                <img :src="'.'+msg.headshotPath" class="rounded-circle msgsize" alt="Alternate Text" />
                                             </span>
                                             <span class="msgcontent">
                                                 {{msg.userMessage}}
                                             </span>
                                         </div>
-                                        <div class="msgbox" v-for="(msg1,index2) in usercontent" :id="'msgren'+num1">
-                                            <span>
-                                                <img src="https://i.pravatar.cc/50" class="rounded-circle msgsize" alt="Alternate Text" />
-                                            </span>
-                                            <span class="msgcontent">
-                                                {{msg1.userMessage}}
-                                            </span>
-                                        </div>
+                                        @*<div class="msgbox" v-for="(msg1,index2) in usercontent" :id="'msgren'+num1">
+                                <span>
+                                    <img src="https://i.pravatar.cc/50" class="rounded-circle msgsize" alt="Alternate Text" />
+                                </span>
+                                <span class="msgcontent">
+                                    {{msg1.userMessage}}
+                                </span>
+                            </div>*@
 
                                         <div class=" mes">
                                             @*留言*@
@@ -145,14 +144,14 @@
 
                         @*留言*@
                         @*<div class="msgboxout" v-for="(msg,index1) in item.message" v-if="index1 < 1">
-                                <span>
-                                    <img src="https://i.pravatar.cc/50/random" class="rounded-circle msgsize" alt="Alternate Text" />
-                                </span>
-                                <span class="msgcontent">
-                                    {{msg.userMessage}}
-                                    <small class="text-muted updatetime">3 mins ago{{msg.createDate}}</small>
-                                </span>
-                            </div>*@
+                <span>
+                    <img src="https://i.pravatar.cc/50/random" class="rounded-circle msgsize" alt="Alternate Text" />
+                </span>
+                <span class="msgcontent">
+                    {{msg.userMessage}}
+                    <small class="text-muted updatetime">3 mins ago{{msg.createDate}}</small>
+                </span>
+            </div>*@
                     </div>
                 </div>
             </div>
@@ -178,7 +177,7 @@
             activeIndex: 0,
 
             MessageList: [],
-
+            userList:[],
 
             post: {
                 personalpostid: "",
@@ -195,8 +194,8 @@
 
         },
         methods: {
-            textnull: function () {
-                if (this.post.content == "") {
+            textnull: function (index) {
+                if (this.MessageList[index].content == "") {
                     this.textnonull = "請輸入文章內容";
                 }
             },
@@ -206,12 +205,14 @@
                 id.state = true;
                 this.isShow = !this.isShow;
             },
-            edit: function () { //編輯貼文內容
+            edit: function ( event,index) { //編輯貼文內容
                 let personalpostid = event.target.value;
+                let self = this;
+                let content = self.MessageList[index].content;
                 let formdata = new FormData();
                 formdata.append('PersonalPostId', personalpostid)
-                formdata.append("Content", this.post.content);
-                if (this.post.content != "") {
+                formdata.append("Content", content);
+                if (self.MessageList[index].content != "") {
                     axios({
                         method: 'post',
                         url: '/personalpost/editpost',
@@ -241,6 +242,8 @@
                 let personalpostid = event.target.value;
                 let Bodyformdata = new FormData();
                 Bodyformdata.append('postId', personalpostid)
+
+                //console.log(personalpostid);
 
                 //axios.delete(`/personalpost/deletepost/?personalpostId = ${self.target.personalpostId}`)
 
@@ -325,11 +328,16 @@
 
         mounted: function () {
             var self = this;
-            axios.get("/PersonalPost/GetAllContent").then(function (result) {
+            axios.get("/PersonalPost/GetUserContent").then(function (result) {
                 console.log(result.data)
                 self.MessageList = result.data;
                 console.log(result.data);
-
+            }),
+                axios.get("/PersonalPost/GetUserEdit").then(function (result) {
+                    console.log(result.data)
+                    self.userList = result.data;
+                    console.log(result.data);
+                })
 
                 ////最新文章 迴圈跑出渲染的東西
                 //for (let i = 0; i < result.data.length; i++) {
@@ -339,7 +347,7 @@
                 //    app.Content.push(contentobject);
                 //}
                 //console.log(app.Content);
-            })
+            
 
         }
     });

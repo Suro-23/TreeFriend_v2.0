@@ -16,6 +16,9 @@
     .page-link {
         border-color: aliceblue;
     }
+    [v-cloak] {
+        display: none;
+    }
 </style>
 
 <!-- AddModal -->
@@ -106,7 +109,11 @@
 </div>
 
 <fieldset id="list">
-    <div class="table-responsive mt-5 me-5">
+    <div class="mt-5 ms-0">
+    <label for="search"><strong>搜尋：</strong></label>
+    <input type="text" v-model="filter_name" id="search">
+    </div>
+    <div class="table-responsive mt-2 me-5">
         <table class="table table-hover table-sm align-middle ">
             <thead>
                 <tr>
@@ -130,19 +137,19 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="(item,index) in lecturelist.slice(pageStart, pageStart + countOfPage)" :key="index">
-                    <td>{{(currPage-1)*countOfPage + index + 1}}</td>
-                    <td v-show="isShow">{{item.lectureId}}</td>
-                    <td>{{item.createDate}}</td>
-                    <td>{{item.theme}}</td>
-                    <td>{{item.eventDate}}</td>
+                <tr v-for="(item,index) in filteredLectureList.slice(pageStart, pageStart + countOfPage)" :key="index">
+                    <td v-cloak >{{(currPage-1)*countOfPage + index + 1}}</td>
+                    <td v-show="isShow" v-cloak >{{item.lectureId}}</td>
+                    <td v-cloak >{{item.createDate}}</td>
+                    <td v-cloak >{{item.theme}}</td>
+                    <td v-cloak >{{item.eventDate}}</td>
                     @*<td>{{item.eventTimeStart}}</td>*@
                     @*<td>{{item.eventTimeEnd}}</td>*@
-                    <td>{{item.venue}}</td>
+                    <td v-cloak >{{item.venue}}</td>
                     @*<td><img :src="item.speakerImgPath" style="max-height:50px" /></td>*@
-                    <td>{{item.speaker}}</td>
-                    <td>{{item.count}}</td>
-                    <td>{{item.price}}</td>
+                    <td v-cloak >{{item.speaker}}</td>
+                    <td v-cloak >{{item.count}}</td>
+                    <td v-cloak >{{item.price}}</td>
                     @*<td>{{item.description}}</td>*@
                     @*<td>{{item.content}}</td>*@
                     @*<td><img :src="item.imgPath" style="max-height:50px" /></td>*@
@@ -162,6 +169,7 @@
             </tbody>
         </table>
     </div>
+
     <div class="d-flex justify-content-center">
         <!--分頁-->
         <nav aria-label="Page navigation example">
@@ -175,7 +183,7 @@
 
                 <li class="page-item" v-for="n in totalPage"
                     v-bind:class="{'active': (currPage === (n))}"
-                    @@click.prevent="setPage(n)"><a class="page-link" href="#">{{n}}</a></li>
+                    @@click.prevent="setPage(n)"><a :id=`page-${n}` class="page-link" href="#">{{n}}</a></li>
 
                 <li class="page-item" v-bind:class="{'disabled': (currPage === totalPage)}"
                     @@click.prevent="setPage(currPage+1)">
@@ -190,118 +198,118 @@
 
 
 
-        <!-- editModal -->
-        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="staticBackdropLabel">Edit</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <form v-on:submit.prevent="editsend">
-                        <div class="modal-body">
-                            <div class="form-row">
-                                <input disabled type="text" required v-model="lecture.lectureId">
-                                @*<input type="hidden" required v-model="lecture.lectureId"> 正式的時候要藏起來*@
-                            </div>
-
-                            <div class="form-row">
-                                <div class="form-title">講座主題:</div>
-                                <input type="text" required v-model="lecture.theme">
-                            </div>
-
-                            <div class="form-row">
-                                <div class="form-title">講座日期:</div>
-                                <input type="date" required v-bind:min="date" v-model="eventDate">
-                            </div>
-
-                            <div class="form-row">
-                                <div class="form-title">講座開始時間:</div>
-                                <input type="time" required v-model="lecture.eventTimeStart">
-                            </div>
-
-                            <div class="form-row">
-                                <div class="form-title">講座結束時間:</div>
-                                <input type="Time" required v-model="lecture.eventTimeEnd">
-                            </div>
-
-                            <div class="form-row">
-                                <div class="form-title">講座地點:</div>
-                                <input type="text" required v-model="lecture.venue">
-                            </div>
-
-                            <div class="form-row">
-                                <div class="form-title">講師圖片:</div>
-                                <input type="file" v-on:change="speakerimgup($event)">
-                                <img v-if="lecture.SpeakerPreview" :src="lecture.SpeakerPreview" style="max-height:200px">
-
-                                <img :src="lecture.speakerImgPath" style="max-height:200px" v-show="isSpeakerPhotoShow" /> @*抓取原先圖片 *@
-                            </div>
-
-                            <div class="form-row">
-                                <div class="form-title">講師:</div>
-                                <textarea cols="20" rows="5" required v-model="lecture.speaker"></textarea>
-                            </div>
-
-                            <div class="form-row">
-                                <div class="form-title">庫存數量:</div>
-                                <input type="number" min="0" required v-model="lecture.count">
-                            </div>
-
-                            <div class="form-row">
-                                <div class="form-title">票價:</div>
-                                <input type="number" min="0" required v-model="lecture.price">
-                            </div>
-
-                            <div class="form-row">
-                                <div class="form-title">封面圖片:</div>
-                                <input type="file" v-on:change="up($event)" />
-                                <img v-if="lecture.preview" :src="lecture.preview" style="max-height:200px">@*新照片顯示*@
-
-                                <img :src="lecture.imgPath" style="max-height:200px" v-show="isPhotoShow" /> @*抓取原先圖片 *@
-                            </div>
-                            <div class="form-row">
-                                <div class="form-title">講座規劃:</div>
-                                <textarea cols="20" rows="5" required v-model="lecture.description"></textarea>
-                            </div>
-
-                            <div class="form-row">
-                                <div class="form-title">講座內容:</div>
-                                <textarea cols="20" rows="5" required v-model="lecture.content"></textarea>
-                            </div>
-
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary btn-sm">SaveChange</button>
-                        </div>
-                    </form>
+    <!-- editModal -->
+    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">Edit</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-
-            </div>
-        </div>
-
-
-
-
-        <!-- deleteModal -->
-        <div class="modal fade" id="deleteModel" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="deleteLabel">Delete</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
+                <form v-on:submit.prevent="editsend">
                     <div class="modal-body">
-                        確定刪除該筆資料?
+                        <div class="form-row">
+                            <input disabled type="text" required v-model="lecture.lectureId">
+                            @*<input type="hidden" required v-model="lecture.lectureId"> 正式的時候要藏起來*@
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-title">講座主題:</div>
+                            <input type="text" required v-model="lecture.theme">
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-title">講座日期:</div>
+                            <input type="date" required v-bind:min="date" v-model="lecture.eventDate">
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-title">講座開始時間:</div>
+                            <input type="time" required v-model="lecture.eventTimeStart">
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-title">講座結束時間:</div>
+                            <input type="Time" required v-model="lecture.eventTimeEnd">
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-title">講座地點:</div>
+                            <input type="text" required v-model="lecture.venue">
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-title">講師圖片:</div>
+                            <input type="file" v-on:change="speakerimgup($event)">
+                            <img v-if="lecture.SpeakerPreview" :src="lecture.SpeakerPreview" style="max-height:200px">
+
+                            <img :src="lecture.speakerImgPath" style="max-height:200px" v-show="isSpeakerPhotoShow" /> @*抓取原先圖片 *@
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-title">講師:</div>
+                            <textarea cols="20" rows="5" required v-model="lecture.speaker"></textarea>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-title">庫存數量:</div>
+                            <input type="number" min="0" required v-model="lecture.count">
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-title">票價:</div>
+                            <input type="number" min="0" required v-model="lecture.price">
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-title">封面圖片:</div>
+                            <input type="file" v-on:change="up($event)" />
+                            <img v-if="lecture.preview" :src="lecture.preview" style="max-height:200px">@*新照片顯示*@
+
+                            <img :src="lecture.imgPath" style="max-height:200px" v-show="isPhotoShow" /> @*抓取原先圖片 *@
+                        </div>
+                        <div class="form-row">
+                            <div class="form-title">講座規劃:</div>
+                            <textarea cols="20" rows="5" required v-model="lecture.description"></textarea>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-title">講座內容:</div>
+                            <textarea cols="20" rows="5" required v-model="lecture.content"></textarea>
+                        </div>
+
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-danger btn-sm" v-on:click="deletesend">Delete</button>
+                        <button type="submit" class="btn btn-primary btn-sm">SaveChange</button>
                     </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+
+
+
+    <!-- deleteModal -->
+    <div class="modal fade" id="deleteModel" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteLabel">Delete</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    確定刪除該筆資料?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-danger btn-sm" v-on:click="deletesend">Delete</button>
                 </div>
             </div>
         </div>
+    </div>
 
 </fieldset>
 
@@ -421,10 +429,9 @@
                 })
                     .then(function (response) {
                         if (response.data == true) {
-                            alert("成功");
-                            window.location.reload();
+                            successAlert("新增成功");
                         } else {
-                            alert("失敗");
+                            errorAlert("刪除失敗");
                         }
                     })
                     .catch(function (response) {
@@ -438,6 +445,7 @@
     let listapp = new Vue({
         el: '#list',
         data: {
+            searchList: [],
             lecturelist: [],
             lecture: {
                 lectureId: "",
@@ -457,7 +465,6 @@
                 SpeakerPreview: null,
                 imgPath: "",
                 speakerImgPath: "",
-
             },
             target: null,
             date: new Date().toLocaleDateString('en-CA'),
@@ -465,49 +472,72 @@
             countOfPage: 5,
             currPage: 1,
             isSpeakerPhotoShow: true,
-            isPhotoShow: true
+            isPhotoShow: true,
+            filter_name: '',
+            
 
         },
         mounted: function () {
             let self = this;
             axios.get("/AddLecture/GetAllLecture").then(function (res) {
                 self.lecturelist = res.data;
+                
             })
         },
         computed: {
-            eventDate: {
-                get() {
-                    return moment(this.lecture.eventDate).format('YYYY-MM-DD');
-                },
-                set(value) {
-                    return this.lecture.eventDate = moment(value).format('YYYY-MM-DD');
+            filteredLectureList: function () {
+
+                var filter_name = this.filter_name.toLowerCase();
+
+                if (this.filter_name.trim() !== '') {
+                    this.searchList = this.lecturelist.filter(function (d) {
+                        return d.theme.toLowerCase().includes(filter_name) ||
+                            d.venue.toLowerCase().includes(filter_name) || d.speaker.toLowerCase().includes(filter_name) ||
+                            d.eventDate.toLowerCase().includes(filter_name)||
+                        d.count===Number(filter_name)|| d.price===Number(filter_name)
+                    })
+                    
+                    return this.searchList;
+                }    
+                else {
+                    return this.lecturelist;
                 }
+            
+                //return (this.filter_name.trim() !== '') ?
+                //    this.searchList = this.lecturelist.filter(function (d) {
+                //        return d.theme.toLowerCase().includes(filter_name)||
+                //            d.venue.toLowerCase().includes(filter_name) || d.speaker.toLowerCase().includes(filter_name) /* ||*/
+                //            //d.count===Number(filter_name)|| d.price===Number(filter_name)
+                //    }) :
+                //    this.lecturelist;
             },
+
             pageStart: function () {
                 return (this.currPage - 1) * this.countOfPage;
             },
             totalPage: function () {
-                return Math.ceil((this.lecturelist.length / this.countOfPage))
-            }
+                return Math.ceil((this.filteredLectureList.length / this.countOfPage))
+            },
+            
 
         },
         methods: {
-            add: function () {
-                window.location.href = "/AddLecture/Upload";
-            },
+            //add: function () {
+            //    window.location.href = "/AddLecture/Upload";
+            //},
 
             speakerimgup: function (event) {
                 console.log(event);
 
-                app.lecture.SpeakerPreview = null;
+                listapp.lecture.SpeakerPreview = null;
                 if (event.target.files) {
                     let reader = new FileReader();
                     reader.onload = function (e) {
                         console.log("callback");
-                        console.log(app.lecture);
-                        app.lecture.SpeakerPreview = e.target.result;
+                        console.log(listapp.lecture);
+                        listapp.lecture.SpeakerPreview = e.target.result;
                         console.log(e.target.result);
-                        app.isSpeakerPhotoShow = false;
+                        listapp.isSpeakerPhotoShow = false;
                     }
                     reader.readAsDataURL(event.target.files[0]);
 
@@ -518,15 +548,15 @@
 
             up: function (event) {
                 console.log(event);
-                app.lecture.preview = null;
+                listapp.lecture.preview = null;
                 if (event.target.files) {
                     let reader = new FileReader();
                     reader.onload = function (e) {
                         console.log("callback");
-                        console.log(app.lecture);
-                        app.lecture.preview = e.target.result;
+                        console.log(listapp.lecture);
+                        listapp.lecture.preview = e.target.result;
                         console.log(e.target.result);
-                        app.isPhotoShow = false;
+                        listapp.isPhotoShow = false;
                     }
                     reader.readAsDataURL(event.target.files[0]);
 
@@ -534,7 +564,6 @@
 
                 this.lecture.picture = event.target.files[0]
             },
-
 
             //load: function () {
             //    window.location.reload();
@@ -573,10 +602,9 @@
                 })
                     .then(function (response) {
                         if (response.data == true) {
-                            alert("修改成功");
-                            window.location.reload();
+                            successAlert("修改成功");
                         } else {
-                            alert("修改失敗");
+                            errorAlert("刪除失敗");
                         }
                     })
                     .catch(function (response) {
@@ -600,10 +628,9 @@
                 axios.delete(`/AddLecture/DeleteLecture/?lectureId=${self.target.lectureId}`)
                     .then(res => {
                         if (res.data == true) {
-                            alert("刪除成功");
-                            window.location.reload();
+                            successAlert("刪除成功");
                         } else {
-                            alert("刪除失敗");
+                            errorAlert("刪除失敗");
                         }
                     }
                     ).catch(err => console.log(err));
@@ -618,8 +645,19 @@
             }
 
         },
+        watch: {
+            searchList: function () {
+                if (this.searchList.length===0|| document.querySelector("#page-1")===null) {
+                    console.log(this.searchList);
+                } else {
+                    document.querySelector("#page-1").click();
+                    console.log(this.searchList);
+                }
 
-    });
+            },
+        }
+
+});
 
 
 </script>

@@ -35,14 +35,16 @@
                             <td v-cloak>{{item.orderDetailId}}</td>
                             <td class="col-2" v-cloak>{{item.createDate}}</td>
                             <td class="col-3">
-                                <div class="d-flex align-items-center position-absolute place" v-cloak>
-                                    <span class="material-symbols-outlined">
-                                        pin_drop
-                                    </span>{{item.venue}}
-                                </div>
-                                <div>
-                                    <img v-bind:src="item.imgPath" style="max-height:80px" class="pic"/>
-                                </div>
+                                <a :href="'/home/lectureDetail?id='+ item.lectureId">
+                                    <div class="d-flex align-items-center position-absolute place" v-cloak>
+                                        <span class="material-symbols-outlined">
+                                            pin_drop
+                                        </span>{{item.venue}}
+                                    </div>
+                                    <div>
+                                        <img v-bind:src="item.imgPath" style="max-height:80px" class="pic" />
+                                    </div>
+                                </a>
                             </td>
                             <td v-cloak>${{item.price}}×{{item.count}}<br />NT${{item.totoalAmount}}</td>
                             <td v-if="item.paymentStatus">付款成功</td>
@@ -123,7 +125,7 @@
                 <nav aria-label="Page navigation example">
                     <ul class="pagination pagination-sm ">
                         <li class="page-item" v-bind:class="{'disabled': (hCurrPage === 1)}"
-                            @@click.prevent="setOrderHistoryTotal(hCurrPage-1)">
+                            @@click.prevent="setOrderHistoryTotalPage(hCurrPage-1)">
                             <a class="page-link" href="#" aria-label="Previous">
                                 <span aria-hidden="true">&laquo;</span>
                             </a>
@@ -131,10 +133,10 @@
 
                         <li class="page-item" v-for="n in orderHistoryTotalPage"
                             v-bind:class="{'active': (hCurrPage === (n))}"
-                            @@click.prevent="setOrderHistoryTotal(n)"><a class="page-link" href="#" v-cloak>{{n}}</a></li>
+                            @@click.prevent="setOrderHistoryTotalPage(n)"><a class="page-link" href="#" v-cloak>{{n}}</a></li>
 
                         <li class="page-item" v-bind:class="{'disabled': (hCurrPage === orderHistoryTotalPage)}"
-                            @@click.prevent="setOrderHistoryTotal(hCurrPage+1)">
+                            @@click.prevent="setOrderHistoryTotalPage(hCurrPage+1)">
                             <a class="page-link" href="#" aria-label="Next">
                                 <span aria-hidden="true">&raquo;</span>
                             </a>
@@ -161,8 +163,8 @@
             orderList: [],
             orderHistoryList: [],
             countOfPage: 10,
-            hCountOfPage: 10,
             currPage: 1,
+            hCountOfPage: 10,
             hCurrPage: 1,
 
         },
@@ -190,7 +192,7 @@
                 return Math.ceil((this.orderList.length / this.countOfPage))
             },
             orderHistoryTotalPage: function () {
-                return Math.ceil((this.orderHistoryList.length / this.countOfPage))
+                return Math.ceil((this.orderHistoryList.length / this.hCountOfPage))
             },
 
 
@@ -206,7 +208,7 @@
                 if (idx <= 0 || idx > this.orderHistoryTotalPage) {
                     return;
                 }
-                this.currPage = idx;
+                this.hCurrPage = idx;
             },
 
 

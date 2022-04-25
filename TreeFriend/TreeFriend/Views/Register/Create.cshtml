@@ -51,7 +51,7 @@
                     <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"></script>
 
                     <!-- The JS SDK Login Button -->
-                    <fb:login-button @*scope="public_profile,email"*@ @*onlogin="checkLoginState()";*@></fb:login-button>
+                    <fb:login-button @*scope="public_profile,email" onlogin="checkLoginState()";*@></fb:login-button>
 
                     <a href="/register/fblogin" @*scope="public_profile,email" onclick="checkLoginState();*@>
                         <img src="/img/fb48px.png" alt="" />
@@ -61,7 +61,7 @@
                     </a>
                     <div id="status"></div>
 
-                   
+
 
                 </div>
             </div>
@@ -97,12 +97,12 @@
                     <br>
                     @*</form>*@
                     <!--<div class="img_btn">-->
-                        @*<a href="javascript:;">*@
-                        <!--<img src="/img/fb48px.png" alt="" />-->
-                        @*</a>*@
-                        @*<a href="javascript:;">*@
-                        <!--<img src="/img/google48px.png" alt="" />-->
-                        @*</a>*@
+                    @*<a href="javascript:;">*@
+                    <!--<img src="/img/fb48px.png" alt="" />-->
+                    @*</a>*@
+                    @*<a href="javascript:;">*@
+                    <!--<img src="/img/google48px.png" alt="" />-->
+                    @*</a>*@
                     <!--</div>-->
                 </div>
             </div>
@@ -132,7 +132,7 @@
     @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 }
 
-
+<!--一般登入-->
 <script>
     var loginbtn = document.getElementById("signinBtn")
     loginbtn.addEventListener("click", function () {
@@ -154,10 +154,62 @@
                     alert('Ajax request 發生錯誤');
                 },
                 success: function (res) {
-                    console.log(res);
-                    window.location.href = "/Home/HomePage";
+                    //console.log(res);
+                    if (res == "帳號或密碼錯誤") {
+                        SWerror("帳號或密碼錯誤!", "", "再想想看");
+                        //alert("帳號或密碼錯誤");
+                    } else if (res == "請至信箱開通帳號") {
+                        SWwarning("請至信箱開通帳號", "", "馬上去開通");
+                        //alert("請至信箱開通帳號");
+                    } else {
+                        SWseccess("歡迎回來!", "", "學習新技能吧!");
+                        /*window.location.href = "/Home/HomePage";*/
+                    }
                 }
             });
+
+        //$.ajax(
+        //    {
+        //        url: '/register/ConfirmUserStatus',
+        //        /*dataType: 'JSON',*/
+        //        contentType: "application/json",
+        //        type: 'POST',
+        //        data:
+        //            JSON.stringify(data),
+        //        error: function (xhr) {
+        //            alert('Ajax request 發生錯誤');
+        //        },
+        //        success: function (res) {
+        //            if (res == "成功") {
+        //                $.ajax(
+        //                    {
+        //                        url: '/register/login',
+        //                        /*dataType: 'JSON',*/
+        //                        contentType: "application/json",
+        //                        type: 'POST',
+        //                        data:
+        //                            JSON.stringify(data),
+        //                        error: function (xhr) {
+        //                            alert('Ajax request 發生錯誤');
+        //                        },
+        //                        success: function (res) {
+        //                            console.log(res);
+        //                            if (res == "帳號或密碼錯誤") {
+        //                                alert("帳號或密碼錯誤");
+        //                            } else if ("請至信箱開通帳號") {
+        //                                alert("請至信箱開通帳號");
+        //                            }
+        //                            window.location.href = "/Home/HomePage";
+        //                        }
+        //                    });
+        //            } else if (res == "請至信箱開通帳號") {
+        //                alert("請至信箱開通帳號");
+        //            } else {
+        //                alert("帳號密碼錯誤");
+        //            }
+        //        }
+        //    });
+
     });
 </script>
 
@@ -264,8 +316,9 @@
                         } else if (res == "資料有誤") {
                             alert("資料有誤");
                         } else {
-                            alert("請至信箱開通帳號")
-                            window.location.href = "/register/AfterRegister";
+                            SWinfo("註冊成功!", "請至email開通帳號~開通即可開始技能交換!", "馬上去開通");
+                            //alert("請至信箱開通帳號");
+                            //window.location.href = "/register/AfterRegister";
                         }
                     }
                 });
@@ -335,4 +388,50 @@
     //            window.location.href = "/home/";
     //    });
     //}
+</script>
+
+<!--SweetAlert-->
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    function SWerror(title, text, close) {
+        Swal.fire({
+            title: title,
+            text: text,
+            icon: 'error',
+            confirmButtonText: close
+        });
+    }
+
+    function SWseccess(title, text, ok) {
+        Swal.fire({
+            title: title,
+            text: text,
+            icon: 'success',
+            confirmButtonText: ok
+        }).then(function () {
+            window.location.href = "/Home/HomePage";
+        });
+    }
+
+    function SWwarning(title, text, ok) {
+        Swal.fire({
+            title: title,
+            text: text,
+            icon: 'warning',
+            confirmButtonText: ok
+        }).then(function () {
+            window.location.href = "/Register/Create";
+        });
+    }
+
+    function SWinfo(title, text, ok) {
+        Swal.fire({
+            title: title,
+            text: text,
+            icon: 'info',
+            confirmButtonText: ok
+        }).then(function () {
+            window.location.href = "/Register/Create";
+        });
+    }
 </script>

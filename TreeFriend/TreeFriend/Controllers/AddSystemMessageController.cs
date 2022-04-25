@@ -65,7 +65,7 @@ namespace TreeFriend.Controllers
                 {
                     Title = model.Title,
                     Description = model.Description,
-                    CreateDate = DateTime.Now,
+                    CreateDate = DateTime.UtcNow.AddHours(8),
                     PicPath = fileName,
                     UserId = model.UserId
                 });

@@ -1,13 +1,17 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Net.Mail;
+using System.Net.Mime;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
+using TreeFriend.Extensions;
 using TreeFriend.Models;
 using TreeFriend.Models.Bank;
 using TreeFriend.Models.Bank.Util;
@@ -35,7 +39,7 @@ namespace TreeFriend.Controllers
             HashKey = "DIQL4I5DZ6sG6aVcBnQ6sFgkzmxUHSdP",
             HashIV = "CNnhZ4oa0qTNVUMP",
             ReturnURL = "http://yourWebsitUrl/Bank/SpgatewayReturn", //ngrok網址要更改 https://0d54-1-164-234-176.ngrok.io/Home/HomePage 跳過NotifyUEL頁面 
-            NotifyURL = "https://0d54-1-164-234-176.ngrok.io/Bank/SpgatewayReturn",
+            NotifyURL = "https://f699-49-158-79-227.ngrok.io/Bank/SpgatewayReturn",
             CustomerURL = "http://yourWebsitUrl/Bank/SpgatewayCustomer",
             AuthUrl = "https://ccore.spgateway.com/MPG/mpg_gateway",
             CloseUrl = "https://core.newebpay.com/API/CreditCard/Close"
@@ -82,7 +86,7 @@ namespace TreeFriend.Controllers
            
             _db.OrderDetails.Add(new Models.Entity.OrderDetail()
             {
-                CreateDate = DateTime.Now,
+                CreateDate = DateTime.UtcNow.AddHours(8),
                 Price = _db.Lectures.Where(x => x.LectureId == InputlectureId).Select(y => y.Price).SingleOrDefault(),
                 Count=Buyercount,
                 UserId=UserId,
@@ -141,7 +145,7 @@ namespace TreeFriend.Controllers
                 // 商店取號網址
                 CustomerURL = _bankInfoModel.CustomerURL,
                 // 支付取消 返回商店網址
-                ClientBackURL = "https://0d54-1-164-234-176.ngrok.io/home/homepage",//返回商店網址 ngrok網址要更改
+                ClientBackURL = "https://f699-49-158-79-227.ngrok.io/home/PersonalOrderHistory",//返回商店網址 ngrok網址要更改
                 // * 付款人電子信箱
                 Email = string.Empty,
                 // 付款人電子信箱 是否開放修改(1=可修改 0=不可修改)
@@ -247,14 +251,42 @@ namespace TreeFriend.Controllers
                     od.PayTime = Convert.ToDateTime(convertModel.PayTime);
                   
                     _db.SaveChanges();
+                    
+                    var user = _db.users.SingleOrDefault(x => x.UserId == od.UserId);
+
+                    //var mails = new string[] {user.Email};
+
+                    var mailhelper = new MailHelper();
+                    //部署後確認可不可以寄發圖片再更改
+                    //mailhelper.CreateMail(mails,"TreeFriend講座入場資訊", $@"親愛會員您好，感謝您購買TreeFriend講座，活動當日請出示此憑證即可確認入場。<div><img src='img/LecturePic/T1.png' width='500'/ ></div><div><img src='img/LecturePic/T2.png' width='500'/></div>"<div>此為系統主動發送信函，請勿直接回覆此封信件。</div>);
+                    //mailhelper.Send();
+                    //return Content("寄信成功");
+                    //電腦上傳圖片
+                    var mail = new MailMessage();
+                    mail.IsBodyHtml = true;
+                    var res = new LinkedResource($@"C:\Users\Tibame_T14\Documents\GitHub\TreeFriend_v2.0\TreeFriend\TreeFriend\wwwroot\img\LecturePic\T1.Png");
+                    res.ContentId = Guid.NewGuid().ToString();
+                    var htmlBody = $@"親愛會員您好，感謝您購買TreeFriend講座，活動當日請出示此憑證即可確認入場。<div><img width='500' src='cid:{res.ContentId}'/></div><div>此為系統主動發送信函，請勿直接回覆此封信件。</div>";
+                    var altView = AlternateView.CreateAlternateViewFromString(htmlBody, null, MediaTypeNames.Text.Html);
+
+                    altView.LinkedResources.Add(res);
+
+                    mail.AlternateViews.Add(altView);
+                    mail.To.Add(user.Email);
+                    mail.From = new MailAddress("tfm104.2@gmail.com");
+                    mail.Subject = "TreeFriend講座入場資訊";
+                    mailhelper.Send(mail);
+                    return Content("寄信成功");
                 }
 
                 if (convertModel.Status != "SUCCESS")
                 {
                     var od = _db.OrderDetails.FirstOrDefault(x => x.OrderDetailId == Convert.ToInt32(convertModel.MerchantOrderNo));
-                    od.OrderStatus = true;
+                    od.OrderStatus = false;
+                    od.UpdateTime = DateTime.UtcNow.AddHours(8);
                     var lecture = _db.Lectures.FirstOrDefault(x => x.LectureId == od.LectureId);
                     lecture.Count += od.Count;
+                    lecture.UpdateTime = DateTime.UtcNow.AddHours(8);
 
                     _db.SaveChanges();
                     

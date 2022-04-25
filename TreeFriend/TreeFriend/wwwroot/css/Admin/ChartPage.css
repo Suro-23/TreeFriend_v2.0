@@ -25,8 +25,3 @@
 .sub-title {
     color: gray;
 }
-
-.content {
-    height: 100vh;
-    overflow: auto;
-}

@@ -29,11 +29,11 @@
 
     .icon {
         display: inline-block;
+        cursor: pointer;
     }
 
     .icon.inverse {
-            /* 箭頭朝下 */
-            transform: rotate(180deg);
+        transform: rotate(180deg);
    }
 
     
@@ -129,8 +129,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="container-fluid">
-                        <div class="col-12">
+                    <div class="container col-12" >
                             <div class="table-responsive">
                                 <table class="table align-middle">
                                     <thead>
@@ -165,9 +164,6 @@
                                     </tbody>
                                 </table>
                             </div>
-
-
-                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>

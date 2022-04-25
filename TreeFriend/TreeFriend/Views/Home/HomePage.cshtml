@@ -108,7 +108,7 @@
 <div class="grid-body-headr">
     <div class="grid" id="GetSystem">
         <div class="grid-item" v-for="item in MessageList">
-            <a href="'/home/SystemDetail/'+item.articleID">
+            <a v-bind:href="'/Home/SystemDetail/?id=' +item.articleID">
                 <div class="card-blog">
                     <img class="card-img" v-bind:src="item.picPath" alt="blog-picture">
                     <div class="card-content">

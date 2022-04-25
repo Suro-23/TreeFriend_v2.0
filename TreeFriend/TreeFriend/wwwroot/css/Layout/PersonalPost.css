@@ -1,4 +1,6 @@
-﻿body {
+﻿@import url('https://fonts.googleapis.com/css2?family=Mali:wght@600&display=swap');
+
+body {
     background-color: rgb(232, 243, 252);
 }
 
@@ -9,7 +11,9 @@
 .logo {
     height: 40px;
 }
-
+.aline {
+    text-decoration: none;
+}
 .headshot {
     height: 40px;
     border-radius: 100%;
@@ -19,9 +23,9 @@
     padding: 0;
 }
 
-.bg-brown {
+/*.bg-brown {
     background-color: rgb(251, 198, 152)
-}
+}*/
 
 .dropdown-toggle::after {
     display: none;
@@ -29,6 +33,10 @@
 
 .container {
     padding: 1rem;
+}
+
+.header-bg {
+    background-color: #9fb6a8;
 }
 
 .member-header-text {
@@ -69,4 +77,15 @@
 .container .row a {
     color: black;
     text-decoration: none;
+}
+.treefriend {
+    font-family: 'Mali', cursive, sans-serif;
+    font-size: 24px;
+    color: #227D51;
+}
+
+.friend {
+    font-family: 'Mali', cursive, sans-serif;
+    font-size: 24px;
+    color: #6E552F;
 }

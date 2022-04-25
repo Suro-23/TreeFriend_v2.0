@@ -23,8 +23,11 @@
 <body>
     <nav id="header-nav" class="navbar navbar-expand-lg navbar-light header-bg">
         <div class="container-fluid">
-            <a href="@Url.Action("HomePage","Home")">
-                <img src="~/icon/Logo.png" alt="" class="logo">
+            <a href="@Url.Action("HomePage","Home")" class="aline">
+                <div class="d-flex align-items-center">
+                    <img src="/img/logo1.png" alt="" class="logo">
+                    <span class="treefriend">Tree<span class="friend">Friend</span></span>
+                </div>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
                     aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
@@ -32,30 +35,37 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNavDropdown">
                 <ul class="navbar-nav d-flex align-items-center">
-                    <li class="nav-item icon-img">
-                        <a class="nav-link" href="@Url.Action("LectureList","Home")"><img src="~/icon/lecture.png"/></a>
-                    </li>
-                    @if (User.IsInRole("Admin")) {
-                        <li class="nav-item icon-img">
-                            <a class="nav-link" href="@Url.Action("ChartPage","Admin")"><img src="~/icon/admin.png"/></a>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" href="@Url.Action("ChartPage","Admin")">管理員</a>
                         </li>
                     }
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("AllSkillPostPage","Home")">技能貼文</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("LectureList","Home")">講座</a>
+                    </li>
                     @{
-                        if (Context.User.Identity.IsAuthenticated) {
+                        if (Context.User.Identity.IsAuthenticated)
+                        {
                             var imgPath = Context.User.Claims.FirstOrDefault(c => c.Type == "Headshot").Value;
 
                             <li class="nav-item dropdown d-flex align-items-center">
                                 <a class="nav-link dropdown-toggle head-area" href="#" id="navbarDropdownMenuLink" role="button"
-                               data-bs-toggle="dropdown" aria-expanded="false">
+                                   data-bs-toggle="dropdown" aria-expanded="false">
                                     <img class="headshot" src="@imgPath" alt="">
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
                                     <li><a class="dropdown-item" href="@Url.Action("MemberInfo","Home")">基本資料</a></li>
-                                    <li><a class="dropdown-item" href="@Url.Action("AddSkillPostPage","Home")">技能發文</a></li>
+                                    <li><a class="dropdown-item" href="@Url.Action("AddSkillPostPage","Home")">交換技能</a></li>
                                     <li><a class="dropdown-item" v-on:click="logout">登出</a></li>
                                 </ul>
                             </li>
-                        } else {
+                        }
+                        else
+                        {
                             <li class="nav-item">
                                 <a class="nav-link" href="@Url.Action("Create","Register")">登入</a>
                             </li>

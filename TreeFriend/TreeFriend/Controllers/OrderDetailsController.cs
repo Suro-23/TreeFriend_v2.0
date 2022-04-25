@@ -18,7 +18,7 @@ namespace TreeFriend.Controllers
 
        public List<OrderHistoryViewModel> GetAllOrders()
         {
-            var result = _db.OrderDetails.Select(od => new OrderHistoryViewModel {
+            var result = _db.OrderDetails.OrderByDescending(od => od.CreateDate).Select(od => new OrderHistoryViewModel {
                 OrderDetailId = od.OrderDetailId,
                 CreateDate = od.CreateDate.ToString("yyyy-MM-dd HH:mm"),
                 TotoalAmount = Convert.ToInt32(od.Price * od.Count),
@@ -40,8 +40,8 @@ namespace TreeFriend.Controllers
         }
 
         public List<OrderHistoryViewModel> GetOrderByDescendingOrders()
-        {
-            var result = _db.OrderDetails.Where(od=>od.OrderStatus==true).OrderByDescending(od=>od.Price*od.Count).Select(od => new OrderHistoryViewModel
+        {//.Where(od=>od.OrderStatus==true).
+            var result = _db.OrderDetails.OrderByDescending(od=>od.Price*od.Count).Select(od => new OrderHistoryViewModel
             {
                 OrderDetailId = od.OrderDetailId,
                 CreateDate = od.CreateDate.ToString("yyyy-MM-dd HH:mm"),

@@ -87,7 +87,7 @@ namespace TreeFriend.Controllers.Api {
         [HttpGet]
         public List<OrderHistoryViewModel> GetOrder() {
             int userId = Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(u => u.Type == "UserId").Value);
-            var result = _db.OrderDetails.Where(od => od.UserId == userId && od.Lecture.EventDate>=DateTime.Now && od.OrderStatus==true).Select(od => new OrderHistoryViewModel
+            var result = _db.OrderDetails.Where(od => od.UserId == userId && od.Lecture.EventDate>=DateTime.Now && od.OrderStatus==true).OrderByDescending(od => od.CreateDate).Select(od => new OrderHistoryViewModel
             {
                 OrderDetailId=od.OrderDetailId,
                 CreateDate=od.CreateDate.ToString("yyyy-MM-dd HH:mm"),
@@ -115,7 +115,7 @@ namespace TreeFriend.Controllers.Api {
         public List<OrderHistoryViewModel> GetOrderHistory()
         {
             int userId = Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(u => u.Type == "UserId").Value);
-            var result = _db.OrderDetails.Where(od => od.UserId == userId &&( od.Lecture.EventDate < DateTime.Now || od.OrderStatus == false)).Select(od => new OrderHistoryViewModel
+            var result = _db.OrderDetails.Where(od => od.UserId == userId &&( od.Lecture.EventDate < DateTime.Now || od.OrderStatus == false)).OrderByDescending(od=>od.CreateDate).Select(od => new OrderHistoryViewModel
             {
                 OrderDetailId = od.OrderDetailId,
                 CreateDate = od.CreateDate.ToString("yyyy-MM-dd HH:mm"),

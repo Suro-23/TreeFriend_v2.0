@@ -35,7 +35,7 @@ namespace TreeFriend.Controllers
         #region 渲染
         public List<AddLecturelistViewModel> GetAllLecture()
         {
-            var result = _db.Lectures.Where(x => x.IsDelete == false).Select(x => new AddLecturelistViewModel
+            var result = _db.Lectures.Where(x => x.IsDelete == false).OrderByDescending(x => x.CreateDate).Select(x => new AddLecturelistViewModel
             {
                 LectureId = x.LectureId,
                 CreateDate = x.CreateDate.ToString("yyyy-MM-dd"),

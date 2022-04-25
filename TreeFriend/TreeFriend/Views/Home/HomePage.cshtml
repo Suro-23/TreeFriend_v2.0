@@ -6,7 +6,7 @@
             <div class="txt">
                 <div>技能交換、讀書會、家教</div>
                 <h1 class="txt-context">知識夥伴一起 啟動斜槓人生</h1>
-                <div class="txt-p2">托特是一個匯集了語言、資訊、音樂等各種知識的技能交換平台</div>
+                <div class="txt-p2">TreeFriend是一個匯集了語言、資訊、音樂等各種知識的技能交換平台</div>
                 <a href="@Url.Action("AllSkillPostPage","Home")" class="txt-contexts">尋找學習夥伴</a>
             </div>
 
@@ -42,8 +42,8 @@
             <img src="/img/social-media.png" alt="">
         </div>
         <div class="contentBx1">
-            <h2>到XX找適合你的</h2>
-            <p>現在就到托特找技能交換、讀書會，學生、家教，最棒的是尋找和刊登都完全免費。</p>
+            <h2>到TreeFriend找適合你的</h2>
+            <p>現在就到TreeFriend找技能交換、讀書會，學生、家教，最棒的是尋找和刊登都完全免費。</p>
         </div>
     </div>
 </div>
@@ -63,10 +63,10 @@
         <div class="content">
             <h2 class="content-h2">Danial</h2>
             <p class="cardp">
-                使用托特是因為朋友推薦，上面有很多交換技能，像是寫程式、英日語教學等等。
+                使用TreeFriend是因為朋友推薦，上面有很多交換技能，像是寫程式、英日語教學等等。
                 抱著試試看的心態下載，發現平台簡單易操作、也從沒有當機問題，上面尋求技能交換的人都很認真
-                ，比起FB社團常常碰到亂傳騷擾訊息的人，我在thoth上從來沒遇過。
-                使用3-4個月，我成功透過touth交換出履歷修改，並學到一直很想嘗試的塔羅牌。
+                ，比起FB社團常常碰到亂傳騷擾訊息的人，我在TreeFriend上從來沒遇過。
+                使用3-4個月，我成功透過TreeFriend交換出履歷修改，並學到一直很想嘗試的塔羅牌。
             </p>
         </div>
     </div>
@@ -77,11 +77,11 @@
         <div class="content">
             <h2 class="content-h2">Agent</h2>
             <p class="cardp">
-                我是純商背景，在2021二月初決定要開始學寫程式，
+                我是純商背景，在2022二月初決定要開始學寫程式，
                 但一開始什麼都不會也沒錢去上課，身邊也沒有認識的工程師，
                 蠻沒有方向的。在網路上有人推薦，抱著姑且一試的心態來交換技能，
                 沒想到才剛Po馬上就真的有很優秀的工程師願意跟我交換技能，大約半年的現在我已經可以獨立寫出動態網頁了。
-                很謝謝遇到的優秀前輩們，推薦XXX給你！
+                很謝謝遇到的優秀前輩們，推薦TreeFriend給你！
             </p>
         </div>
     </div>
@@ -104,62 +104,16 @@
 
 
 @*系統推文*@
-<div class="grid-h2"><h2 style="text-align: center; background-color: #efeeee; ">精選專欄</h2></div>
+<div class="grid-h2"><h2 style="text-align: center; background-color: #efeeee; font-size: 45px;">精選專欄</h2></div>
 <div class="grid-body-headr">
-    <div class="grid">
-
-        <div class="grid-item">
-            <a href="https://www.google.com.tw/?hl=zh_TW">
+    <div class="grid" id="GetSystem">
+        <div class="grid-item" v-for="item in MessageList">
+            <a href="'/home/SystemDetail/'+item.articleID">
                 <div class="card-blog">
-                    <img class="card-img" src="https://picsum.photos/1280/853" alt="blog-picture">
+                    <img class="card-img" v-bind:src="item.picPath" alt="blog-picture">
                     <div class="card-content">
-                        <h1 class="card-header" title="公司常說的「數位轉型」，對我的職涯或升遷有幫助嗎？">公司常說的「數位轉型」，對我的職涯或升遷有幫助嗎？</h1>
-                        <p class="card-text">當內部常常提到「數位轉型」， 但該如何運用在工作、職務上？想要加薪、升遷，有什麼方式能加強「數位轉型能力」？ TibaMe 邀請台灣數位轉型大師 —詹文男博士，親自為你解答！</p>
-                        <button class="card-btn">
-                            閱讀更多
-                        </button>
-
-                    </div>
-                </div>
-            </a>
-        </div>
-
-        <div class="grid-item">
-            <a href="https://www.google.com.tw/?hl=zh_TW">
-                <div class="card-blog">
-                    <img class="card-img" src="https://picsum.photos/1280/853" alt="blog-picture">
-                    <div class="card-content">
-                        <h1 class="card-header" title="到處都在說數位轉型，關我什麼事？">到處都在說數位轉型，關我什麼事？</h1>
-                        <p class="card-text">對「數位轉型」這四個字聽了很多、卻感受很少嗎？就算企業在談，還是不知道跟你自己有什麼關聯性？TibaMe 邀請台灣數位轉型大師—詹文男博士，為你解答！</p>
-                        <button class="card-btn">
-                            閱讀更多
-                        </button>
-                    </div>
-                </div>
-            </a>
-        </div>
-
-        <div class="grid-item">
-            <a href="https://www.google.com.tw/?hl=zh_TW">
-                <div class="card-blog">
-                    <img class="card-img" src="https://picsum.photos/1280/853" alt="blog-picture">
-                    <div class="card-content">
-                        <h1 class="card-header" title="【理財小辭典5】總資產周轉率、固定資產周轉率、存貨周轉率、企業經營效率的財務指標小秘密">【理財小辭典5】總資產周轉率、固定資產周轉率、存貨周轉率、企業經營效率的財務指標小秘密</h1>
-                        <p class="card-text">理財小辭典第五波來臨！總資產周轉率、固定資產周轉率、存貨周轉率，這三者怎麼區分？他們個別的計算方式為何呢？教你看懂企業經營效率的「財務指標小秘密」！</p>
-                        <button class="card-btn">
-                            閱讀更多
-                        </button>
-                    </div>
-                </div>
-            </a>
-        </div>
-        <div class="grid-item">
-            <a href="https://www.google.com.tw/?hl=zh_TW">
-                <div class="card-blog">
-                    <img class="card-img" src="https://picsum.photos/1280/853" alt="blog-picture">
-                    <div class="card-content">
-                        <h1 class="card-header" title="如何選擇適合自己的電商架站平台？">如何選擇適合自己的電商架站平台？</h1>
-                        <p class="card-text">那很多人在初步進入電商領域時，一定會因為眾多的電商架站平台而不知如何選擇。其實你只要掌握這關鍵的5大要素，就能馬上選出最適合你品牌的架站平台！</p>
+                        <h1 class="card-header">{{item.title}}</h1>
+                        <p class="card-text">{{item.description}}</p>
                         <button class="card-btn">
                             閱讀更多
                         </button>
@@ -171,7 +125,23 @@
     </div>
 
     <div class="link-frame">
-        <a href="http://" class="link-frame-a">看更多文章<span>&rarr;</span></a>
+        <a href="@Url.Action("Systemlist","Home")" class="link-frame-a">看更多文章<span>&rarr;</span></a>
     </div>
 </div>
+
+<script>
+    let app = new Vue({
+        el: '#GetSystem',
+        data: {
+            MessageList: [],
+        },
+        mounted: function () {
+            var self = this;
+            axios.get("SystemMessage/GetAllHomeSystemMessage").then(function (result) {
+                self.MessageList = result.data;
+                console.log(result);
+            })
+        }
+    });
+</script>
 

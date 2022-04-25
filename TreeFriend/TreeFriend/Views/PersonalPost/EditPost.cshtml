@@ -222,10 +222,14 @@
                         .then(function (res) {
 
                             if (res.data == true) {
-                                alert("儲存成功");
-                                window.location.reload();
+                                SWseccess("儲存成功!", "", "繼續").then(
+                                    window.location.reload()
+                                );
+                                //alert("儲存成功");
+                                
                             } else {
-                                alert('修改失敗');
+                                SWerror("修改失敗!", "", "返回");
+                                //alert('修改失敗');
                             }
 
                         })
@@ -234,7 +238,8 @@
                         })
                 }
                 else {
-                    alert("請輸入文章內容");
+                    SWinfo("請輸入文章內容","","返回")
+                    //alert("請輸入文章內容");
                 }
             },
             deletepost: function (event) { //刪除貼文
@@ -255,10 +260,11 @@
                 })
                     .then(function (res) {
                         if (res.data == true) {
-                            alert('刪除成功');
-                            window.location.reload();
+                            SWseccess("刪除成功!", "", "繼續").then(
+                                window.location.reload());
                         } else {
-                            alert('刪除失敗');
+                            SWerror("刪除失敗!", "", "返回");
+                            //alert('刪除失敗');
                         }
                     }
                     ).catch(function (res) {

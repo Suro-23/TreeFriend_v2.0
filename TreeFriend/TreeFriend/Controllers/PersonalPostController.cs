@@ -142,14 +142,14 @@ namespace TreeFriend.Controllers.Api
                 if (head != null)
                 {
                     //選出跟usersDetail一樣的userid 取出頭像路徑
-                    var h = _context.usersDetail.FirstOrDefault(n => n.UserId == head.UserId);
+                    //var h = _context.usersDetail.FirstOrDefault(n => n.UserId == head.UserId);
                     //建立一個留言區物件
                     var mes = _context.PersonalPostMessages.Where(x => x.PersonalPostId == F)
                     .Select(y => new PersonalPostMessageViewModel()
                     {
                         PersonalPostId = F,
                         UserMessage = y.Message,
-                        HeadshotPath = h.HeadshotPath,
+                        HeadshotPath =_context.usersDetail.Where(x=>x.UserId==y.UserId).FirstOrDefault().HeadshotPath,
                         CreateDate = y.CreateDate
                         //TODO 加暱稱
                     }).ToList();
@@ -232,14 +232,14 @@ namespace TreeFriend.Controllers.Api
                 if (head != null)
                 {
                     //選出跟usersDetail一樣的userid 取出頭像路徑
-                    var h = _context.usersDetail.FirstOrDefault(n => n.UserId == head.UserId);
+                    //var h = _context.usersDetail.FirstOrDefault(n => n.UserId == head.UserId);
                     //建立一個留言區物件
                     var mes = _context.PersonalPostMessages.Where(x => x.PersonalPostId == F)
                     .Select(y => new PersonalPostMessageViewModel()
                     {
                         PersonalPostId = F,
                         UserMessage = y.Message,
-                        HeadshotPath = h.HeadshotPath,
+                        HeadshotPath = _context.usersDetail.Where(x => x.UserId == y.UserId).FirstOrDefault().HeadshotPath,
                         CreateDate = y.CreateDate
                         //TODO 加暱稱
                     }).ToList();
@@ -380,6 +380,7 @@ namespace TreeFriend.Controllers.Api
 
                 catch (Exception ex)
                 {
+                    Console.WriteLine(ex);
                     return false;
                 }
             }

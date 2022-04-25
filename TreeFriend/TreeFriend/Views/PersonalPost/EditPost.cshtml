@@ -115,20 +115,20 @@
                                         <div class="msgbox" v-for="msg in item.message">
                                             @*彈出視窗-使用者留言*@
                                             <span>
-                                                <img :src="'.'+msg.headshotPath" class="rounded-circle msgsize" alt="Alternate Text" />
+                                                <img :src="msg.headshotPath" class="rounded-circle msgsize" alt="Alternate Text" />
                                             </span>
                                             <span class="msgcontent">
                                                 {{msg.userMessage}}
                                             </span>
                                         </div>
-                                        @*<div class="msgbox" v-for="(msg1,index2) in usercontent" :id="'msgren'+num1">
+                                        <div class="msgbox" v-for="(msg1,index2) in usercontent" :id="'msgren'+num1">
                                 <span>
-                                    <img src="https://i.pravatar.cc/50" class="rounded-circle msgsize" alt="Alternate Text" />
+                                    <img  :src="msg1.headshotPath"  class="rounded-circle msgsize" alt="Alternate Text" />
                                 </span>
                                 <span class="msgcontent">
                                     {{msg1.userMessage}}
                                 </span>
-                            </div>*@
+                            </div>
 
                                         <div class=" mes">
                                             @*留言*@

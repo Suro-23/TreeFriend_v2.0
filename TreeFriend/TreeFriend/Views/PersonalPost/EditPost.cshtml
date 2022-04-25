@@ -1,14 +1,10 @@
 ﻿@{
     ViewData["Title"] = "EditPost";
     Layout = "_PersonalPost";
-
 }
 
 @{
-}
-
-@{
-    ViewData["Title"] = "Post";
+    ViewData["Title"] = "EditPost";
 }
 <script src='https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.6/vue.js' integrity='sha512-ZD7CJYgtekQVIaDp8LVTYWPenxvyC1wpPwnXFm9N1YdyPmQnX/yMweUQVAPcrLte7Z4jSCp2MW+8KW6/zK7tYQ==' crossorigin='anonymous'></script>
 @*<script src='https://cdnjs.cloudflare.com/ajax/libs/vue/2.2.6/vue.min.js' integrity='sha512-yNMXFsZbP+Hii2fM4n1EvhKbBCZ2NAfW1FvlN6yB1ZanH+1sEcNV2rPEg6qCMRT/4dY01ELCdD75WflfTHdKJg==' crossorigin='anonymous'></script>*@
@@ -24,7 +20,7 @@
         </div>
         <div class="text-center mt-2">
             <a :href="'/personalpost/post?id='+ user.userId"><img :src="user.headshotPath" class="rounded-circle size" alt="Alternate Text" /></a>
-</div>
+        </div>
         <div class="text-center username">{{user.userName}}</div>
         <div class="text-center contentaboutme">
             <p class="aboutme">{{user.selfIntrodution}}</p>
@@ -61,7 +57,7 @@
                             </div>
                             <img class="iconmessage" src="/img/message.png" alt="Alternate Text" />
                         </div>
-                        <p class="card-text ellipsis1 " >
+                        <p class="card-text ellipsis-edit " >
                             {{item.content}}
                         </p>
                     </div>

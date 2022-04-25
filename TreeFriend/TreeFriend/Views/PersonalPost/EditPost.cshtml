@@ -23,8 +23,8 @@
             <button class="addPost" onclick="location.href='/personalpost/postbackstage'">新增動態貼文</button>
         </div>
         <div class="text-center mt-2">
-            <img :src="user.headshotPath" class="rounded-circle size" alt="Alternate Text" />
-        </div>
+            <a :href="'/personalpost/post?id='+ user.userId"><img :src="user.headshotPath" class="rounded-circle size" alt="Alternate Text" /></a>
+</div>
         <div class="text-center username">{{user.userName}}</div>
         <div class="text-center contentaboutme">
             <p class="aboutme">{{user.selfIntrodution}}</p>
@@ -61,29 +61,29 @@
                             </div>
                             <img class="iconmessage" src="/img/message.png" alt="Alternate Text" />
                         </div>
-                        <p class="card-text">
+                        <p class="card-text ellipsis1 " >
                             {{item.content}}
                         </p>
                     </div>
-
-                    <!-- 確定刪除的Modal -->
-                    <div class="modal fade" :id="'mmm'+num1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                        <div class="modal-dialog modal-sm">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    @*<h5 class="modal-title" id="exampleModalLabel">Modal title</h5>*@
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                @*確定刪除 彈出視窗*@
+                                <!-- 確定刪除的Modal -->
+                                <div class="modal fade" :id="'mmm'+num1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-sm">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                @*<h5 class="modal-title" id="exampleModalLabel">Modal title</h5>*@
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                確定刪除?
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">否</button>
+                                                <button type="button" class="btn " style="background-color: #BDA684; color:white" v-on:click="deletepost($event)" v-bind:value="item.personalPostId">是</button>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="modal-body">
-                                    確定刪除?
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">否</button>
-                                    <button type="button" class="btn " style="background-color: #BDA684; color:white" v-on:click="deletepost($event)" v-bind:value="item.personalPostId">是</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
 
                     <div class="">
                         @*card-footer*@
@@ -94,13 +94,11 @@
                                     <div class="modal-header" style="background-color:linen;">
                                         @*<h5 class="modal-title" id="exampleModalLabel">Modal title</h5>*@
                                         <button type="button" class="btn btn-danger me-1" @*data-bs-target="#exampleModal"*@ data-bs-toggle="modal" :href="'#mmm'+num1">刪除</button>
-                                        <button type="button" class="btn " style="background-color: #BDA684; color: #fff" v-on:click="edit($event)" v-bind:value="item.personalPostId">儲存</button>
+                                        <button type="button" class="btn " style="background-color: #BDA684; color: #fff" v-on:click="edit($event,num1)" v-bind:value="item.personalPostId">儲存</button>
                                         <label id="saveOk"></label>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" v-on:click="reload"></button>
                                     </div>
-                                    @*確定刪除 彈出視窗*@
-                                    <div>
-                                    </div>
+
                                     <div class="modal-body" style="background-color:linen;">
                                         @*內容*@
                                         @*圖片*@
@@ -109,7 +107,7 @@
                                         </div>
                                         <div class="card-body imgsicon">
                                             <p class="card-text">
-                                                <textarea id="content" class="msgEdit" v-model="post.content" @@blur="textnull" v-bind:placeholder="textnonull">
+                                                <textarea id="content" class="msgEdit" v-model="item.content" @@blur="textnull(num1)" v-bind:placeholder="textnonull">
                                                 </textarea>
                                             </p>
 
@@ -117,20 +115,20 @@
                                         <div class="msgbox" v-for="msg in item.message">
                                             @*彈出視窗-使用者留言*@
                                             <span>
-                                                <img :src="msg.headshotPath" class="rounded-circle msgsize" alt="Alternate Text" />
+                                                <img :src="'.'+msg.headshotPath" class="rounded-circle msgsize" alt="Alternate Text" />
                                             </span>
                                             <span class="msgcontent">
                                                 {{msg.userMessage}}
                                             </span>
                                         </div>
-                                        <div class="msgbox" v-for="(msg1,index2) in usercontent" :id="'msgren'+num1">
-                                            <span>
-                                                <img src="https://i.pravatar.cc/50" class="rounded-circle msgsize" alt="Alternate Text" />
-                                            </span>
-                                            <span class="msgcontent">
-                                                {{msg1.userMessage}}
-                                            </span>
-                                        </div>
+                                        @*<div class="msgbox" v-for="(msg1,index2) in usercontent" :id="'msgren'+num1">
+                                <span>
+                                    <img src="https://i.pravatar.cc/50" class="rounded-circle msgsize" alt="Alternate Text" />
+                                </span>
+                                <span class="msgcontent">
+                                    {{msg1.userMessage}}
+                                </span>
+                            </div>*@
 
                                         <div class=" mes">
                                             @*留言*@
@@ -146,14 +144,14 @@
 
                         @*留言*@
                         @*<div class="msgboxout" v-for="(msg,index1) in item.message" v-if="index1 < 1">
-                                <span>
-                                    <img src="https://i.pravatar.cc/50/random" class="rounded-circle msgsize" alt="Alternate Text" />
-                                </span>
-                                <span class="msgcontent">
-                                    {{msg.userMessage}}
-                                    <small class="text-muted updatetime">3 mins ago{{msg.createDate}}</small>
-                                </span>
-                            </div>*@
+                <span>
+                    <img src="https://i.pravatar.cc/50/random" class="rounded-circle msgsize" alt="Alternate Text" />
+                </span>
+                <span class="msgcontent">
+                    {{msg.userMessage}}
+                    <small class="text-muted updatetime">3 mins ago{{msg.createDate}}</small>
+                </span>
+            </div>*@
                     </div>
                 </div>
             </div>
@@ -196,8 +194,8 @@
 
         },
         methods: {
-            textnull: function () {
-                if (this.post.content == "") {
+            textnull: function (index) {
+                if (this.MessageList[index].content == "") {
                     this.textnonull = "請輸入文章內容";
                 }
             },
@@ -207,12 +205,14 @@
                 id.state = true;
                 this.isShow = !this.isShow;
             },
-            edit: function () { //編輯貼文內容
+            edit: function ( event,index) { //編輯貼文內容
                 let personalpostid = event.target.value;
+                let self = this;
+                let content = self.MessageList[index].content;
                 let formdata = new FormData();
                 formdata.append('PersonalPostId', personalpostid)
-                formdata.append("Content", this.post.content);
-                if (this.post.content != "") {
+                formdata.append("Content", content);
+                if (self.MessageList[index].content != "") {
                     axios({
                         method: 'post',
                         url: '/personalpost/editpost',

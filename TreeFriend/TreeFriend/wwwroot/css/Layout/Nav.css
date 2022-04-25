@@ -16,6 +16,10 @@
     height: 40px;
 }
 
+.aline {
+    text-decoration: none;
+}
+
 .headshot {
     height: 40px;
     border-radius: 100%;

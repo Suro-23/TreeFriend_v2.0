@@ -5,7 +5,8 @@ namespace TreeFriend.Models.ViewModel {
         public decimal Sales { get; set; }
         public int PostCount { get; set; }
         public int MemberCount { get; set; }
-        public List<PostInfo> CategoryPostCount { get; set; } = new List<PostInfo>();
+        public List<PostInfo> CategoryPostList { get; set; } = new List<PostInfo>();
+        public List<PostInfo> HashtagPostList { get; set; } = new List<PostInfo>();
     }
 
     public class PostInfo {

@@ -321,7 +321,7 @@ namespace TreeFriend.Controllers {
                     user.Password = Guid.NewGuid().ToString("d").Substring(0, 7);
                     var sameEmail = _context.users.Where(x => x.Email == user.Email).FirstOrDefault();
 
-                    if (sameEmail == null) {
+                    if (sameEmail == null) { //第一次登入
 
                         _context.Add(user);
                         await _context.SaveChangesAsync();
@@ -355,7 +355,7 @@ namespace TreeFriend.Controllers {
                             ExpiresUtc = DateTime.UtcNow.AddMinutes(20)
                         });
                         return LocalRedirect("/Home/HomePage");
-                    } else {
+                    } else { //登入過
                         var userFbG = _context.usersDetail.Where(u => u.UserId == sameEmail.UserId).FirstOrDefault();
                         var UserLevel = sameEmail.UserLevel == true ? "Admin" : "Member";
                         var claims = new List<Claim>()

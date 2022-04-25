@@ -63,11 +63,15 @@
             margin-bottom: 10px;
         }
 
-        li {
+        .message-title-box{
+            width:80%
+        }
+
+        .message-title-box li {
             margin-bottom: 11px;
             padding-bottom: 12px;
             border-bottom: 1px solid #dedede;
-            font-size: 12px;
+            font-size: 14px;
             color: black;
             list-style-type: none;
         }
@@ -82,8 +86,12 @@
                 text-decoration: underline;
             }
 
-        ul {
+        .message-title-box ul {
             padding-left: 0;
+        }
+
+        .description{
+            white-space:pre-line;
         }
     </style>
 </head>
@@ -95,13 +103,13 @@
                 <div class="carousel1">
                     <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
                         <div class="carousel-inner">
-                            <template v-for="(item,num1) in MessageList">
+                            <template v-for="(item,num1) in Content">
                                 <div v-if="num1 == 0" class="carousel-item active">
-                                    <img :src="item.picPath" class="d-block w-100" alt="" style="width:700px; height:400px;">
+                                    <img :src="item.picPath" class="d-block w-100" alt="" style="width:700px; height:500px;">
                                 </div>
 
                                 <div v-else class="carousel-item">
-                                    <img :src="item.picPath" class="d-block w-100" alt="" style="width:700px; height:400px;">
+                                    <img :src="item.picPath" class="d-block w-100" alt="" style="width:700px; height:500px;">
                                 </div>
                             </template>
                         </div>
@@ -127,12 +135,12 @@
                         <h1 class="post-title">{{MessageList.title}}</h1>
                     </div>
 
+                    <!-- 照片的事件 -->
                     <div class="contaniner-img">
-                        <!-- 照片的事件 -->
                         <img v-bind:src="MessageList.picPath" alt="" style="width: 85%;">
                     </div>
 
-                    <div>
+                    <div class="description">
                         @*文章內容*@
                         {{MessageList.description}}
 
@@ -178,33 +186,29 @@
 </body>
 </html>
 
+
+
 <script>
-    var getUrlString = location.pathname;
-    var articleID = getUrlString.replace("/Home/SystemDetail/", ""); // 文章ID
-    class message {
-        title = '';
-        dscription = '';
-
-    }
-    class mesagge1 {
-        title = '';
-    }
 
 
-    var app = new Vue({
+    let getUrlString = location.search; //URL 解析
+    console.log(getUrlString);
+    let articleId = getUrlString.replace("?id=", ""); // 取代?id=
+
+    let GetAllVUE = new Vue({
         el: '#GetAll',
         data: {
-            message1: new mesagge1(),
             MessageList: "",
-            newMessage: [],
             Content: [],
         },
         mounted:
             function () {
                 var self = this;
-                axios.get("SystemMessage/FullContent1/?articleID" + articleID).then(function (result) {
+                axios.get("/SystemMessage/FullContent1/?articleId=" + articleId).then(function (result) {
+                    /*axios.get("/SystemMessage/FullContent1/3").then(function (result) {*/
                     self.MessageList = result.data;
                     console.log(self.MessageList);
+
 
                     axios.get("/SystemMessage/GetAllSystemMessage").then(function (result) {
                         self.Content = result.data;

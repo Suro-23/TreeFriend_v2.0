@@ -44,7 +44,6 @@ namespace TreeFriend.Controllers.Api
             if (pic != null)
             {
                 var fileName = "";
-                //var sum = "";
 
                 try
                 {
@@ -52,9 +51,7 @@ namespace TreeFriend.Controllers.Api
                     {
                         UserId = Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(u => u.Type == "UserId").Value),
                         Content = post.Content,
-                        //PostPhotoPath = sum
                     });
-
 
                     //先將資料更新貼文，才能取得當前貼文ID
                     _context.SaveChanges();
@@ -78,10 +75,6 @@ namespace TreeFriend.Controllers.Api
                         _context.SaveChanges();
                     }
 
-                    //拿到該使用者的最後一筆新增貼文的ID後
-                    //存入標籤細節表，對應的標籤&貼文
-                    //TODO: 多對多
-
                     return true;
                 }
                 catch (Exception ex)
@@ -99,14 +92,6 @@ namespace TreeFriend.Controllers.Api
         #endregion
 
         #region 渲染
-        //public string GetId(int id)
-        //{
-        //    var userid = "https://localhost:44341/personalpost/post?d=" + id;
-        //    GetAllContent(userid);
-        //    return userid;
-        //}
-        //渲染個人動態到前端  渲染的資料不能抓cookie的使用者，id因為這個頁面是給其他人看的
-        //[AllowAnonymous]
 
         //post的user
         [HttpGet]
@@ -124,32 +109,28 @@ namespace TreeFriend.Controllers.Api
         return user;
         }
 
-            [HttpGet]
+       [HttpGet]
        [Route("[controller]/[action]/{UserId}")]
         public List<PersonalPostRenderViewModel> GetAllContent([FromRoute] int UserId)  //id要等於下面的Userid
         {
-
-            //var UserId = _context.users.Where(n=>n.UserId);  //這裡要更改
             var p = _context.personalPosts.Where(x => x.UserId == UserId).OrderByDescending(y => y.PersonalPostId).Select(z => z.PersonalPostId); //抓登入userId的所有貼文 反序列personalPosts表 取前三筆PersonalPostId
             var L = new List<PersonalPostRenderViewModel>();
               
             foreach (var F in p.ToList())
             {
 
-                //取出跟6筆貼文PersonalPostId一樣的PersonalPostMessages
+                //取出跟每一筆貼文PersonalPostId一樣的PersonalPostMessages
                 var head = _context.PersonalPostMessages.FirstOrDefault(x => x.PersonalPostId == F);
 
                 if (head != null)
                 {
-                    //選出跟usersDetail一樣的userid 取出頭像路徑
-                    var h = _context.usersDetail.FirstOrDefault(n => n.UserId == head.UserId);
                     //建立一個留言區物件
                     var mes = _context.PersonalPostMessages.Where(x => x.PersonalPostId == F)
                     .Select(y => new PersonalPostMessageViewModel()
                     {
                         PersonalPostId = F,
                         UserMessage = y.Message,
-                        HeadshotPath = h.HeadshotPath,
+                        HeadshotPath =_context.usersDetail.Where(x=>x.UserId==y.UserId).FirstOrDefault().HeadshotPath,
                         CreateDate = y.CreateDate
                         //TODO 加暱稱
                     }).ToList();
@@ -178,7 +159,6 @@ namespace TreeFriend.Controllers.Api
                         PostPhotoPath = _context.PersonalPostImages.Where(w => w.PersonalPostId == F).Select(s => s.PostPhotoPath).ToList(),
                         Message = mes,
 
-
                     }).ToList();
 
                     L.AddRange(a);
@@ -199,7 +179,7 @@ namespace TreeFriend.Controllers.Api
         }
         //edit的user
         [HttpGet]
-        public List<PersonalPostRenderViewModel> GetUserEdit()  //id要等於下面的Userid
+        public List<PersonalPostRenderViewModel> GetUserEdit()  
         {
             var UserId = Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(u => u.Type == "UserId").Value);
 
@@ -215,31 +195,30 @@ namespace TreeFriend.Controllers.Api
             return user;
         }
         //edit 的貼文
-        public List<PersonalPostRenderViewModel> GetUserContent()  //id要等於下面的Userid
+        public List<PersonalPostRenderViewModel> GetUserContent()  
         {
             var UserId = Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(u => u.Type == "UserId").Value);
-
-            //var UserId = _context.users.Where(n=>n.UserId);  //這裡要更改
-            var p = _context.personalPosts.Where(x => x.UserId == UserId).OrderByDescending(y => y.PersonalPostId).Take(6).Select(z => z.PersonalPostId); //抓登入userId的所有貼文 反序列personalPosts表 取前三筆PersonalPostId
+            //抓登入userId的所有貼文 反序列personalPosts表 取前六筆PersonalPostId
+            var p = _context.personalPosts.Where(x => x.UserId == UserId).OrderByDescending(y => y.PersonalPostId).Take(6).Select(z => z.PersonalPostId);
+            //建立一個List後面可以接資料
             var L = new List<PersonalPostRenderViewModel>();
-
+            //將取出的貼文逐一帶入
             foreach (var F in p.ToList())
             {
 
-                //取出跟6筆貼文PersonalPostId一樣的PersonalPostMessages
+                //取出跟每一筆貼文PersonalPostId一樣的PersonalPostMessages  一篇貼文可能有多篇不同使用者的留言
                 var head = _context.PersonalPostMessages.FirstOrDefault(x => x.PersonalPostId == F);
 
                 if (head != null)
                 {
-                    //選出跟usersDetail一樣的userid 取出頭像路徑
-                    var h = _context.usersDetail.FirstOrDefault(n => n.UserId == head.UserId);
                     //建立一個留言區物件
+                    //從留言表內選取所要取出的內容(與上面找出的PersonalPostId一樣)
                     var mes = _context.PersonalPostMessages.Where(x => x.PersonalPostId == F)
                     .Select(y => new PersonalPostMessageViewModel()
                     {
                         PersonalPostId = F,
                         UserMessage = y.Message,
-                        HeadshotPath = h.HeadshotPath,
+                        HeadshotPath = _context.usersDetail.Where(x => x.UserId == y.UserId).FirstOrDefault().HeadshotPath,
                         CreateDate = y.CreateDate
                         //TODO 加暱稱
                     }).ToList();
@@ -345,9 +324,7 @@ namespace TreeFriend.Controllers.Api
             try
             {
                 var result = _context.personalPosts.Where(x => x.PersonalPostId == postId).SingleOrDefault();
-                // var img = _context.PersonalPostImages.Where(x => x.PersonalPostId == postId).Select(y => y.PersonalPostId);
                 _context.Remove(result);
-                //_context.personalPosts.Update(result);
                 _context.SaveChanges();
                 return true;
 
@@ -380,6 +357,7 @@ namespace TreeFriend.Controllers.Api
 
                 catch (Exception ex)
                 {
+                    Console.WriteLine(ex);
                     return false;
                 }
             }
@@ -390,11 +368,14 @@ namespace TreeFriend.Controllers.Api
         #region 留言即時渲染
         public PersonalPostMessageViewModel PCreateMessage(PersonalPostMessageViewModel mes)
         {
+            //從cookie找出使用者的userId
             var UserId = Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(u => u.Type == "UserId").Value);
+            //找出cookie與userDetail相符的userId
             var headshot = _context.usersDetail.Where(x => x.UserId == UserId).FirstOrDefault();
-            //var list = new List<PersonalPostMessageViewModel>();
+            //從留言資料表內找出最後一筆留言
             var personalp = _context.PersonalPostMessages.Where(x => x.PersonalPostId == mes.PersonalPostId).OrderBy(x => x.CreateDate)
                                     .LastOrDefault();
+            //new一個viewmodel把資料塞進去
             var post = new PersonalPostMessageViewModel()
             {
                 PersonalPostId = mes.PersonalPostId,
@@ -403,7 +384,6 @@ namespace TreeFriend.Controllers.Api
                 CreateDate = personalp.CreateDate
                 //TODO 加暱稱
             };
-            //list.AddRange(personalp);
 
             return post;
         }

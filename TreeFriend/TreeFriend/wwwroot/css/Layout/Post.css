@@ -1,4 +1,6 @@
-﻿body {
+﻿@import url('https://fonts.googleapis.com/css2?family=Mali:wght@600&display=swap');
+
+body {
     background-color: rgb(232, 243, 252);
 }
 
@@ -34,7 +36,9 @@
 .container {
     padding: 1rem;
 }
-
+.aline{
+    text-decoration:none;
+}
 .member-header-text {
     border-bottom: 2px solid black;
     height: 3rem;
@@ -85,4 +89,15 @@
 .isCheck {
     background-color: cadetblue;
     color: white;
+}
+.treefriend {
+    font-family: 'Mali', cursive, sans-serif;
+    font-size: 24px;
+    color: #227D51;
+}
+
+.friend {
+    font-family: 'Mali', cursive, sans-serif;
+    font-size: 24px;
+    color: #6E552F;
 }

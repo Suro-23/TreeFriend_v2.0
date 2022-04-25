@@ -20,7 +20,8 @@ namespace TreeFriend.Controllers
         }
 
         [AllowAnonymous]
-        public List<SystemlistViewModel> GetAllSystemMessage() //渲染系統文章頁面
+        [HttpGet]
+        public List<SystemlistViewModel> GetAllSystemMessage() //渲染系統文章頁面 + 最新文章 Id
         {
             var result = _db.SystemPost.OrderByDescending(x => x.ArticleID).Take(5)
              .Where(x => x.IsDelete == false).Select(x => new SystemlistViewModel()         // 先抓取資料 在改寫資料庫欄位 new一個新的Model
@@ -30,17 +31,16 @@ namespace TreeFriend.Controllers
                  Title = x.Title,
                  Description = x.Description,
                  PicPath = "/SystemPicture/" + x.PicPath  //對應資料庫欄位
+             });
 
-             }).ToList();
-
-            return result;
+            return result.ToList();
 
         }
 
-
-        //詳細頁面
+        [AllowAnonymous]
         [HttpGet]
-        public SystemPost FullContent1(int articleId)
+        [Route("[controller]/[action]/{articleId}")]
+        public SystemPost FullContent1([FromRoute]int articleId)      //系統文章 詳細頁面渲染
         {
             var post = _db.SystemPost.FirstOrDefault(x => x.ArticleID == articleId);
             var systemPost = new SystemPost();

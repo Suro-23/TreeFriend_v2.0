@@ -180,7 +180,7 @@
 
 <script>
     var getUrlString = location.pathname;
-    var articleId = getUrlString.replace("/SysteMessage/FullContent1/", ""); // 15
+    var articleID = getUrlString.replace("/Home/SystemDetail/", ""); // 文章ID
     class message {
         title = '';
         dscription = '';
@@ -202,11 +202,11 @@
         mounted:
             function () {
                 var self = this;
-                axios.get("../FullContent1/?articleId=" + articleId).then(function (result) {
+                axios.get("SystemMessage/FullContent1/?articleID" + articleID).then(function (result) {
                     self.MessageList = result.data;
                     console.log(self.MessageList);
 
-                    axios.post("/SystemMessage/GetAllSystemMessage").then(function (result) {
+                    axios.get("/SystemMessage/GetAllSystemMessage").then(function (result) {
                         self.Content = result.data;
                         console.log(result);
                     })

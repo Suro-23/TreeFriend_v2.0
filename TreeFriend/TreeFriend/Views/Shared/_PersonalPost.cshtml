@@ -11,6 +11,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.26.1/axios.min.js" integrity="sha512-bPh3uwgU5qEMipS/VOmRqynnMXGGSRv+72H/N260MQeXZIK4PG48401Bsby9Nq5P5fz7hy5UGNmC/W1Z51h2GQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href="~/css/Layout/PersonalPost.css" rel="stylesheet" />
+    <!--sweetalert2相關CDN-->
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     @*
         <link rel="stylesheet" href="~/css/Reset.css" />*@
     @*
@@ -111,4 +114,42 @@
             }
         }
     });
+</script>
+
+<script>
+    function SWerror(title, text, close) {
+        Swal.fire({
+            title: title,
+            text: text,
+            icon: 'error',
+            confirmButtonText: close
+        });
+    }
+
+    function SWseccess(title, text, ok) {
+        Swal.fire({
+            title: title,
+            text: text,
+            icon: 'success',
+            confirmButtonText: ok
+        });
+    }
+
+    function SWwarning(title, text, ok) {
+        Swal.fire({
+            title: title,
+            text: text,
+            icon: 'warning',
+            confirmButtonText: ok
+        });
+    }
+
+    function SWinfo(title, text, ok) {
+        Swal.fire({
+            title: title,
+            text: text,
+            icon: 'info',
+            confirmButtonText: ok
+        });
+    }
 </script>

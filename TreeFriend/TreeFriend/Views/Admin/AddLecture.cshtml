@@ -16,6 +16,9 @@
     .page-link {
         border-color: aliceblue;
     }
+    [v-cloak] {
+        display: none;
+    }
 </style>
 
 <!-- AddModal -->
@@ -105,16 +108,16 @@
     </div>
 </div>
 
-<fieldset id="list">
-    <div class="mt-5 ms-5">
-    <label for="search"><strong>講座名稱搜尋：</strong></label>
+<fieldset id="list" >
+    <div class="mt-5 ms-0">
+    <label for="search"><strong>搜尋：</strong></label>
     <input type="text" v-model="filter_name" id="search">
     </div>
-    <div class="table-responsive mt-5 me-5">
-        <table class="table table-hover table-sm align-middle ">
+    <div class="table-responsive mt-2 me-5"  style="height:78%;">
+        <table class="table table-hover table-sm align-middle">
             <thead>
                 <tr>
-                    <th scope="col">編號</th>
+                    <th scope="col">#</th>
                     <th scope="col" v-show="isShow">系統編號</th>
                     <th scope="col">新增日期</th>
                     <th scope="col">講座主題</th>
@@ -135,18 +138,18 @@
             </thead>
             <tbody>
                 <tr v-for="(item,index) in filteredLectureList.slice(pageStart, pageStart + countOfPage)" :key="index">
-                    <td>{{(currPage-1)*countOfPage + index + 1}}</td>
-                    <td v-show="isShow">{{item.lectureId}}</td>
-                    <td>{{item.createDate}}</td>
-                    <td>{{item.theme}}</td>
-                    <td>{{item.eventDate}}</td>
+                    <td v-cloak >{{(currPage-1)*countOfPage + index + 1}}</td>
+                    <td v-show="isShow" v-cloak >{{item.lectureId}}</td>
+                    <td v-cloak >{{item.createDate}}</td>
+                    <td v-cloak >{{item.theme}}</td>
+                    <td v-cloak >{{item.eventDate}}</td>
                     @*<td>{{item.eventTimeStart}}</td>*@
                     @*<td>{{item.eventTimeEnd}}</td>*@
-                    <td>{{item.venue}}</td>
+                    <td v-cloak >{{item.venue}}</td>
                     @*<td><img :src="item.speakerImgPath" style="max-height:50px" /></td>*@
-                    <td>{{item.speaker}}</td>
-                    <td>{{item.count}}</td>
-                    <td>{{item.price}}</td>
+                    <td v-cloak >{{item.speaker}}</td>
+                    <td v-cloak >{{item.count}}</td>
+                    <td v-cloak >{{item.price}}</td>
                     @*<td>{{item.description}}</td>*@
                     @*<td>{{item.content}}</td>*@
                     @*<td><img :src="item.imgPath" style="max-height:50px" /></td>*@
@@ -166,6 +169,7 @@
             </tbody>
         </table>
     </div>
+
     <div class="d-flex justify-content-center">
         <!--分頁-->
         <nav aria-label="Page navigation example">
@@ -441,7 +445,7 @@
     let listapp = new Vue({
         el: '#list',
         data: {
-            searchList: [""],
+            searchList: [],
             lecturelist: [],
             lecture: {
                 lectureId: "",
@@ -461,7 +465,6 @@
                 SpeakerPreview: null,
                 imgPath: "",
                 speakerImgPath: "",
-
             },
             target: null,
             date: new Date().toLocaleDateString('en-CA'),
@@ -471,12 +474,14 @@
             isSpeakerPhotoShow: true,
             isPhotoShow: true,
             filter_name: '',
+            
 
         },
         mounted: function () {
             let self = this;
             axios.get("/AddLecture/GetAllLecture").then(function (res) {
                 self.lecturelist = res.data;
+                
             })
         },
         computed: {
@@ -484,9 +489,27 @@
 
                 var filter_name = this.filter_name.toLowerCase();
 
-                return (this.filter_name.trim() !== '') ?
-                    this.searchList =this.lecturelist.filter(function (d) { return d.theme.toLowerCase().indexOf(filter_name) > -1; }) :
-                    this.lecturelist;
+                if (this.filter_name.trim() !== '') {
+                    this.searchList = this.lecturelist.filter(function (d) {
+                        return d.theme.toLowerCase().includes(filter_name) ||
+                            d.venue.toLowerCase().includes(filter_name) || d.speaker.toLowerCase().includes(filter_name) ||
+                            d.eventDate.toLowerCase().includes(filter_name)||
+                        d.count===Number(filter_name)|| d.price===Number(filter_name)
+                    })
+                    
+                    return this.searchList;
+                }    
+                else {
+                    return this.lecturelist;
+                }
+            
+                //return (this.filter_name.trim() !== '') ?
+                //    this.searchList = this.lecturelist.filter(function (d) {
+                //        return d.theme.toLowerCase().includes(filter_name)||
+                //            d.venue.toLowerCase().includes(filter_name) || d.speaker.toLowerCase().includes(filter_name) /* ||*/
+                //            //d.count===Number(filter_name)|| d.price===Number(filter_name)
+                //    }) :
+                //    this.lecturelist;
             },
 
             pageStart: function () {
@@ -624,11 +647,17 @@
         },
         watch: {
             searchList: function () {
-                document.querySelector("#page-1").click();
-            }
+                if (this.searchList.length===0|| document.querySelector("#page-1")===null) {
+                    console.log(this.searchList);
+                } else {
+                    document.querySelector("#page-1").click();
+                    console.log(this.searchList);
+                }
+
+            },
         }
 
-    });
+});
 
 
 </script>

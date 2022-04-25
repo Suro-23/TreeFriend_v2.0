@@ -21,7 +21,7 @@ namespace TreeFriend.Models.Entity
 
 
         //使用getdate()
-        public DateTime CreateDate { get; set; }
+        public DateTime CreateDate { get; set; } = DateTime.UtcNow.AddHours(8);
 
 
         public virtual User User { get; set; }

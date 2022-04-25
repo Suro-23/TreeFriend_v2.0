@@ -33,7 +33,7 @@
             <canvas id="myPie"></canvas>
         </div>
         <div class="col-7">
-            <canvas id="myLine"></canvas>
+            <canvas id="myBar"></canvas>
         </div>
     </div>
 </div>
@@ -42,125 +42,104 @@
     let chartApp = new Vue({
         el:"#chartDiv",
         data:{
-            todayInfo:{},
+            todayInfo:{
+                sales: "",
+                postCount:"",
+                memberCount:""
+            },
             pieData:{
-                labels: [
-                    ],
+                labels: [],
                 datasets: [{
                         label: '分類貼文總數',
                         data: [],
-                        backgroundColor: [
-                            'rgb(255, 99, 132)',
-                            'rgb(54, 162, 235)',
-                            'rgb(255, 205, 86)'
-                        ],
+                        backgroundColor: [],
                         hoverOffset: 4
                 }]
             },
-            pieChart:""
-        },
-        mounted: function() {
-            const self = this;
-            const pie = this.pieData;
-            const data = pie.datasets;
-            axios.get("../Api/Chart/GetTodayInfo")
-            .then(res => {
-                self.todayInfo = res.data;
-                for(let d of res.data.categoryPostCount){
-                    pie.labels[pie.labels.length] = d.category;
-                    data[0].data[data[0].data.length] = d.count;
-                }
-                const config = {
-                    type: 'doughnut',
-                    data: self.pieData,
-                };
-
-                const myChart = new Chart(
-                    document.getElementById('myPie'),
-                    config
-                );
-            });
-
-        },
-        methods:{
-        }
-    });
-
-
-    //圓餅
-    //const data = {
-    //    labels: chartApp.pieData.labels,
-    //    datasets: [{
-    //        label: 'My First Dataset',
-    //        data: chartApp.pieData.datasets[0].data,
-    //        backgroundColor: [
-    //            'rgb(255, 99, 132)',
-    //            'rgb(54, 162, 235)',
-    //            'rgb(255, 205, 86)'
-    //        ],
-    //        hoverOffset: 4
-    //    }]
-    //};
-    //const config = {
-    //    type: 'doughnut',
-    //    data: chartApp.pieData,
-    //};
-
-    //const myChart = new Chart(
-    //    document.getElementById('myPie'),
-    //    config
-    //);
-
-    //長條
-    const labels = [
-        'January',
-        'February',
-        'March',
-        'April',
-        'May',
-        'June',
-    ];
-    const data2 = {
-        labels: labels,
-        datasets: [{
-            label: 'My First Dataset',
-            data: [65, 59, 80, 81, 56, 55, 40],
-            backgroundColor: [
-                'rgba(255, 99, 132, 0.2)',
-                'rgba(255, 159, 64, 0.2)',
-                'rgba(255, 205, 86, 0.2)',
-                'rgba(75, 192, 192, 0.2)',
-                'rgba(54, 162, 235, 0.2)',
-                'rgba(153, 102, 255, 0.2)',
-                'rgba(201, 203, 207, 0.2)'
-            ],
-            borderColor: [
-                'rgb(255, 99, 132)',
-                'rgb(255, 159, 64)',
-                'rgb(255, 205, 86)',
-                'rgb(75, 192, 192)',
-                'rgb(54, 162, 235)',
-                'rgb(153, 102, 255)',
-                'rgb(201, 203, 207)'
-            ],
-            borderWidth: 1
-        }]
-    };
-
-    const config2 = {
-        type: 'bar',
-        data: data2,
-        options: {
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
+            barData:{
+                labels: [],
+                datasets: [{
+                    label: '標籤貼文總數',
+                    data: [],
+                    backgroundColor: [],
+                    borderColor: [],
+                    borderWidth: 1
+                }]
             }
         },
-    };
+        mounted: function() {
+            this.getInfo();
+        },
+        methods:{
+            getInfo: async function(){
+                const todayInfo = this.todayInfo;
 
-    const myChart2 = new Chart(
-        document.getElementById('myLine'),
-        config2
-    );
+                const pieLabel = this.pieData.labels;
+                const pieData = this.pieData.datasets[0].data;
+                const pieColor = this.pieData.datasets[0].backgroundColor;
+
+                const barLabel = this.barData.labels;
+                const barData = this.barData.datasets[0].data;
+                const barColor = this.barData.datasets[0].borderColor;
+                const borderColor = this.barData.datasets[0].backgroundColor;
+                
+                const get = await axios.get("../Api/Chart/GetTodayInfo");
+                const {data} = get;
+                const {sales,postCount, memberCount} = data;
+
+                this.todayInfo.sales = sales;
+                this.todayInfo.postCount = postCount;
+                this.todayInfo.memberCount = memberCount;
+
+                for(let i of data.categoryPostList){
+                    pieLabel[pieLabel.length] = i.category;
+                    pieData[pieData.length] = i.count;
+                    pieColor[pieColor.length] = this.getRandomColor();
+                }
+                for(let i of data.hashtagPostList){
+                    barLabel[barLabel.length] = i.category;
+                    barData[barData.length] = i.count;
+                    barColor[barColor.length] = this.getRandomColor();
+                    borderColor[borderColor.length] = this.getRgbaColor(barColor[barColor.length-1]);
+                }
+                console.log(this.barData)
+                const myPie = this.setChart("doughnut",this.pieData,"myPie");
+                const myBar = this.setChart("bar",this.barData,"myBar");
+            },
+            setChart: function(type,data,element){
+                const config = {
+                    type: type,
+                    data: data,
+                };
+
+                if(type === "bar"){
+                    config.options = {
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                }
+                console.log(config)
+                return new Chart(
+                    document.getElementById(element),
+                    config
+                );
+            },
+            getRandomColor: function(){
+                var letters = '0123456789ABCDEF'.split('');
+                var color = '#';
+                for (var i = 0; i < 6; i++ ) {
+                    color += letters[Math.floor(Math.random() * 16)];
+                }
+                return color;
+            },
+            getRgbaColor: function(hex) {
+                // 將hex顏色轉成rgb
+                let RGBA = "rgba(" + parseInt("0x" + hex.slice(1, 3)) + "," + parseInt("0x" + hex.slice(3, 5)) + "," + parseInt( "0x" + hex.slice(5, 7)) + ", 0.2)";
+                return RGBA;
+            }
+        }
+    });
 </script>

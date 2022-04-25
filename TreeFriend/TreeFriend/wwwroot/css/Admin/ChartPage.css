@@ -1,25 +1,32 @@
 ﻿/* 內容樣式 */
-#chart-div {
-    height: 100%;
-    width: 100%;
-    padding: 1rem 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
+.content {
+    background-color: aliceblue;
+    border-radius: 2rem 0 0 2rem;
+    padding: 2rem 0;
+    box-shadow: 0 0 5px 5px rgb(92, 153, 155);
 }
 
-    #chart-div .row {
-        width: 100%;
-        height: 100%;
-        margin: 0;
-    }
+.today-info {
+    background-color: white;
+    padding: 1rem 0;
+    border-radius: 1rem;
+    box-shadow: 0 0 5px 5px rgb(232, 241, 248);
+}
 
-        #chart-div .row + .row {
-            margin-top: 1rem;
-        }
+.info-item + .info-item {
+    border-left: 1px solid #CCC;
+}
 
-    #chart-div div div {
-        background-color: rgb(148, 175, 157);
-        /* height: 17rem; */
-        border-radius: 1rem;
-    }
+.today-info img {
+    width: 60px;
+    height: 60px;
+}
+
+.sub-title {
+    color: gray;
+}
+
+.content {
+    height: 100vh;
+    overflow: auto;
+}

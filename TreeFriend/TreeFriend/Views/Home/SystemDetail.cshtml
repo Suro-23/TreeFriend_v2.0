@@ -63,7 +63,7 @@
             margin-bottom: 10px;
         }
 
-        li {
+        .message-title-box li {
             margin-bottom: 11px;
             padding-bottom: 12px;
             border-bottom: 1px solid #dedede;
@@ -82,7 +82,7 @@
                 text-decoration: underline;
             }
 
-        ul {
+        .message-title-box ul {
             padding-left: 0;
         }
     </style>
@@ -127,8 +127,8 @@
                         <h1 class="post-title">{{MessageList.title}}</h1>
                     </div>
 
+                    <!-- 照片的事件 -->
                     <div class="contaniner-img">
-                        <!-- 照片的事件 -->
                         <img v-bind:src="MessageList.picPath" alt="" style="width: 85%;">
                     </div>
 
@@ -179,32 +179,24 @@
 </html>
 
 <script>
-    var getUrlString = location.pathname;
-    var articleID = getUrlString.replace("/Home/SystemDetail/", ""); // 文章ID
-    class message {
-        title = '';
-        dscription = '';
+    let getUrlString = location.search; //URL 解析
+    console.log(getUrlString);
+    let articleId = getUrlString.replace("?id=", ""); // 取代?id=
 
-    }
-    class mesagge1 {
-        title = '';
-    }
-
-
-    var app = new Vue({
+    let GetAllVUE = new Vue({
         el: '#GetAll',
         data: {
-            message1: new mesagge1(),
             MessageList: "",
-            newMessage: [],
             Content: [],
         },
         mounted:
             function () {
                 var self = this;
-                axios.get("SystemMessage/FullContent1/?articleID" + articleID).then(function (result) {
+                axios.get("/SystemMessage/FullContent1/?articleId=" + articleId).then(function (result) {
+                    /*axios.get("/SystemMessage/FullContent1/3").then(function (result) {*/
                     self.MessageList = result.data;
                     console.log(self.MessageList);
+
 
                     axios.get("/SystemMessage/GetAllSystemMessage").then(function (result) {
                         self.Content = result.data;

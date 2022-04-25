@@ -48,15 +48,15 @@
                 <div class="img_btn">
 
                     <!-- Load the JS SDK asynchronously -->
-                    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"></script>
+                    @*<script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"></script>*@
 
                     <!-- The JS SDK Login Button -->
-                    <fb:login-button @*scope="public_profile,email" onlogin="checkLoginState()";*@></fb:login-button>
+                    @*<fb:login-button scope="public_profile,email" onlogin="checkLoginState()";></fb:login-button>*@
 
-                    <a href="/register/fblogin" @*scope="public_profile,email" onclick="checkLoginState();*@>
+                    <a href="/register/fblogin" id=fblogin @*scope="public_profile,email" onclick="checkLoginState();*@>
                         <img src="/img/fb48px.png" alt="" />
                     </a>
-                    <a href="/register/googlelogin">
+                    <a href="/register/googlelogin" id="googlelogin">
                         <img src="/img/google48px.png" alt="" />
                     </a>
                     <div id="status"></div>
@@ -95,15 +95,7 @@
                         <input class="inputloginbtn" type="submit" value="註冊" id="registerbtn" />
                     </div>
                     <br>
-                    @*</form>*@
-                    <!--<div class="img_btn">-->
-                    @*<a href="javascript:;">*@
-                    <!--<img src="/img/fb48px.png" alt="" />-->
-                    @*</a>*@
-                    @*<a href="javascript:;">*@
-                    <!--<img src="/img/google48px.png" alt="" />-->
-                    @*</a>*@
-                    <!--</div>-->
+                   
                 </div>
             </div>
 
@@ -134,7 +126,7 @@
 
 <!--一般登入-->
 <script>
-    var loginbtn = document.getElementById("signinBtn")
+    var loginbtn = document.getElementById("signinBtn");
     loginbtn.addEventListener("click", function () {
         let Email = document.getElementById("loginEmail").value;
         let Password = document.getElementById("loginPassword").value;
@@ -213,6 +205,8 @@
     });
 </script>
 
+
+<!--註冊-->
 <script>
     var registerEmail1 = document.getElementById("registerEmail")
     var labelemailTY = document.querySelector("#lb");

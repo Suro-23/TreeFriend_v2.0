@@ -1,14 +1,10 @@
 ﻿@{
     ViewData["Title"] = "EditPost";
     Layout = "_PersonalPost";
-
 }
 
 @{
-}
-
-@{
-    ViewData["Title"] = "Post";
+    ViewData["Title"] = "EditPost";
 }
 <script src='https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.6/vue.js' integrity='sha512-ZD7CJYgtekQVIaDp8LVTYWPenxvyC1wpPwnXFm9N1YdyPmQnX/yMweUQVAPcrLte7Z4jSCp2MW+8KW6/zK7tYQ==' crossorigin='anonymous'></script>
 @*<script src='https://cdnjs.cloudflare.com/ajax/libs/vue/2.2.6/vue.min.js' integrity='sha512-yNMXFsZbP+Hii2fM4n1EvhKbBCZ2NAfW1FvlN6yB1ZanH+1sEcNV2rPEg6qCMRT/4dY01ELCdD75WflfTHdKJg==' crossorigin='anonymous'></script>*@
@@ -24,7 +20,7 @@
         </div>
         <div class="text-center mt-2">
             <a :href="'/personalpost/post?id='+ user.userId"><img :src="user.headshotPath" class="rounded-circle size" alt="Alternate Text" /></a>
-</div>
+        </div>
         <div class="text-center username">{{user.userName}}</div>
         <div class="text-center contentaboutme">
             <p class="aboutme">{{user.selfIntrodution}}</p>
@@ -61,7 +57,7 @@
                             </div>
                             <img class="iconmessage" src="/img/message.png" alt="Alternate Text" />
                         </div>
-                        <p class="card-text ellipsis1 " >
+                        <p class="card-text ellipsis-edit " >
                             {{item.content}}
                         </p>
                     </div>
@@ -115,20 +111,20 @@
                                         <div class="msgbox" v-for="msg in item.message">
                                             @*彈出視窗-使用者留言*@
                                             <span>
-                                                <img :src="'.'+msg.headshotPath" class="rounded-circle msgsize" alt="Alternate Text" />
+                                                <img :src="msg.headshotPath" class="rounded-circle msgsize" alt="Alternate Text" />
                                             </span>
                                             <span class="msgcontent">
                                                 {{msg.userMessage}}
                                             </span>
                                         </div>
-                                        @*<div class="msgbox" v-for="(msg1,index2) in usercontent" :id="'msgren'+num1">
+                                        <div class="msgbox" v-for="(msg1,index2) in usercontent" :id="'msgren'+num1">
                                 <span>
-                                    <img src="https://i.pravatar.cc/50" class="rounded-circle msgsize" alt="Alternate Text" />
+                                    <img  :src="msg1.headshotPath"  class="rounded-circle msgsize" alt="Alternate Text" />
                                 </span>
                                 <span class="msgcontent">
                                     {{msg1.userMessage}}
                                 </span>
-                            </div>*@
+                            </div>
 
                                         <div class=" mes">
                                             @*留言*@
@@ -222,10 +218,14 @@
                         .then(function (res) {
 
                             if (res.data == true) {
-                                alert("儲存成功");
-                                window.location.reload();
+                                SWseccess("儲存成功!", "", "繼續").then(
+                                    window.location.reload()
+                                );
+                                //alert("儲存成功");
+                                
                             } else {
-                                alert('修改失敗');
+                                SWerror("修改失敗!", "", "返回");
+                                //alert('修改失敗');
                             }
 
                         })
@@ -234,7 +234,8 @@
                         })
                 }
                 else {
-                    alert("請輸入文章內容");
+                    SWinfo("請輸入文章內容","","返回")
+                    //alert("請輸入文章內容");
                 }
             },
             deletepost: function (event) { //刪除貼文
@@ -255,10 +256,11 @@
                 })
                     .then(function (res) {
                         if (res.data == true) {
-                            alert('刪除成功');
-                            window.location.reload();
+                            SWseccess("刪除成功!", "", "繼續").then(
+                                window.location.reload());
                         } else {
-                            alert('刪除失敗');
+                            SWerror("刪除失敗!", "", "返回");
+                            //alert('刪除失敗');
                         }
                     }
                     ).catch(function (res) {

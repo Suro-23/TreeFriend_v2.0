@@ -256,6 +256,11 @@ textarea {
     background-color: #dc3545;
     border-color: #dc3545;
 }
+.ellipsis-edit {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
 
 
 

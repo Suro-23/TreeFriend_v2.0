@@ -95,7 +95,7 @@
                 <div class="carousel1">
                     <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
                         <div class="carousel-inner">
-                            <template v-for="(item,num1) in Content">
+                            <template v-for="(item,num1) in MessageList">
                                 <div v-if="num1 == 0" class="carousel-item active">
                                     <img :src="item.picPath" class="d-block w-100" alt="" style="width:700px; height:400px;">
                                 </div>
@@ -122,19 +122,19 @@
         <div class="container-single-box">
             <!-- 文章內容框架 -->
             <div class="container-article-box">
-                <div >
+                <div>
                     <div class="container-header">
-                        <h1 class="post-title">{{  MessageList.title}}</h1>
+                        <h1 class="post-title">{{MessageList.title}}</h1>
                     </div>
 
                     <div class="contaniner-img">
                         <!-- 照片的事件 -->
-                        <img v-bind:src="  MessageList.picPath" alt="" style="width: 85%;">
+                        <img v-bind:src="MessageList.picPath" alt="" style="width: 85%;">
                     </div>
 
                     <div>
                         @*文章內容*@
-                        {{  MessageList.description}}
+                        {{MessageList.description}}
 
                     </div>
                 </div>
@@ -159,18 +159,18 @@
 
                     @*關於我們 寫死的內容*@
                     @*<div class="message-we">
-                        <aside class="message-title-box">
-                            <h4 class="message-title">
-                                關於我們
-                            </h4>
-                            <ul>
-                                <li>【學生學習】透過線上學習的方式，讓學生方便使用</li>
-                                <li>【老師授課】提供線上管道，把教學熱忱從實體帶到網路上！</li>
-                                <li>【自由學習】每天學習新知識，讓學習不在受到書本上的限制</li>
-                                <li>【交換技能】大家互相學習，分享自己知識的同時，也能學習想了解的領域!</li>
-                            </ul>
-                        </aside>
-                    </div>*@
+                            <aside class="message-title-box">
+                                <h4 class="message-title">
+                                    關於我們
+                                </h4>
+                                <ul>
+                                    <li>【學生學習】透過線上學習的方式，讓學生方便使用</li>
+                                    <li>【老師授課】提供線上管道，把教學熱忱從實體帶到網路上！</li>
+                                    <li>【自由學習】每天學習新知識，讓學習不在受到書本上的限制</li>
+                                    <li>【交換技能】大家互相學習，分享自己知識的同時，也能學習想了解的領域!</li>
+                                </ul>
+                            </aside>
+                        </div>*@
                 </div>
             </div>
         </div>
@@ -179,25 +179,32 @@
 </html>
 
 <script>
-    let getUrlString = location.search; //URL 解析
-    console.log(getUrlString);
-    let articleId = getUrlString.replace("?id=", ""); // 取代?id=
-    console.log(articleId)
+    var getUrlString = location.pathname;
+    var articleID = getUrlString.replace("/Home/SystemDetail/", ""); // 文章ID
+    class message {
+        title = '';
+        dscription = '';
 
-    let GetAllVUE = new Vue({
+    }
+    class mesagge1 {
+        title = '';
+    }
+
+
+    var app = new Vue({
         el: '#GetAll',
         data: {
+            message1: new mesagge1(),
             MessageList: "",
+            newMessage: [],
             Content: [],
         },
         mounted:
             function () {
                 var self = this;
-                axios.get("/SystemMessage/FullContent1/" + articleId).then(function (result) {
-                /*axios.get("/SystemMessage/FullContent1/3").then(function (result) {*/
+                axios.get("SystemMessage/FullContent1/?articleID" + articleID).then(function (result) {
                     self.MessageList = result.data;
                     console.log(self.MessageList);
-                    
 
                     axios.get("/SystemMessage/GetAllSystemMessage").then(function (result) {
                         self.Content = result.data;

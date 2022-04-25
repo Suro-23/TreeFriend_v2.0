@@ -16,6 +16,8 @@ body {
 .content {
     background-color: aliceblue;
     border-radius: 2rem 0 0 2rem;
+    height: 100%;
+    overflow: auto;
 }
 
 .nav-list {

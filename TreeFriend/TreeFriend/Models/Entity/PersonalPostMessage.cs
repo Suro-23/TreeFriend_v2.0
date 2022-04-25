@@ -21,7 +21,7 @@ namespace TreeFriend.Models.Entity
         [Required]
         public string Message { get; set; }
 
-        public DateTime CreateDate { get; set; }
+        public DateTime CreateDate { get; set; } = DateTime.UtcNow.AddHours(8);
 
 
         //public virtual PersonalPost PersonalPost { get; set; }

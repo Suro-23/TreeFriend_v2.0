@@ -31,7 +31,7 @@ namespace TreeFriend.Models.Entity {
         //設定GetDate()，自動取的時間
         //[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         //[Required]
-        public DateTime CreateDate { get; set; }
+        public DateTime CreateDate { get; set; } = DateTime.UtcNow.AddHours(8);
 
         [Required]
         public bool Status { get; set; } = true;

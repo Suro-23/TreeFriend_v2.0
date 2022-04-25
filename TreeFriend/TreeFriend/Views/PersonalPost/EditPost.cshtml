@@ -1,14 +1,10 @@
 ﻿@{
     ViewData["Title"] = "EditPost";
     Layout = "_PersonalPost";
-
 }
 
 @{
-}
-
-@{
-    ViewData["Title"] = "Post";
+    ViewData["Title"] = "EditPost";
 }
 <script src='https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.6/vue.js' integrity='sha512-ZD7CJYgtekQVIaDp8LVTYWPenxvyC1wpPwnXFm9N1YdyPmQnX/yMweUQVAPcrLte7Z4jSCp2MW+8KW6/zK7tYQ==' crossorigin='anonymous'></script>
 @*<script src='https://cdnjs.cloudflare.com/ajax/libs/vue/2.2.6/vue.min.js' integrity='sha512-yNMXFsZbP+Hii2fM4n1EvhKbBCZ2NAfW1FvlN6yB1ZanH+1sEcNV2rPEg6qCMRT/4dY01ELCdD75WflfTHdKJg==' crossorigin='anonymous'></script>*@
@@ -23,7 +19,7 @@
             <button class="addPost" onclick="location.href='/personalpost/postbackstage'">新增動態貼文</button>
         </div>
         <div class="text-center mt-2">
-            <img :src="user.headshotPath" class="rounded-circle size" alt="Alternate Text" />
+            <a :href="'/personalpost/post?id='+ user.userId"><img :src="user.headshotPath" class="rounded-circle size" alt="Alternate Text" /></a>
         </div>
         <div class="text-center username">{{user.userName}}</div>
         <div class="text-center contentaboutme">
@@ -61,29 +57,29 @@
                             </div>
                             <img class="iconmessage" src="/img/message.png" alt="Alternate Text" />
                         </div>
-                        <p class="card-text">
+                        <p class="card-text ellipsis-edit " >
                             {{item.content}}
                         </p>
                     </div>
-
-                    <!-- 確定刪除的Modal -->
-                    <div class="modal fade" :id="'mmm'+num1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                        <div class="modal-dialog modal-sm">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    @*<h5 class="modal-title" id="exampleModalLabel">Modal title</h5>*@
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                @*確定刪除 彈出視窗*@
+                                <!-- 確定刪除的Modal -->
+                                <div class="modal fade" :id="'mmm'+num1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-sm">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                @*<h5 class="modal-title" id="exampleModalLabel">Modal title</h5>*@
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                確定刪除?
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">否</button>
+                                                <button type="button" class="btn " style="background-color: #BDA684; color:white" v-on:click="deletepost($event)" v-bind:value="item.personalPostId">是</button>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="modal-body">
-                                    確定刪除?
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">否</button>
-                                    <button type="button" class="btn " style="background-color: #BDA684; color:white" v-on:click="deletepost($event)" v-bind:value="item.personalPostId">是</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
 
                     <div class="">
                         @*card-footer*@
@@ -94,13 +90,11 @@
                                     <div class="modal-header" style="background-color:linen;">
                                         @*<h5 class="modal-title" id="exampleModalLabel">Modal title</h5>*@
                                         <button type="button" class="btn btn-danger me-1" @*data-bs-target="#exampleModal"*@ data-bs-toggle="modal" :href="'#mmm'+num1">刪除</button>
-                                        <button type="button" class="btn " style="background-color: #BDA684; color: #fff" v-on:click="edit($event)" v-bind:value="item.personalPostId">儲存</button>
+                                        <button type="button" class="btn " style="background-color: #BDA684; color: #fff" v-on:click="edit($event,num1)" v-bind:value="item.personalPostId">儲存</button>
                                         <label id="saveOk"></label>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" v-on:click="reload"></button>
                                     </div>
-                                    @*確定刪除 彈出視窗*@
-                                    <div>
-                                    </div>
+
                                     <div class="modal-body" style="background-color:linen;">
                                         @*內容*@
                                         @*圖片*@
@@ -109,7 +103,7 @@
                                         </div>
                                         <div class="card-body imgsicon">
                                             <p class="card-text">
-                                                <textarea id="content" class="msgEdit" v-model="post.content" @@blur="textnull" v-bind:placeholder="textnonull">
+                                                <textarea id="content" class="msgEdit" v-model="item.content" @@blur="textnull(num1)" v-bind:placeholder="textnonull">
                                                 </textarea>
                                             </p>
 
@@ -124,13 +118,13 @@
                                             </span>
                                         </div>
                                         <div class="msgbox" v-for="(msg1,index2) in usercontent" :id="'msgren'+num1">
-                                            <span>
-                                                <img src="https://i.pravatar.cc/50" class="rounded-circle msgsize" alt="Alternate Text" />
-                                            </span>
-                                            <span class="msgcontent">
-                                                {{msg1.userMessage}}
-                                            </span>
-                                        </div>
+                                <span>
+                                    <img  :src="msg1.headshotPath"  class="rounded-circle msgsize" alt="Alternate Text" />
+                                </span>
+                                <span class="msgcontent">
+                                    {{msg1.userMessage}}
+                                </span>
+                            </div>
 
                                         <div class=" mes">
                                             @*留言*@
@@ -146,14 +140,14 @@
 
                         @*留言*@
                         @*<div class="msgboxout" v-for="(msg,index1) in item.message" v-if="index1 < 1">
-                                <span>
-                                    <img src="https://i.pravatar.cc/50/random" class="rounded-circle msgsize" alt="Alternate Text" />
-                                </span>
-                                <span class="msgcontent">
-                                    {{msg.userMessage}}
-                                    <small class="text-muted updatetime">3 mins ago{{msg.createDate}}</small>
-                                </span>
-                            </div>*@
+                <span>
+                    <img src="https://i.pravatar.cc/50/random" class="rounded-circle msgsize" alt="Alternate Text" />
+                </span>
+                <span class="msgcontent">
+                    {{msg.userMessage}}
+                    <small class="text-muted updatetime">3 mins ago{{msg.createDate}}</small>
+                </span>
+            </div>*@
                     </div>
                 </div>
             </div>
@@ -196,8 +190,8 @@
 
         },
         methods: {
-            textnull: function () {
-                if (this.post.content == "") {
+            textnull: function (index) {
+                if (this.MessageList[index].content == "") {
                     this.textnonull = "請輸入文章內容";
                 }
             },
@@ -207,12 +201,14 @@
                 id.state = true;
                 this.isShow = !this.isShow;
             },
-            edit: function () { //編輯貼文內容
+            edit: function ( event,index) { //編輯貼文內容
                 let personalpostid = event.target.value;
+                let self = this;
+                let content = self.MessageList[index].content;
                 let formdata = new FormData();
                 formdata.append('PersonalPostId', personalpostid)
-                formdata.append("Content", this.post.content);
-                if (this.post.content != "") {
+                formdata.append("Content", content);
+                if (self.MessageList[index].content != "") {
                     axios({
                         method: 'post',
                         url: '/personalpost/editpost',
@@ -222,10 +218,14 @@
                         .then(function (res) {
 
                             if (res.data == true) {
-                                alert("儲存成功");
-                                window.location.reload();
+                                SWseccess("儲存成功!", "", "繼續").then(
+                                    window.location.reload()
+                                );
+                                //alert("儲存成功");
+                                
                             } else {
-                                alert('修改失敗');
+                                SWerror("修改失敗!", "", "返回");
+                                //alert('修改失敗');
                             }
 
                         })
@@ -234,7 +234,8 @@
                         })
                 }
                 else {
-                    alert("請輸入文章內容");
+                    SWinfo("請輸入文章內容","","返回")
+                    //alert("請輸入文章內容");
                 }
             },
             deletepost: function (event) { //刪除貼文
@@ -255,10 +256,11 @@
                 })
                     .then(function (res) {
                         if (res.data == true) {
-                            alert('刪除成功');
-                            window.location.reload();
+                            SWseccess("刪除成功!", "", "繼續").then(
+                                window.location.reload());
                         } else {
-                            alert('刪除失敗');
+                            SWerror("刪除失敗!", "", "返回");
+                            //alert('刪除失敗');
                         }
                     }
                     ).catch(function (res) {

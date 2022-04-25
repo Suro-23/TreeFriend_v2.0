@@ -113,7 +113,7 @@ namespace TreeFriend.Controllers
                 updateLecture.Description = model.Description;
                 updateLecture.Content = model.Content;
                 updateLecture.ImgPath = pic;
-                updateLecture.UpdateTime = DateTime.Now;
+                updateLecture.UpdateTime = DateTime.UtcNow.AddHours(8);
                 _db.SaveChanges();
                 return true;
             }
@@ -158,7 +158,7 @@ namespace TreeFriend.Controllers
 
                 _db.Lectures.Add(new Lecture()
                 {
-                    CreateDate = DateTime.Now,
+                    CreateDate = DateTime.UtcNow.AddHours(8),
                     Theme = model.Theme,
                     EventDate = model.EventDate,
                     EventTimeStart = model.EventTimeStart,
@@ -195,6 +195,7 @@ namespace TreeFriend.Controllers
                 var result = _db.Lectures.Where(x => x.LectureId == lectureId).SingleOrDefault();
                 Console.WriteLine(result);
                 result.IsDelete = true;
+                result.UpdateTime = DateTime.UtcNow.AddHours(8);
                 _db.Lectures.Update(result);
                 _db.SaveChanges();
                 return true;

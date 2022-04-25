@@ -130,7 +130,7 @@ namespace TreeFriend.Controllers.Api
         {
 
             //var UserId = _context.users.Where(n=>n.UserId);  //這裡要更改
-            var p = _context.personalPosts.Where(x => x.UserId == UserId).OrderByDescending(y => y.PersonalPostId).Take(6).Select(z => z.PersonalPostId); //抓登入userId的所有貼文 反序列personalPosts表 取前三筆PersonalPostId
+            var p = _context.personalPosts.Where(x => x.UserId == UserId).OrderByDescending(y => y.PersonalPostId).Select(z => z.PersonalPostId); //抓登入userId的所有貼文 反序列personalPosts表 取前三筆PersonalPostId
             var L = new List<PersonalPostRenderViewModel>();
               
             foreach (var F in p.ToList())
@@ -154,7 +154,7 @@ namespace TreeFriend.Controllers.Api
                         //TODO 加暱稱
                     }).ToList();
                     //建立貼文內容物件渲染
-                    var a = _context.personalPosts.Where(x => x.PersonalPostId == F).OrderByDescending(x => x.CreateDate).Take(6)
+                    var a = _context.personalPosts.Where(x => x.PersonalPostId == F).OrderByDescending(x => x.CreateDate)
                     .Select(y => new PersonalPostRenderViewModel()
                     {
                         PersonalPostId = F,
@@ -170,7 +170,7 @@ namespace TreeFriend.Controllers.Api
                 {
                     //如果貼文內沒有留言，留言為空值
                     List<PersonalPostMessageViewModel> mes = null;
-                    var a = _context.personalPosts.Where(x => x.PersonalPostId == F).OrderByDescending(x => x.CreateDate).Take(6)
+                    var a = _context.personalPosts.Where(x => x.PersonalPostId == F).OrderByDescending(x => x.CreateDate)
                     .Select(y => new PersonalPostRenderViewModel()
                     {
                         PersonalPostId = F,
@@ -208,7 +208,8 @@ namespace TreeFriend.Controllers.Api
             {
                 HeadshotPath = x.HeadshotPath,
                 UserName = x.UserName,
-                SelfIntrodution = x.SelfIntrodution
+                SelfIntrodution = x.SelfIntrodution,
+                UserId=x.UserId
 
             }).ToList();
             return user;

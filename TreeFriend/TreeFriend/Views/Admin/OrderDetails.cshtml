@@ -23,10 +23,25 @@
         border-color: aliceblue;
     }
 
+    .th-w100 {
+        width: 100px;
+    }
+
+    .icon {
+        display: inline-block;
+        cursor: pointer;
+    }
+
+    .icon.inverse {
+        transform: rotate(180deg);
+   }
+
+    
+
 </style>
 
-<fieldset id="od">
-    <div class="container">
+<fieldset id="od" class="col-12">
+    <div class="container" style="height:83%;">
         <div class="mt-5 ms-5">
             <label for="search"><strong>搜尋：</strong></label>
             <input type="text" v-model="filter_name" id="search">
@@ -36,19 +51,19 @@
             <table class="table table-hover table-sm align-middle  ">
                 <thead>
                     <tr>
-                        <th scope="col">編號</th>
+                        @*<th scope="col">編號</th>*@
                         <th scope="col">訂單編號</th>
                         <th scope="col">訂購日期</th>
                         <th scope="col">訂購人</th>
                         <th scope="col">
                             <div class="d-flex align-items-center">
                                 訂單總金額
-                                <span class="material-symbols-outlined" @@click="sort">
+                                <span class="material-symbols-outlined icon" @@click="sort(),isReverse = !isReverse" v-bind:class="{'inverse': isReverse}">
                                     arrow_drop_down
                                 </span>
-                                <span class="material-symbols-outlined" @@click="reset">
+                                @*<span class="material-symbols-outlined" @@click="reset">
                                     arrow_drop_up
-                                </span>
+                                </span>*@
                             </div>
                         </th>
                         <th scope="col">付款狀態</th>
@@ -58,7 +73,7 @@
                 </thead>
                 <tbody>
                     <tr v-for="(item,index) in filteredorderList.slice(pageStart, pageStart + countOfPage)" :key="index">
-                        <td v-cloak>{{(currPage-1)*countOfPage + index + 1}}</td>
+                        @*<td v-cloak>{{(currPage-1)*countOfPage + index + 1}}</td>*@
                         <td v-cloak>{{item.orderDetailId}}</td>
                         <td class="col-2" v-cloak >{{item.createDate}}</td>
                         <td v-cloak>{{item.userName}}</td>
@@ -107,15 +122,14 @@
 
     <!--  DetailModal -->
     <div class="modal fade" id="deleteModel" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog" >
             <div class="modal-content">
                 <div class="modal-header">
                     <p class="modal-title" id="deleteLabel">訂單詳情</p>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="container-fluid">
-                        <div class="row">
+                    <div class="container col-12" >
                             <div class="table-responsive">
                                 <table class="table align-middle">
                                     <thead>
@@ -150,9 +164,6 @@
                                     </tbody>
                                 </table>
                             </div>
-
-
-                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
@@ -175,6 +186,7 @@
             currPage: 1,
             target:null,
             filter_name: '',
+            isReverse:true,
 
         },
         mounted: function () {
@@ -248,19 +260,24 @@
                 console.log(orderId);
             },
             sort: function () {
+
                 let self = this;
-                axios.get("/OrderDetails/GetOrderByDescendingOrders").then(function (res) {
-                    self.orderList = res.data;
-                    console.log(res.data);
-                })
+                if (self.isReverse) {
+
+                    axios.get("/OrderDetails/GetOrderByDescendingOrders").then(function (res) {
+                        self.orderList = res.data;
+                        document.querySelector("#page-1").click();
+                        console.log(res.data);
+                    })
+                } else {
+                    axios.get("/OrderDetails/GetAllOrders").then(function (res) {
+                        self.orderList = res.data;
+                        document.querySelector("#page-1").click();
+                        console.log(res.data);
+                    })
+                }
             },
-            reset: function () {
-                let self = this;
-                axios.get("/OrderDetails/GetAllOrders").then(function (res) {
-                    self.orderList = res.data;
-                    console.log(res.data);
-                })
-            }
+           
         },
         watch: {
             searchList: function () {
@@ -271,6 +288,7 @@
                     console.log(this.searchList);
                 }
             }
+
 
 
         }

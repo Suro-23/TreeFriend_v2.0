@@ -26,7 +26,7 @@ namespace TreeFriend.Controllers.Api {
                 Id = u.UserId,
                 Email = u.Email,
                 Name = u.UserDetail.UserName,
-                Level = u.UserLevel == true ? "Admin" : "Membere",
+                Level = u.UserLevel == true ? "Admin" : "Member",
                 Status = u.UserStatus,
                 Headshot = u.UserDetail.HeadshotPath,
                 Sex = u.UserDetail.Sex == true ? "男" : "女",

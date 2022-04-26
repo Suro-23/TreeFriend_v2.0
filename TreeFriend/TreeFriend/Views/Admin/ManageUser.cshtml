@@ -2,7 +2,7 @@
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
 }
 
-<link rel="stylesheet" href="~/css/Admin/ManageUser.css"/>
+<link rel="stylesheet" href="~/css/Admin/ManageUser.css" />
 
 <div id="manageUser" class="container-fluid overflow-auto h-100">
     <div class="row justify-content-around h-100">
@@ -10,18 +10,18 @@
             <div class="row fs-5 list-header m-0">
                 <div class="col-2">ID</div>
                 <div class="col-3">Name</div>
-                <div class="col-2">Level</div>
+                <div class="col-3">Level</div>
                 <div class="col-2">Status</div>
             </div>
             <div class="list-wrap m-0">
                 <div v-for="item in allUserInfo" @@click="clickUserInfo(item)" class="row list-data  align-items-center m-0 p-0">
                     <div class="col-2">{{item.id}}</div>
                     <div class="col-3">{{item.name}}</div>
-                    <div class="col-2">{{item.level}}</div>
+                    <div class="col-3">{{item.level}}</div>
                     <div class="col-2">{{item.status}}</div>
-                    <div class="col-3">
-                        <button><img src="~/icon/pen.png" alt=""></button>
-                        <button><img src="~/icon/delete.png" alt=""></button>
+                    <div class="col-2 p-0">
+                        <button class="p-0" @@click="editUserInfo(item.id)"><img src="~/icon/pen.png" alt=""></button>
+                        <button class="ms-2 p-0"><img src="~/icon/delete.png" alt=""></button>
                     </div>
                 </div>
             </div>
@@ -37,7 +37,7 @@
                         <div class="row fs-4">
                             <div class="col-5">ID</div>{{selectUser.userInfo.id}}
                         </div>
-                        <div class="row fs-4">
+                        <div class="row fs-4" style="flex-wrap: nowrap">
                             <div class="col-5">姓名</div>{{selectUser.userInfo.name}}
                         </div>
                         <div class="row fs-4">
@@ -49,9 +49,11 @@
                     </div>
                 </div>
                 <div class="row intro">
-                    <div class="fs-3 intro-title">自我介紹
+                    <div class="fs-3 intro-title">
+                        自我介紹
                     </div>
-                    <div class="col-9 intro-content fs-5 text-center">{{selectUser.userInfo.selfIntro}}
+                    <div class="col-9 intro-content fs-5 text-center">
+                        {{selectUser.userInfo.selfIntro}}
                     </div>
                 </div>
                 <div class="row m-0 justify-content-center fs-3 pt-3 pb-3">
@@ -70,10 +72,48 @@
                     </div>
                 </div>
             </div>
-            <div v-else><img src="~/icon/userInfo.png" style="width: 100%"/></div>
+            <div v-else><img src="~/icon/userInfo.png" style="width: 100%" /></div>
         </div>
     </div>
 </div>
+
+
+@*彈出視窗*@
+<div class="modal fade" id="editUserInfo" tabindex="-1" @* aria-labelledby="exampleModalLabel" aria-hidden="true"*@>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-2 fs-4">身分 </div>
+                    <div class="col-10">
+                        <select v-model="selectUser.userInfo.level" class="form-select" aria-label="Default select example">
+                            <option value="Admin">管理員</option>
+                            <option value="Member">會員</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-2 fs-4">狀態 </div>
+                    <div class="col-10">
+                        <select v-model="selectUser.userInfo.level" class="form-select" aria-label="Default select example">
+                            <option value="true">啟用</option>
+                            <option value="false">停用</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <script>
     let mngApp = new Vue({
@@ -83,10 +123,14 @@
             selectUser:{
                 clickUser: false,
                 userInfo:{}
-            }
+            },
+            modal:{}
         },
         mounted: function(){
             this.getAllUserInfo();
+            this.modal = new bootstrap.Modal(document.getElementById('editUserInfo'), {
+              keyboard: false
+            });
         },
         methods:{
             getAllUserInfo: async function(){
@@ -105,6 +149,9 @@
                 user.userInfo.totalTime = `${totalTime}`;
 
                 user.clickUser = true;
+            },
+            editUserInfo: function(){
+                this.modal.show();
             }
         }
     });

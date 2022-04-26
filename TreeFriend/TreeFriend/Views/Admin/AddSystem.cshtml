@@ -171,12 +171,12 @@
 
                         <div class="form-row">
                             <div class="form-title" style="margin-right: 10px;">文章標題:</div>
-                            <input type="text" required v-model="article.title" style="width: 80%;">
+                            <input type="text" required v-model="article.title">
                         </div>
 
                         <div class="form-row">
                             <div class="form-title" style="margin-right: 10px;">文章內容:</div>
-                            <textarea required v-model="article.description" style="width: 80%;"></textarea>
+                            <input type="text" required v-model="article.description">
 
                             <div class="form-row">
                                 <div class="form-title" style="margin-right: 10px;">文章圖片:</div>
@@ -341,7 +341,7 @@
                     title: '確定要刪除嗎?',
                     text: "刪除就無法復原囉!",
                     icon: 'warning',
-                    showCancelButton: "取消",
+                    showCancelButton: true,
                     confirmButtonColor: '#3085d6',
                     cancelButtonColor: '#d33',
                     confirmButtonText: 'delete'

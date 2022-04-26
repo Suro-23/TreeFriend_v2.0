@@ -202,7 +202,7 @@ namespace TreeFriend.Controllers.Api
         {
             var UserId = Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(u => u.Type == "UserId").Value);
             //抓登入userId的所有貼文 反序列personalPosts表 取前六筆PersonalPostId
-            var p = _context.personalPosts.Where(x => x.UserId == UserId).OrderByDescending(y => y.PersonalPostId).Take(6).Select(z => z.PersonalPostId);
+            var p = _context.personalPosts.Where(x => x.UserId == UserId).OrderByDescending(y => y.PersonalPostId).Select(z => z.PersonalPostId);
             //建立一個List後面可以接資料
             var L = new List<PersonalPostRenderViewModel>();
             //將取出的貼文逐一帶入
@@ -226,7 +226,7 @@ namespace TreeFriend.Controllers.Api
                         //TODO 加暱稱
                     }).ToList();
                     //建立貼文內容物件渲染
-                    var a = _context.personalPosts.Where(x => x.PersonalPostId == F).OrderByDescending(x => x.CreateDate).Take(6)
+                    var a = _context.personalPosts.Where(x => x.PersonalPostId == F).OrderByDescending(x => x.CreateDate)
                     .Select(y => new PersonalPostRenderViewModel()
                     {
                         PersonalPostId = F,
@@ -242,7 +242,7 @@ namespace TreeFriend.Controllers.Api
                 {
                     //如果貼文內沒有留言，留言為空值
                     List<PersonalPostMessageViewModel> mes = null;
-                    var a = _context.personalPosts.Where(x => x.PersonalPostId == F).OrderByDescending(x => x.CreateDate).Take(6)
+                    var a = _context.personalPosts.Where(x => x.PersonalPostId == F).OrderByDescending(x => x.CreateDate)
                     .Select(y => new PersonalPostRenderViewModel()
                     {
                         PersonalPostId = F,
@@ -262,41 +262,41 @@ namespace TreeFriend.Controllers.Api
         }
 
         //渲染個人動態到編輯的前端
-        public List<PersonalPostRenderViewModel> GetAllContentOnePic()
-        {
-            var UserId = Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(u => u.Type == "UserId").Value);
+        //public List<PersonalPostRenderViewModel> GetAllContentOnePic()
+        //{
+        //    var UserId = Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(u => u.Type == "UserId").Value);
 
-            var p = _context.personalPosts.Where(x => x.UserId == UserId).OrderByDescending(y => y.PersonalPostId).Take(6).Select(z => z.PersonalPostId); //抓登入userId的所有貼文 反序列personalPosts表 取前三筆PersonalPostId
+        //    var p = _context.personalPosts.Where(x => x.UserId == UserId).OrderByDescending(y => y.PersonalPostId).Take(6).Select(z => z.PersonalPostId); //抓登入userId的所有貼文 反序列personalPosts表 取前三筆PersonalPostId
 
-            var L = new List<PersonalPostRenderViewModel>();
+        //    var L = new List<PersonalPostRenderViewModel>();
 
-            foreach (var F in p.ToList())
-            {
-                var mes = _context.PersonalPostMessages.Where(x => x.PersonalPostId == F)
-                .Select(y => new PersonalPostMessageViewModel()
-                {
-                    PersonalPostId = F,
-                    UserMessage = y.Message,
-                    //HeadshotPath = h.HeadshotPath,
-                    CreateDate = y.CreateDate
-                    //TODO 加暱稱
-                }).ToList();
-                        var a = _context.personalPosts.Where(x => x.PersonalPostId == F).OrderByDescending(x => x.CreateDate).Take(6)
-                .Select(y => new PersonalPostRenderViewModel()
-                {
-                    PersonalPostId = F,
-                    Content = y.Content,
-                    PostPhotoPath = _context.PersonalPostImages.Where(w => w.PersonalPostId == F).Select(s => s.PostPhotoPath).Take(1).ToList(),
-                    Message = mes,
-                    State = false
-                }).ToList();
+        //    foreach (var F in p.ToList())
+        //    {
+        //        var mes = _context.PersonalPostMessages.Where(x => x.PersonalPostId == F)
+        //        .Select(y => new PersonalPostMessageViewModel()
+        //        {
+        //            PersonalPostId = F,
+        //            UserMessage = y.Message,
+        //            //HeadshotPath = h.HeadshotPath,
+        //            CreateDate = y.CreateDate
+        //            //TODO 加暱稱
+        //        }).ToList();
+        //                var a = _context.personalPosts.Where(x => x.PersonalPostId == F).OrderByDescending(x => x.CreateDate).Take(6)
+        //        .Select(y => new PersonalPostRenderViewModel()
+        //        {
+        //            PersonalPostId = F,
+        //            Content = y.Content,
+        //            PostPhotoPath = _context.PersonalPostImages.Where(w => w.PersonalPostId == F).Select(s => s.PostPhotoPath).Take(1).ToList(),
+        //            Message = mes,
+        //            State = false
+        //        }).ToList();
 
-                L.AddRange(a);
-            }
-            Console.WriteLine(L);
-            return L;
+        //        L.AddRange(a);
+        //    }
+        //    Console.WriteLine(L);
+        //    return L;
 
-        }
+        //}
         #endregion
 
         #region 編輯個人動態

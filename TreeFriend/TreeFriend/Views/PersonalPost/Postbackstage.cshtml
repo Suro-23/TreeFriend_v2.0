@@ -108,30 +108,32 @@
                 }
                 bodyFormData.append('Content', this.hello.content);
 
-                axios({
-                    method: "post",
-                    url: "/personalpost/create",
-                    data: bodyFormData,
-                    headers: { "Content-Type": "multipart/form-data" },
+                if (this.hello.Pic != "" || this.hello.content != "") {
+                    axios({
+                        method: "post",
+                        url: "/personalpost/create",
+                        data: bodyFormData,
+                        headers: { "Content-Type": "multipart/form-data" },
 
-                })
-                    .then
-                    (function (res) {
-                    if (res.data == true) {
-                        //alert("成功");
-                        SWseccess("新增成功!", "", "前往動態貼文");
-                        //(function () { window.location.href = "/personalpost/editpost" });
-                        //window.location.href = "/personalpost/editpost";
-                    }
-                    else {
-                        //alert("失敗");
-                        SWerror("新增失敗!", "圖片或內文不得為空", "再試一次");
-                    }
-                })
-                    .catch(function (response) {
-                        //handle error
-                        console.log(response);
-                    });
+                    })
+                        .then
+                        (function (res) {
+                            if (res.data == true) {
+                                //alert("成功");
+                                SWPseccess("新增成功!", "", "前往動態貼文");
+                                //(function () { window.location.href = "/personalpost/editpost" });
+                                //window.location.href = "/personalpost/editpost";
+                            }
+                            else {
+                                //alert("失敗");
+                                SWerror("新增失敗!", "圖片或內文不得為空", "再試一次");
+                            }
+                        })
+                        .catch(function (response) {
+                            //handle error
+                            console.log(response);
+                        });
+                } else { SWerror("新增失敗!", "圖片或內文不得為空", "再試一次"); }
             }
         }
 
@@ -280,17 +282,17 @@
         });
     }
 
-    function SWseccess(title, text, ok) {
+    function SWPseccess(title, text, ok) {
         Swal.fire({
             title: title,
             text: text,
             icon: 'success',
-            confirmButtonText: ok
-        })
-        //    .then(function () {
-        //    window.location.href = "/personalpost/editpost";
-        //});
-    }
+            confirmButtonText: ok,
+            willClose: () => {
+                window.location.href = "/personalpost/editpost";
+            }
+        }
+        )}
 
     function SWwarning(title, text, ok) {
         Swal.fire({

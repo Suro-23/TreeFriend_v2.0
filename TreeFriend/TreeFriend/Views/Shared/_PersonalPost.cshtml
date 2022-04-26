@@ -156,7 +156,7 @@
         });
     }
 
-    function SWmini(title) { 
+    function SWmini(icon,title) { 
     const Toast = Swal.mixin({
         toast: true,
         position: 'top-end',
@@ -170,7 +170,7 @@
     });
     
         Toast.fire({
-            icon: 'success',
+            icon: icon,
             title: title
         });
     }

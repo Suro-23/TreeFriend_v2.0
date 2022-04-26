@@ -4,49 +4,18 @@
 
 <link href="https://fonts.googleapis.com/css?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Two+Tone|Material+Icons+Round|Material+Icons+Sharp" rel="stylesheet">
 <link rel="stylesheet" href="https://fonts.sandbox.google.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20,100,0,-25" />
-<style>
-    .page-item.active .page-link {
-        color: aliceblue;
-        background-color: cadetblue;
-        border-color: aliceblue;
-    }
+<link rel="stylesheet" href="~/css/Yie/orderdetails.css">
 
-    [v-cloak] {
-        display: none;
-    }
-
-    .wrap a {
-        color: black;
-    }
-
-    .page-link {
-        border-color: aliceblue;
-    }
-
-    .th-w100 {
-        width: 100px;
-    }
-
-    .icon {
-        display: inline-block;
-        cursor: pointer;
-    }
-
-    .icon.inverse {
-        transform: rotate(180deg);
-   }
-
-</style>
 
 <fieldset id="od" class="col-12">
     <div class="container" style="height:83%;">
         <div class="mt-5 ms-5">
-            <label for="search"><strong>搜尋：</strong></label>
-            <input type="text" v-model="filter_name" id="search">
+            <label for="search"><span class="material-symbols-outlined">search</span></label>
+            <input type="text" v-model="filter_name" id="search" placeholder="搜尋">
         </div>
-        <div class="table-responsive  ms-5 d-flex justify-content-center align-content-center ">
+        <div class="table-responsive mt-3 ms-5 d-flex justify-content-center align-content-center ">
 
-            <table class="table table-hover table-sm align-middle  ">
+            <table class="table table-hover table-sm align-middle">
                 <thead>
                     <tr>
                         @*<th scope="col">編號</th>*@

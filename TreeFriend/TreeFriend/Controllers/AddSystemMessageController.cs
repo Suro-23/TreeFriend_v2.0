@@ -67,8 +67,8 @@ namespace TreeFriend.Controllers
                     Description = model.Description,
                     CreateDate = DateTime.UtcNow.AddHours(8),
                     PicPath = fileName,
-                    UserId = model.UserId
-                });
+                    UserId = UserId
+                }) ;
                 _db.SaveChanges(); //存進資料庫
                 return true;
             }

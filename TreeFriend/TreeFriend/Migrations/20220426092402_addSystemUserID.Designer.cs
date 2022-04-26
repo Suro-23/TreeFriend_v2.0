@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TreeFriend.Models;
 
 namespace TreeFriend.Migrations
 {
     [DbContext(typeof(TreeFriendDbContext))]
-    partial class TreeFriendDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220426092402_addSystemUserID")]
+    partial class addSystemUserID
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -364,8 +366,6 @@ namespace TreeFriend.Migrations
 
                     b.HasKey("ArticleID");
 
-                    b.HasIndex("UserId");
-
                     b.ToTable("SystemPost");
                 });
 
@@ -545,17 +545,6 @@ namespace TreeFriend.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("TreeFriend.Models.Entity.SystemPost", b =>
-                {
-                    b.HasOne("TreeFriend.Models.Entity.User", "User")
-                        .WithMany("SystemPosts")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("TreeFriend.Models.Entity.UserDetail", b =>
                 {
                     b.HasOne("TreeFriend.Models.Entity.User", "User")
@@ -605,8 +594,6 @@ namespace TreeFriend.Migrations
                     b.Navigation("Posts");
 
                     b.Navigation("SkillPosts");
-
-                    b.Navigation("SystemPosts");
 
                     b.Navigation("UserDetail");
                 });

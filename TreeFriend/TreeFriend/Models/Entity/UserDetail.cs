@@ -19,7 +19,7 @@ namespace TreeFriend.Models.Entity {
         public string HeadshotPath { get; set; } = "/icon/headshot.jpg";
 
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        public DateTime UpdateTime { get; set; } = DateTime.UtcNow.AddHours(8);
+        public DateTime UpdateTime { get; set; } 
 
         public User User { get; set; }
     }

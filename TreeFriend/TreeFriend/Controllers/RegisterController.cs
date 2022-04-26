@@ -242,24 +242,30 @@ namespace TreeFriend.Controllers {
             var check = _context.users.Where(x => x.Email == model.Email)
                 .FirstOrDefault();
 
-            if (check == null && (model.Email == "" || model.Password == "")) {
+            if (check == null && (model.Email == "" || model.Password == ""))
+            {
                 return View("帳號或密碼錯誤");
-            } else {
-                string salt = check.Salt.ToString();
+            }
+            else
+            {
+                if (check.Salt != null)
+                {
+                    string salt = check.Salt.ToString();
 
-                byte[] passwordAndSaltBytes = System.Text.Encoding.UTF8.GetBytes(model.Password + salt);
-                byte[] hashBytes = new SHA256Managed().ComputeHash(passwordAndSaltBytes);
-                string hashString = Convert.ToBase64String(hashBytes);
+                    byte[] passwordAndSaltBytes = System.Text.Encoding.UTF8.GetBytes(model.Password + salt);
+                    byte[] hashBytes = new SHA256Managed().ComputeHash(passwordAndSaltBytes);
+                    string hashString = Convert.ToBase64String(hashBytes);
 
 
 
-                if (hashString == check.Password) {
-                    if (check.UserStatus == true)
+                    if (hashString == check.Password)
                     {
-                    //YP : 登入時順便檢查身分，並獲得頭像
-                    var user = _context.usersDetail.Where(u => u.UserId == check.UserId).FirstOrDefault();
-                    var UserLevel = check.UserLevel == true ? "Admin" : "Member";
-                    var claims = new List<Claim>()
+                        if (check.UserStatus == true)
+                        {
+                            //YP : 登入時順便檢查身分，並獲得頭像
+                            var user = _context.usersDetail.Where(u => u.UserId == check.UserId).FirstOrDefault();
+                            var UserLevel = check.UserLevel == true ? "Admin" : "Member";
+                            var claims = new List<Claim>()
                 {
                     //YP : 確認身分後cookie綁定權限
                     new Claim(ClaimTypes.Email,check.Email),
@@ -269,26 +275,31 @@ namespace TreeFriend.Controllers {
                     new Claim("UserName",user.UserName)
                 };
 
-                    var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-                    var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+                            var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                            var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
 
-                    await HttpContext.SignInAsync(claimsPrincipal);
-                    await HttpContext.SignInAsync(
-                    CookieAuthenticationDefaults.AuthenticationScheme,
-                    new ClaimsPrincipal(claimsIdentity),
-                    new AuthenticationProperties {
-                        IsPersistent = true,
-                        ExpiresUtc = DateTime.UtcNow.AddMinutes(20)
-                    });
-                        //YP : 登入成功後轉跳回首頁
-                        return Json(Url.Action("HomePage", "Home"));
+                            await HttpContext.SignInAsync(claimsPrincipal);
+                            await HttpContext.SignInAsync(
+                            CookieAuthenticationDefaults.AuthenticationScheme,
+                            new ClaimsPrincipal(claimsIdentity),
+                            new AuthenticationProperties
+                            {
+                                IsPersistent = true,
+                                ExpiresUtc = DateTime.UtcNow.AddMinutes(20)
+                            });
+                            //YP : 登入成功後轉跳回首頁
+                            return Json(Url.Action("HomePage", "Home"));
+                        }
+                        return Content("請至信箱開通帳號");
+
+
                     }
-                    return Content("請至信箱開通帳號");
-                    
-                    
-                } else {
-                    return Content("帳號或密碼錯誤");
+                    else
+                    {
+                        return Content("帳號或密碼錯誤");
+                    }
                 }
+                return Content("帳號或密碼錯誤");
             }
         }
         #endregion

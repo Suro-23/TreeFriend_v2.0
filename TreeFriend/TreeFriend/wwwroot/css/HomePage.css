@@ -57,12 +57,12 @@ header {
             }
 
 .headshot {
+    width: 40px;
     display: flex;
     align-items: center;
 }
 
     .headshot img {
-        width: 50px;
         border-radius: 100%;
     }
 /*********************************************************/

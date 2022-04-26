@@ -60,3 +60,7 @@
 [v-cloak]{
     display:none;
 }
+
+.des {
+    white-space: pre-line;
+}

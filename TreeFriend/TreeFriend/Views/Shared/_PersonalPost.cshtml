@@ -22,10 +22,13 @@
         <link rel="stylesheet" href="~/css/site.css" />*@
 </head>
 <body>
-    <nav id="header-nav" class="navbar navbar-expand-lg navbar-light bg-brown">
+    <nav id="header-nav" class="navbar navbar-expand-lg navbar-light header-bg">
         <div class="container-fluid">
-            <a href="@Url.Action(" HomePage","Home")">
-                <img src="~/icon/Logo.png" alt="" class="logo">
+            <a href="@Url.Action("HomePage","Home")" class="aline">
+                <div class="d-flex align-items-center">
+                    <img src="/img/logo1.png" alt="" class="logo">
+                    <span class="treefriend">Tree<span class="friend">Friend</span></span>
+                </div>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
                     aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
@@ -42,7 +45,7 @@
                         <a class="nav-link" href="@Url.Action("AllSkillPostPage","Home")">技能貼文</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="@Url.Action("ProductPage","Home")">講座</a>
+                        <a class="nav-link" href="@Url.Action("LectureList","Home")">講座</a>
                     </li>
                     @{
                     if (Context.User.Identity.IsAuthenticated) {
@@ -152,4 +155,24 @@
             confirmButtonText: ok
         });
     }
+
+    function SWmini(icon,title) { 
+    const Toast = Swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timer: 1000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer)
+            toast.addEventListener('mouseleave', Swal.resumeTimer)
+        }
+    });
+    
+        Toast.fire({
+            icon: icon,
+            title: title
+        });
+    }
+
 </script>

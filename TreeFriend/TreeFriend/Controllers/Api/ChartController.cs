@@ -28,32 +28,45 @@ namespace TreeFriend.Controllers.Api {
         public TodayInfoViewModel GetTodayInfo() {
             TodayInfoViewModel todayInfo = new();
             var today = DateTime.Parse(DateTime.UtcNow.AddHours(8).ToString("yyyy-MM-dd"));
+
             //今日銷售額
             var todaySales = (from od in _db.OrderDetails
                              where od.CreateDate >= today && od.CreateDate < today.AddDays(1)
                              select od).Sum(od => od.Price);
             todayInfo.Sales = todaySales;
+
             //今日貼文數
             var todayPosts = (from p in _db.skillPosts
                               where p.CreateDate >= today && p.CreateDate < today.AddDays(1)
                               select p).Count();
             todayInfo.PostCount = todayPosts;
+
             //新進會員數
             var newMember = (from u in _db.users
                               where u.CreateDate >= today && u.CreateDate < today.AddDays(1)
                               select u).Count();
             todayInfo.MemberCount = newMember;
 
-            //分類貼文數量
+            //總分類貼文數量
             var postCountByCategory = from p in _db.skillPosts
                                       group p by p.Category.CategoryName into newGroup
                                       select new PostInfo{
                                           Category = newGroup.Key,
                                           Count = newGroup.Count()
                                       };
-
             foreach (var item in postCountByCategory) {
-                todayInfo.CategoryPostCount.Add(item);
+                todayInfo.CategoryPostList.Add(item);
+            }
+
+            //總標籤貼文數量
+            var postCountByHashtag = from p in _db.hashtagDetails
+                                      group p by p.Hashtag.HashtagName into newGroup
+                                      select new PostInfo {
+                                          Category = newGroup.Key,
+                                          Count = newGroup.Count()
+                                      };
+            foreach (var item in postCountByHashtag) {
+                todayInfo.HashtagPostList.Add(item);
             }
 
             return todayInfo;

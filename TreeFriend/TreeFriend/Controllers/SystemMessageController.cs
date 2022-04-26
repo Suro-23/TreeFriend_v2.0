@@ -64,7 +64,7 @@ namespace TreeFriend.Controllers
         [AllowAnonymous]
         [HttpGet]
         //[Route("[controller]/[action]/{articleId}")]
-        public SystemPost FullContent1(int articleId)
+        public SystemPost SystemDetailContent(int articleId)
         {
             var post = _db.SystemPost.FirstOrDefault(x => x.ArticleID == articleId);
             var systemPost = new SystemPost();

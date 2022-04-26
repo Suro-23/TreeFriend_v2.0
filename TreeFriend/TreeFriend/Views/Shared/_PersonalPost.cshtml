@@ -175,4 +175,16 @@
         });
     }
 
+    function SWPseccess(title, text, ok) {
+        Swal.fire({
+            title: title,
+            text: text,
+            icon: 'success',
+            confirmButtonText: ok,
+            willClose: () => {
+            location.reload();
+        }
+        });
+    }
+
 </script>

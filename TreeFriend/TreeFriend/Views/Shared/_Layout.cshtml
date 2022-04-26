@@ -92,23 +92,7 @@
                     .then(res => {
                         window.location.href = res.data;
                     });
-            },
-            //SWerror: function (title, text, close) {
-            //    Swal.fire({
-            //        title: title,
-            //        text: text,
-            //        icon: 'error',
-            //        confirmButtonText: close
-            //    });
-            //},
-            //SWseccess: function (title, text, ok) {
-            //    Swal.fire({
-            //        title: title,
-            //        text: text,
-            //        icon: 'success',
-            //        confirmButtonText: ok
-            //    });
-            //}
+            }
         }
     });
 </script>
@@ -146,6 +130,25 @@
             text: text,
             icon: 'info',
             confirmButtonText: ok
+        });
+    }
+
+    function SWmini(icon,title) {
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 1000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+            }
+        });
+
+        Toast.fire({
+            icon: icon,
+            title: title
         });
     }
 </script>

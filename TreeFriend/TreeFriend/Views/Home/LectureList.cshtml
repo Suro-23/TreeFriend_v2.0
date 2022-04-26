@@ -3,11 +3,9 @@
     Layout = "_Layout";
 }
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.sandbox.google.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20,100,0,-25" />
 <link rel="stylesheet" href="~/css/Yie/lecturelist.css">
 
-<style>
-  
-</style>
 
 
 <div class="container" id="list">
@@ -56,35 +54,40 @@
             <img class="mflrg-img position-absolute " src="~/img/LecturePic/mflrg.png" alt="">
         </div>
     </div>
-
+        
   
         <!--講座呈列-->
-        <div class="row mb-5 mx-auto">
-            <div class="row row-cols-1 row-cols-lg-4 row-cols-md-4 g-3 mt-3">
-                <a class="lecture link-secondary" v-for="item in lecturelist" :href="'/home/lectureDetail?id='+ item.lectureId">
-                    <div class="col h-100">
-                        <div class="card lecture-border ">
-                            <img :src="item.imgPath" class="card-img">
-                            <div class="card-body ">
-                                <div class="row">
-                                    <h5 class="card-title" v-cloak>{{item.theme}}</h5>
-                                    <div class="d-flex gap-1 align-items-center">
-                                        <span class="material-icons-sharp align-middle">date_range</span>
-                                        <span class="align-middles" v-cloak>{{item.eventDate}}  {{item.eventTimeStart}}-{{item.eventTimeEnd}}</span>
-                                    </div>
-                                    <p class="card-text mt-1 mb-0" v-cloak>{{item.description}}</p>
-                                    <div class="container mt-2">
-                                        <div class="float-end ">
-                                            <span v-cloak>NT${{item.price}}</span>
-                                        </div>
+        
+    <div class="row mb-5 mx-auto">
+        <div class="mt-5 ms-0 ">
+            <label for="search"><span class="material-symbols-outlined">search</span></label>
+            <input type="text" v-model="filter_name" id="search" placeholder="搜尋你想要的講座主題或價格" class="search">
+        </div>
+        <div class="row row-cols-1 row-cols-lg-4 row-cols-md-4 g-3 mt-3">
+            <a class="lecture link-secondary" v-for="item in  filteredLectureList" :href="'/home/lectureDetail?id='+ item.lectureId">
+                <div class="col h-100">
+                    <div class="card lecture-border ">
+                        <img :src="item.imgPath" class="card-img">
+                        <div class="card-body ">
+                            <div class="row">
+                                <h5 class="card-title" v-cloak>{{item.theme}}</h5>
+                                <div class="d-flex gap-1 align-items-center">
+                                    <span class="material-icons-sharp align-middle">date_range</span>
+                                    <span class="align-middles" v-cloak>{{item.eventDate}}  {{item.eventTimeStart}}-{{item.eventTimeEnd}}</span>
+                                </div>
+                                <p class="card-text mt-1 mb-0" v-cloak>{{item.description}}</p>
+                                <div class="container mt-2">
+                                    <div class="float-end ">
+                                        <span v-cloak>NT${{item.price}}</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </a>
-            </div>
+                </div>
+            </a>
         </div>
+    </div>
        <div class="row">
            <div class="col d-flex justify-content-center" >
                <div class="btn mb-5" v-if="isMoreShow" @@click="moreShow">顯示更多講座</div>
@@ -102,19 +105,44 @@
         let app = new Vue({
             el: '#list',
             data: {
+                searchList: [],
                 lecturelist: [],
                 activeIndex: 0,
                 isMoreShow:false,
                 nowPage: 1,
-                isShow:false,
+                isShow: false,
+                filter_name: '',
             },
             mounted() {
                 this.loadMore();
             },
+            computed: {
+                filteredLectureList: function () {
+                    var filter_name = this.filter_name.toLowerCase();
+
+                    if (this.filter_name.trim() !== '') {
+                        this.searchList = this.lecturelist.filter(function (d) {
+                            return d.theme.toLowerCase().includes(filter_name) || d.price === Number(filter_name) ||
+                                d.description.toLowerCase().includes(filter_name)
+                        })
+
+                        return this.searchList;
+                    }
+                    else {
+                        return this.lecturelist;
+                    }
+
+
+
+                }
+                    
+                    
+                    
+            },
             methods: {
                 loadMore() {
                     let self = this;
-                    //TODO講座顯示數量改變
+
                     axios.get("/Lecture/GetAllLecture").then(res => {
                         if (res.data.length <= 4) {
                             self.lecturelist = res.data;

@@ -393,5 +393,7 @@ body {
     color: green;
     font-size: 12px;
 }
-
+.img_btn{
+    cursor:pointer;
+}
 

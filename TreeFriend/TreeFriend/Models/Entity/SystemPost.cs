@@ -12,11 +12,26 @@ namespace TreeFriend.Models.Entity
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ArticleID { get; set; } //Guid 流水編號
+
+        [Required]
         public DateTime CreateDate { get; set; }
+
+        [Required]
         public string Title { get; set; }
+
+        [Required]
         public string Description { get; set; }
+
+        [Required]
         public string PicPath { get; set; }
+
+        [Required]
         public bool IsDelete { get; set; } = false;
-        public string UserId { get; set; }
+
+        [Required]
+        public int UserId { get; set; }
+
+        //對應關聯到User表，User表那邊也要新增到這的關聯
+        public virtual User User { get; set; }
     }
 }

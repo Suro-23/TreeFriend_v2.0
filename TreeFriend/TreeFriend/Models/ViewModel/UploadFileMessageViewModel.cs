@@ -14,6 +14,6 @@ namespace TreeFriend.Models.ViewModel
         public String Description { get; set; }
         public List<IFormFile> PicPath { get; set; }  //如果傳的是檔案型別 要用 IFromFile 
                                                       //用List<> 來裝 因為不知道會送多少張照片進來
-        public string UserId { get; internal set; }
+        public int UserId { get; internal set; }
     }
 }

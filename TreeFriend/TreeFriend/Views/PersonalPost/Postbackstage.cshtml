@@ -51,18 +51,18 @@
             }
         },
         methods: {
-            fileChangeback(e) {  // 加入图片
-                // 图片预览部分
-                var vm=this
+            fileChangeback(e) {  // 加入圖片
+                // 圖片預覽部分
+                var vm = this
                 var event = event || window.event; //實現瀏覽器的相容
                 var file = event.target.files //指向最初觸發事件的 DOM 物件
                 var leng = file.length;
                 for (var i = 0; i < leng; i++) {
-                    var reader = new FileReader();    // 使用 FileReader 来获取图片路径及预览效果
-                     vm.hello.Pic.push(file[i])
+                    var reader = new FileReader();    // 使用 FileReader 来获取圖片路径及預覽效果
+                    vm.hello.Pic.push(file[i])
                     reader.readAsDataURL(file[i]);
                     reader.onload = function (e) {  //onload讀取操作成功後調用
-                        vm.hello.imgback.push(e.target.result);   // base 64 图片地址形成预览
+                        vm.hello.imgback.push(e.target.result);   // base 64 圖片地址形成預覽
 
                     };
                 }
@@ -98,7 +98,8 @@
                 this.hello.imgback.splice(index, 1);
                 this.hello.Pic.splice(index, 1);
             },
-            // 这是默认图片的方法，弹出默认图片无法删除
+            //彈出默認(上傳+號)圖片 無法删除
+
             send: function () {
                 var bodyFormData = new FormData();
 
@@ -108,25 +109,31 @@
                 bodyFormData.append('Content', this.hello.content);
 
                 axios({
-                        method: "post",
-                        url: "/personalpost/create",
-                        data: bodyFormData,
-                        headers: { "Content-Type": "multipart/form-data" },
+                    method: "post",
+                    url: "/personalpost/create",
+                    data: bodyFormData,
+                    headers: { "Content-Type": "multipart/form-data" },
 
-                    }).then(function (res) {
-                        if (res.data == true) {
-                            alert("成功");
-                            window.location.href = "/personalpost/editpost";
-                        } else {
-                            alert("失敗");
-                        }
-                    })
-                        .catch(function (response) {
-                            //handle error
-                            console.log(response);
-                        });
-             }
-           }
+                })
+                    .then
+                    (function (res) {
+                    if (res.data == true) {
+                        //alert("成功");
+                        SWseccess("新增成功!", "", "前往動態貼文");
+                        //(function () { window.location.href = "/personalpost/editpost" });
+                        //window.location.href = "/personalpost/editpost";
+                    }
+                    else {
+                        //alert("失敗");
+                        SWerror("新增失敗!", "圖片或內文不得為空", "再試一次");
+                    }
+                })
+                    .catch(function (response) {
+                        //handle error
+                        console.log(response);
+                    });
+            }
+        }
 
     });
 </script>
@@ -259,4 +266,47 @@
     //        }
     //    }
     //})
+
+</script>
+<!--sweetalert2相關CDN-->
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    function SWerror(title, text, close) {
+        Swal.fire({
+            title: title,
+            text: text,
+            icon: 'error',
+            confirmButtonText: close
+        });
+    }
+
+    function SWseccess(title, text, ok) {
+        Swal.fire({
+            title: title,
+            text: text,
+            icon: 'success',
+            confirmButtonText: ok
+        })
+        //    .then(function () {
+        //    window.location.href = "/personalpost/editpost";
+        //});
+    }
+
+    function SWwarning(title, text, ok) {
+        Swal.fire({
+            title: title,
+            text: text,
+            icon: 'warning',
+            confirmButtonText: ok
+        });
+    }
+
+    function SWinfo(title, text, ok) {
+        Swal.fire({
+            title: title,
+            text: text,
+            icon: 'info',
+            confirmButtonText: ok
+        });
+    }
 </script>

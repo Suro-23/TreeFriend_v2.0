@@ -44,44 +44,47 @@ namespace TreeFriend.Controllers.Api
             if (pic != null)
             {
                 var fileName = "";
-
-                try
+                if (post.Content != null)
                 {
-                    _context.personalPosts.Add(new PersonalPost()
+                    try
                     {
-                        UserId = Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(u => u.Type == "UserId").Value),
-                        Content = post.Content,
-                    });
-
-                    //先將資料更新貼文，才能取得當前貼文ID
-                    _context.SaveChanges();
-
-                    var imgpost = _context.personalPosts.Where(x => x.UserId == UserId).OrderByDescending(x => x.PersonalPostId).FirstOrDefault();
-                    for (var i = 0; i < pic.Length; i++)
-                    {
-                        fileName = DateTime.Now.Ticks.ToString() + pic[i].FileName;
-                        using (var fs = System.IO.File.Create($"{path}/{fileName}"))  //create一個路徑
+                        _context.personalPosts.Add(new PersonalPost()
                         {
-                            pic[i].CopyTo(fs); //至根目錄
-                        }
-                        //sum += fileName; //存進資料庫
-
-                        _context.PersonalPostImages.Add(new PersonalPostImage()
-                        {
-                            PersonalPostId = Convert.ToInt32(imgpost.PersonalPostId),
-                            PostPhotoPath = fileName,
-
+                            UserId = Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(u => u.Type == "UserId").Value),
+                            Content = post.Content,
                         });
-                        _context.SaveChanges();
-                    }
 
-                    return true;
+                        //先將資料更新貼文，才能取得當前貼文ID
+                        _context.SaveChanges();
+
+                        var imgpost = _context.personalPosts.Where(x => x.UserId == UserId).OrderByDescending(x => x.PersonalPostId).FirstOrDefault();
+                        for (var i = 0; i < pic.Length; i++)
+                        {
+                            fileName = DateTime.Now.Ticks.ToString() + pic[i].FileName;
+                            using (var fs = System.IO.File.Create($"{path}/{fileName}"))  //create一個路徑
+                            {
+                                pic[i].CopyTo(fs); //至根目錄
+                            }
+                            //sum += fileName; //存進資料庫
+
+                            _context.PersonalPostImages.Add(new PersonalPostImage()
+                            {
+                                PersonalPostId = Convert.ToInt32(imgpost.PersonalPostId),
+                                PostPhotoPath = fileName,
+
+                            });
+                            _context.SaveChanges();
+                        }
+
+                        return true;
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex);
+                        return false;
+                    }
                 }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex);
-                    return false;
-                }
+                else { return false; }
             }
             else
             {

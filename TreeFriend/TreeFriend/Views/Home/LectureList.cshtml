@@ -114,7 +114,7 @@
             methods: {
                 loadMore() {
                     let self = this;
-                    //TODO講座顯示數量改變
+
                     axios.get("/Lecture/GetAllLecture").then(res => {
                         if (res.data.length <= 4) {
                             self.lecturelist = res.data;

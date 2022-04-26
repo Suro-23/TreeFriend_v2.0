@@ -29,6 +29,14 @@
         border-color: aliceblue;
     }
 
+    .wrap a {
+        color: black;
+    }
+
+    .page-link {
+        border-color: aliceblue;
+    }
+
     textarea {
         height: 250px;
     }
@@ -232,7 +240,7 @@
             up: function (event) {
                 console.log(event);
                 this.hello.picPath = event.target.files[0]
-                alert("你已經上傳了");
+                SWUploadFile("上傳成功!","","close");
             },
             send: function () {
                 var bodyFormData = new FormData();
@@ -249,10 +257,10 @@
                 })
                     .then(function (response) {
                         if (response.data == true) {
-                            alert("成功");
+                            SWseccess("成功","分享更多文章吧!","close");
                             window.location.reload(); //新增完視窗跳回當前頁面
                         } else {
-                            alert("失敗");
+                            SWerror("失敗","在檢查一下","close");
                         }
 
                     })
@@ -320,15 +328,33 @@
                 let self = this;
 
                 axios.delete(`/AddSystemMessage/DeleteMessage/?articleID=${self.target.articleID}`)
-                    .then(res => {
-                        if (res.data == true) {
-                            alert("刪除成功");
-                            window.location.reload();
-                        } else {
-                            alert("刪除失敗");
-                        }
+                    //.then(res => {
+                    //    if (res.data == true) {
+                    //        SWdelete("刪除成功","","close");
+                    //        //window.location.reload();
+                    //    } else {
+                    //        SWerror("刪除失敗", "在檢查一下", "close");
+                    //    }
+                    //}
+                    //).catch(err => console.log(err));
+                Swal.fire({
+                    title: '確定要刪除嗎?',
+                    text: "刪除就無法復原囉!",
+                    icon: 'warning',
+                    showCancelButton: "取消",
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'delete'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        Swal.fire(
+                            'Deleted!',
+                            'Your file has been deleted.',
+                            'success'
+                        )
+                        window.location.reload();
                     }
-                    ).catch(err => console.log(err));
+                })
 
             },
 
@@ -355,7 +381,7 @@
                 let self = this;
                 let articleID = event.target.value;
                 self.target = self.systemlist.find((sourceItem) => { return +sourceItem.articleID === +articleID });
-                self.article = target; //等於選取的講座
+                self.article = target; //等於選取的文章
                 console.log(target);
                 console.log(articleID);
             },
@@ -382,17 +408,32 @@
                     data: bodyFormData,
                     Headers: { "Content-Type": "multipart/form-data" },
                 })
-                    .then(function (response) {
-                        if (response.data == true) {
-                            alert("修改成功");
-                            window.location.reload();
-                        } else {
-                            alert("修改失敗");
-                        }
-                    })
-                    .catch(function (response) {
-                        console.log(response);
-                    })
+                    //.then(function (response) {
+                    //    if (response.data == true) {
+                    //        SWseccess("修改成功","","close");
+                    //        //window.location.reload();
+                    //    } else {
+                    //        SWerror("修改失敗","在檢查一下","close");
+                    //    }
+                    //})
+                    //.catch(function (response) {
+                    //    console.log(response);
+                    //})
+                Swal.fire({
+                    title: '確定要修改嗎?',
+                    showDenyButton: true,
+                    //showCancelButton: true,
+                    confirmButtonText: 'Save',
+                    denyButtonText: `Don't save`,
+                }).then((result) => {
+                    /* Read more about isConfirmed, isDenied below */
+                    if (result.isConfirmed) {
+                        Swal.fire('修改成功!', '', 'success')
+                        window.location.reload();
+                    } else if (result.isDenied) {
+                        Swal.fire('修改失敗', '', 'info')
+                    }
+                })
             },
             setPage: function (idx) {
                 if (idx <= 0 || idx > this.totalPage) {
@@ -404,6 +445,46 @@
     });
 </script>
 
+
+<!--SweetAlert-->
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    function SWUploadFile(title, text, close) {
+        Swal.fire({
+            title: title,
+            text: text,
+            icon: 'success',
+            confirmButtonText: close
+        });
+    }
+
+    function SWseccess(title, text, ok) {
+        Swal.fire({
+            title: title,
+            text: text,
+            icon: 'success',
+            confirmButtonText: ok
+        })
+    }
+
+    function SWerror(title, text, ok) {
+        Swal.fire({
+            title: title,
+            text: text,
+            icon: 'error',
+            confirmButtonText: ok
+        })
+    }
+
+    function SWdelete(title, text, ok) {
+        Swal.fire({
+            title: '確定要刪除嗎?',
+            text: text,
+            icon: 'error',
+            confirmButtonText: ok
+        })
+    }
+</script>
 
 
 

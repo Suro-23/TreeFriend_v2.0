@@ -27,7 +27,7 @@ namespace TreeFriend.Controllers
         public List<SystemPostViewModel> GetAllMessage()                //查詢資料庫 撈資料後 去渲染畫面
                                                                         //List泛型 復數 的資料
         {
-            var result = _db.SystemPost.OrderByDescending(x => x.ArticleID).Take(5)
+            var result = _db.SystemPost.OrderByDescending(x => x.ArticleID)
             .Where(x => x.IsDelete == false).Select(x => new SystemPostViewModel()       // 先抓取資料 在改寫資料庫欄位 new一個新的Model
             {
                 ArticleID = x.ArticleID,

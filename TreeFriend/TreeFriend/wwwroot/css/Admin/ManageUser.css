@@ -1,0 +1,88 @@
+﻿.content {
+    background-color: aliceblue;
+    border-radius: 2rem 0 0 2rem;
+    box-shadow: 0 0 5px 5px rgb(92, 153, 155);
+}
+
+.result-data {
+    background-color: white;
+    box-shadow: 0 0 .5rem .5rem rgb(231, 239, 247);
+    border-radius: 1rem;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.list-header {
+    background-color: rgb(108, 141, 173);
+    color: white;
+    border-radius: 1rem 1rem 0 0;
+}
+
+.list-data {
+    height: 2rem;
+}
+
+    .list-data button {
+        border: none;
+        background-color: white;
+    }
+
+    .list-data img {
+        width: 25px;
+    }
+
+    .list-data + .list-data {
+        border-top: 1px solid #CCC
+    }
+
+.list-wrap {
+    height: 90.5vh;
+    overflow: auto;
+}
+
+.user-info {
+    padding: 2rem;
+    /*height: 100%;*/
+    display: flex;
+    align-items: center;
+}
+
+.base-info img {
+    padding: 0;
+    width: 150px;
+    height: 150px;
+    border-radius: 100%;
+}
+
+.intro {
+    height: 10rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.intro-title {
+    width: 40%;
+    margin-bottom: .5rem;
+    border-bottom: 2px solid #CCC;
+    text-align-last: justify;
+}
+
+
+.item {
+    border-radius: .5rem;
+    color: white;
+    background-color: rgb(90, 125, 126);
+}
+
+.days {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 6rem;
+}
+
+.user-info-wrap {
+    height: 95%;
+}

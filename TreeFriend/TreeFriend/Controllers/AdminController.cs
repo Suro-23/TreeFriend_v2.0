@@ -35,5 +35,11 @@ namespace TreeFriend.Controllers
         {
             return View();
         }
+
+        //管理使用者
+        public IActionResult ManageUser() {
+            return View();
+        }
+
     }
 }

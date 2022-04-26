@@ -19,30 +19,34 @@
             width: 70%;
             margin: 0 auto;
         }
+        .containers {
+            width: 85%;
+            margin: 0 auto;
+        }
 
         .big {
             width: 100vw;
             margin: auto;
         }
 
-        .ccc {
+        .pic-contents {
             width: 85vw;
             display: flex;
         }
 
-        .ppp {
+        .contents {
             width: 40%;
             padding: 20px 20px;
         }
 
-            .ppp h3 {
-                font-size: 16px;
-                text-transform: uppercase;
-                font-weight: 600;
-            }
+        .contents h3 {
+            font-size: 26px;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
 
-            .ppp p {
-                font-size: 10px;
+        .contents p {
+                font-size: 17px;
                 border-top: solid 1px;
                 letter-spacing: 0.1rem;
                 line-height: 1.8;
@@ -52,7 +56,7 @@
                 -webkit-line-clamp: 3;
                 -webkit-box-orient: vertical;
                 overflow: hidden;
-            }
+        }
 
 
         ul {
@@ -94,7 +98,7 @@
             margin-top: 30px;
         }
 
-        .ccc a {
+        .pic-contents a {
             text-decoration: none;
             color: black;
             transition: color .3s;
@@ -130,7 +134,7 @@
             width: 100%;
         }
 
-        .container-img {
+        .containers-img {
             height: 80%;
         }
     </style>
@@ -139,8 +143,8 @@
 <body>
     @* 輪播的地方 *@
     <div id="GetAll">
-        <div class="container">
-            <div>
+        <div class="containers">
+            <div style="margin: 50px 0;">
                 <div id="carouselExampleDark" class="carousel carousel-dark slide" data-bs-ride="carousel">
                     <div class="carousel-indicators">
                         <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
@@ -148,13 +152,13 @@
                         <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="2" aria-label="Slide 3"></button>
                     </div>
                     <div class="carousel-inner">
-                        <template v-for="(item,num1) in MessageList">
+                        <template v-for="(item,num1) in PicMessage">
                             <div v-if="num1 == 0" class="carousel-item active">
-                                <img :src="item.picPath" class="d-block w-100" alt="" style="width:700px; height:500px;">
+                                <img :src="item.picPath" class="d-block w-100" alt="" style="height:800px;">
                             </div>
 
                             <div v-else class="carousel-item">
-                                <img :src="item.picPath" class="d-block w-100" alt="" style="width:700px; height:500px;">
+                                <img :src="item.picPath" class="d-block w-100" alt="" style="height:800px;">
                             </div>
                         </template>
                     </div>
@@ -175,14 +179,14 @@
                     <div class="col-xl-7 " style="margin: 20px 0 60px 0; padding: 0; " v-for="item in MessageList">
                         <div class="contaner">
 
-                            <div class="ccc">
-
+                            <div class="pic-contents">
                                 <a :href="'/Home/SystemDetail/?id=' +item.articleID"> <img v-bind:src="item.picPath" class="imgsize"> </a>
-                                <div class="ppp">
+                                <div class="contents">
                                     <h3>{{item.title}}</h3>
                                     <p>{{item.description}}</p>
                                 </div>
                             </div>
+
                         </div>
 
                     </div>
@@ -198,7 +202,7 @@
                                 最新文章
                             </h4>
                             <ul v-for="item in MessageList">
-                                <li> <a :href="'/Home/SystemDetail/?id=' +item.articleID">【技能分享】{{item.title}}</a> </li>
+                                <li> <a :href="'/Home/SystemDetail/?id=' +item.articleID">{{item.title}}</a> </li>
                             </ul>
                         </aside>
                     </div>
@@ -210,24 +214,13 @@
 </html>
 
 <script>
-
-    class message {
-        title = '';
-        dscription = '';
-
-    }
-    class mesagge1 {
-        title = '';
-    }
-
-
     var app = new Vue({
         el: '#GetAll',
         data: {
-            message1:new mesagge1(),
             MessageList: [],
-            newMessage: [],
-            num:[],
+            PicMessage: [],
+            num: [],
+
 
         },
         mounted: function () {
@@ -236,14 +229,10 @@
                 self.MessageList = result.data;
                 console.log(result);
 
-                //最新文章 迴圈跑出渲染的東西
-                //for (let i = 0; i < result.data.length; i++) {
-                //    console.log(result.data[i]);
-                //    var newmessageobject = new mesagge1;
-                //    newmessageobject.title = result.data[i].title;
-                //    app.newMessage.push(newmessageobject);
-                //}
-                //console.log(app.newMessage);
+                axios.get("/SystemMessage/GetSystemMessageCarouselPic").then(function (result) {
+                    self.PicMessage = result.data;
+                    console.log(result);
+                })
             })
         }
     });

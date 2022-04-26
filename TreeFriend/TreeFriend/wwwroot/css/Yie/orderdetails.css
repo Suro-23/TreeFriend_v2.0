@@ -1,0 +1,42 @@
+.page-item.active .page-link {
+    color: aliceblue;
+    background-color: cadetblue;
+    border-color: aliceblue;
+}
+
+[v-cloak] {
+    display: none;
+}
+
+.wrap a {
+    color: black;
+}
+
+.page-link {
+    border-color: aliceblue;
+}
+
+.th-w100 {
+    width: 100px;
+}
+
+.icon {
+    display: inline-block;
+    cursor: pointer;
+}
+
+.icon.inverse {
+    transform: rotate(180deg);
+}
+
+#search {
+    width: 180px;
+    height: 25px;
+    border: 1px solid rgb(187, 183, 183);
+    border-radius: 5px;
+    outline: none;
+}
+
+.material-symbols-outlined {
+    vertical-align: bottom;
+}

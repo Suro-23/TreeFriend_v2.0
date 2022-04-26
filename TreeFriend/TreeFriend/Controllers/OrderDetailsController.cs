@@ -40,7 +40,7 @@ namespace TreeFriend.Controllers
         }
 
         public List<OrderHistoryViewModel> GetOrderByDescendingOrders()
-        {//.Where(od=>od.OrderStatus==true).
+        {
             var result = _db.OrderDetails.OrderByDescending(od=>od.Price*od.Count).Select(od => new OrderHistoryViewModel
             {
                 OrderDetailId = od.OrderDetailId,

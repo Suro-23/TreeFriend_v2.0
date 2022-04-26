@@ -1,0 +1,111 @@
+﻿@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<link rel="stylesheet" href="~/css/Admin/ManageUser.css"/>
+
+<div id="manageUser" class="container-fluid overflow-auto h-100">
+    <div class="row justify-content-around h-100">
+        <div class="result-data col-5 p-0">
+            <div class="row fs-5 list-header m-0">
+                <div class="col-2">ID</div>
+                <div class="col-3">Name</div>
+                <div class="col-2">Level</div>
+                <div class="col-2">Status</div>
+            </div>
+            <div class="list-wrap m-0">
+                <div v-for="item in allUserInfo" @@click="clickUserInfo(item)" class="row list-data  align-items-center m-0 p-0">
+                    <div class="col-2">{{item.id}}</div>
+                    <div class="col-3">{{item.name}}</div>
+                    <div class="col-2">{{item.level}}</div>
+                    <div class="col-2">{{item.status}}</div>
+                    <div class="col-3">
+                        <button><img src="~/icon/pen.png" alt=""></button>
+                        <button><img src="~/icon/delete.png" alt=""></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="result-data user-info col-6">
+            <div v-if="selectUser.clickUser" class="user-info-wrap  w-100">
+                <div class="row justify-content-around base-info m-auto">
+                    <div class="col-5 d-flex flex-column align-items-center">
+                        <img :src="selectUser.userInfo.headshot" alt="">
+                        <div class="mt-2">{{selectUser.userInfo.email}}</div>
+                    </div>
+                    <div class="col-5 d-flex flex-column justify-content-around">
+                        <div class="row fs-4">
+                            <div class="col-5">ID</div>{{selectUser.userInfo.id}}
+                        </div>
+                        <div class="row fs-4">
+                            <div class="col-5">姓名</div>{{selectUser.userInfo.name}}
+                        </div>
+                        <div class="row fs-4">
+                            <div class="col-5">性別</div>{{selectUser.userInfo.sex}}
+                        </div>
+                        <div class="row fs-4">
+                            <div class="col-5">生日</div>{{selectUser.userInfo.birthday}}
+                        </div>
+                    </div>
+                </div>
+                <div class="row intro">
+                    <div class="fs-3 intro-title">自我介紹
+                    </div>
+                    <div class="col-9 intro-content fs-5 text-center">{{selectUser.userInfo.selfIntro}}
+                    </div>
+                </div>
+                <div class="row m-0 justify-content-center fs-3 pt-3 pb-3">
+                    <div class="col-4 me-4">
+                        <div class="row ps-4 item pt-2 pb-2">
+                            <div class="row fs-5">貼文數</div>
+                            <div class="row">{{selectUser.userInfo.postCount}}</div>
+                        </div>
+                        <div class="row ps-4 mt-2 item pt-2 pb-2">
+                            <div class="row fs-5">累積消費</div>
+                            <div class="row">{{selectUser.userInfo.totalAmount}}</div>
+                        </div>
+                    </div>
+                    <div class="col-4 item">
+                        <div class="col-12 text-center pt-2 pb-2">存活天數<div class="days">{{selectUser.userInfo.totalTime}}</div></div>
+                    </div>
+                </div>
+            </div>
+            <div v-else><img src="~/icon/userInfo.png" style="width: 100%"/></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let mngApp = new Vue({
+        el:"#manageUser",
+        data:{
+            allUserInfo:{},
+            selectUser:{
+                clickUser: false,
+                userInfo:{}
+            }
+        },
+        mounted: function(){
+            this.getAllUserInfo();
+        },
+        methods:{
+            getAllUserInfo: async function(){
+                const get = await axios.get("../Api/ManageUser/GetAllUserInfo");
+                const {data} = get;
+                this.allUserInfo = data;
+                console.log("allUserInfo",this.allUserInfo);
+            },
+            clickUserInfo: function(item) {
+                const user = this.selectUser;
+                const birthday = new Date(item.birthday);
+                const totalTime = new Date(item.totalTime).getDate();
+
+                user.userInfo = item;
+                user.userInfo.birthday = `${birthday.getMonth()} / ${birthday.getDate()}`;
+                user.userInfo.totalTime = `${totalTime}`;
+
+                user.clickUser = true;
+            }
+        }
+    });
+</script>

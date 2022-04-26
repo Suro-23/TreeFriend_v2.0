@@ -75,8 +75,9 @@
                     <div class="form-group row" style="margin-top: 1rem; margin-bottom: 1rem;">
                         <label for="pic" class="col-sm-4 col-form-label">上傳照片</label>
                         <div class="col-sm-8">
-                            <input type="file" class="form-control" id="picPath" required v-on:change="up">  @*寫一個up的方法  *@
-                        </div>                                               @*這裡不能用v-model去綁 要寫一個v-on:change事件*@
+                            <input type="file" class="form-control" id="picPath" required v-on:change="up($event)"> @*寫一個up的方法  *@
+                            <img v-if="hello.Preview" :src="hello.Preview" style="max-height:200px">       @*這裡不能用v-model去綁 要寫一個v-on:change事件*@
+                        </div>
                     </div>
 
                     <div class="modal-footer">
@@ -171,18 +172,17 @@
 
                         <div class="form-row">
                             <div class="form-title" style="margin-right: 10px;">文章標題:</div>
-                            <input type="text" required v-model="article.title">
+                            <input type="text" required v-model="article.title" style="width: 80%;">
                         </div>
 
                         <div class="form-row">
                             <div class="form-title" style="margin-right: 10px;">文章內容:</div>
-                            <input type="text" required v-model="article.description">
+                            <textarea required v-model="article.description" style="width: 80%;"></textarea>
 
                             <div class="form-row">
                                 <div class="form-title" style="margin-right: 10px;">文章圖片:</div>
                                 <input type="file" v-on:change="up($event)" /> @* up事件 *@
                                 <img v-if="article.preview" :src="article.preview" style="max-height:200px">  @*新照片顯示*@
-                                <img :src="article.picPath" style="max-height:200px" v-show="isPhotoShow" />  @*抓取原先圖片*@
                             </div>
 
 
@@ -233,12 +233,22 @@
             hello: {
                 title: "",
                 description: "",
-                picPath:null
+                picPath: null,
+                Preview: null,
             }
         },
         methods: {
             up: function (event) {
                 console.log(event);
+
+                if (event.target.files) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        this.hello.Preview = e.target.result;
+                        console.log(e);
+                    }
+                    reader.readAsDataURL(event.target.files[0]);
+                }
                 this.hello.picPath = event.target.files[0]
                 SWUploadFile("上傳成功!","","close");
             },

@@ -57,9 +57,9 @@
                             </div>
                             <img class="iconmessage" src="/img/message.png" alt="Alternate Text" />
                         </div>
-                        <p class="card-text ellipsis-edit " >
+                        <div class="cardtext" style="width: 100%; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; ">
                             {{item.content}}
-                        </p>
+                        </div>
                     </div>
                                 @*確定刪除 彈出視窗*@
                                 <!-- 確定刪除的Modal -->
@@ -219,7 +219,7 @@
 
                             if (res.data == true) {
                                 SWseccess("儲存成功!", "", "繼續").then(
-                                    window.location.reload()
+                                    window.location.reload()//?
                                 );
                                 //alert("儲存成功");
                                 
@@ -256,8 +256,7 @@
                 })
                     .then(function (res) {
                         if (res.data == true) {
-                            SWseccess("刪除成功!", "", "繼續").then(
-                                window.location.reload());
+                            SWPseccess("刪除成功!", "", "繼續");
                         } else {
                             SWerror("刪除失敗!", "", "返回");
                             //alert('刪除失敗');
@@ -314,10 +313,11 @@
                             //("'#msgren'+num1").
 
                             //window.location.replace(location.href);
-                            alert('留言成功');
+                            //alert('留言成功');
+                            SWmini("success", "留言成功");
                         }
                         else {
-                            alert('留言失敗');
+                            SWmini("error", "留言失敗");
                         }
                     })
 

@@ -11,6 +11,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.26.1/axios.min.js" integrity="sha512-bPh3uwgU5qEMipS/VOmRqynnMXGGSRv+72H/N260MQeXZIK4PG48401Bsby9Nq5P5fz7hy5UGNmC/W1Z51h2GQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href="~/css/Layout/Post.css" rel="stylesheet" />
+    <!--sweetalert2相關CDN-->
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     @*<link rel="stylesheet" href="~/css/Reset.css" />*@
     @*<link rel="stylesheet" href="~/css/HomePage.css" />*@
     @*<link rel="stylesheet" href="~/css/site.css" />*@
@@ -86,6 +88,7 @@
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>
+</html>
 <script>
     let header = new Vue({
         el:"#header-nav",
@@ -140,4 +143,61 @@
         }
     });
 </script>
-</html>
+<script>
+    function SWerror(title, text, close) {
+        Swal.fire({
+            title: title,
+            text: text,
+            icon: 'error',
+            confirmButtonText: close
+        });
+    }
+
+    function SWseccess(title, text, ok) {
+        Swal.fire({
+            title: title,
+            text: text,
+            icon: 'success',
+            confirmButtonText: ok
+        });
+    }
+
+    function SWwarning(title, text, ok) {
+        Swal.fire({
+            title: title,
+            text: text,
+            icon: 'warning',
+            confirmButtonText: ok
+        });
+    }
+
+    function SWinfo(title, text, ok) {
+        Swal.fire({
+            title: title,
+            text: text,
+            icon: 'info',
+            confirmButtonText: ok
+        });
+    }
+
+    function SWmini(title) {
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 1000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+            }
+        });
+
+        Toast.fire({
+            icon: 'success',
+            title: title
+        });
+    }
+
+</script>
+

@@ -204,7 +204,7 @@
         mounted:
             function () {
                 var self = this;
-                axios.get("/SystemMessage/FullContent1/?articleId=" + articleId).then(function (result) {
+                axios.get("/SystemMessage/SystemDetailContent/?articleId=" + articleId).then(function (result) {
                     /*axios.get("/SystemMessage/FullContent1/3").then(function (result) {*/
                     self.MessageList = result.data;
                     console.log(self.MessageList);
@@ -216,20 +216,6 @@
                     })
                 })
             },
-
-
-
-
-        //methods: {
-        //    OneMessage: function () {
-        //        var self = this;
-        //        axios.get("/Content/FullContent/" + aid)
-        //            .then(function (result) {
-        //                self.MessageList = result.data;
-        //                console.log(result);
-        //            })
-        //    }
-        //}
     })
 </script>
 

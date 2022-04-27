@@ -134,7 +134,8 @@ namespace TreeFriend.Controllers.Api
                         PersonalPostId = F,
                         UserMessage = y.Message,
                         HeadshotPath =_context.usersDetail.Where(x=>x.UserId==y.UserId).FirstOrDefault().HeadshotPath,
-                        CreateDate = y.CreateDate
+                        CreateDate = y.CreateDate,
+                        UserName= _context.usersDetail.Where(x => x.UserId == y.UserId).FirstOrDefault().UserName,
                         //TODO 加暱稱
                     }).ToList();
                     //建立貼文內容物件渲染
@@ -208,7 +209,6 @@ namespace TreeFriend.Controllers.Api
             //將取出的貼文逐一帶入
             foreach (var F in p.ToList())
             {
-
                 //取出跟每一筆貼文PersonalPostId一樣的PersonalPostMessages  一篇貼文可能有多篇不同使用者的留言
                 var head = _context.PersonalPostMessages.FirstOrDefault(x => x.PersonalPostId == F);
 
@@ -222,7 +222,8 @@ namespace TreeFriend.Controllers.Api
                         PersonalPostId = F,
                         UserMessage = y.Message,
                         HeadshotPath = _context.usersDetail.Where(x => x.UserId == y.UserId).FirstOrDefault().HeadshotPath,
-                        CreateDate = y.CreateDate
+                        CreateDate = y.CreateDate,
+                        UserName = _context.usersDetail.Where(x => x.UserId == y.UserId).FirstOrDefault().UserName,
                         //TODO 加暱稱
                     }).ToList();
                     //建立貼文內容物件渲染

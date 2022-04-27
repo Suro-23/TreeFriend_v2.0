@@ -113,9 +113,14 @@
                                             <span>
                                                 <img :src="msg.headshotPath" class="rounded-circle msgsize" alt="Alternate Text" />
                                             </span>
-                                            <span class="msgcontent">
-                                                {{msg.userMessage}}
-                                            </span>
+                                            <div class="user-msgcontent ms-2 p-1 ps-2 pe-2">
+                                                <span class=" d-flex msgname fw-bold">
+                                                    {{msg.userName}}
+                                                </span>
+                                                <span class="msgcontent">
+                                                    {{msg.userMessage}}
+                                                </span>
+                                            </div>
                                         </div>
                                         <div class="msgbox" v-for="(msg1,index2) in usercontent" :id="'msgren'+num1">
                                 <span>

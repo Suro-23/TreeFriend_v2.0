@@ -7,8 +7,6 @@
     ViewData["Title"] = "EditPost";
 }
 <script src='https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.6/vue.js' integrity='sha512-ZD7CJYgtekQVIaDp8LVTYWPenxvyC1wpPwnXFm9N1YdyPmQnX/yMweUQVAPcrLte7Z4jSCp2MW+8KW6/zK7tYQ==' crossorigin='anonymous'></script>
-@*<script src='https://cdnjs.cloudflare.com/ajax/libs/vue/2.2.6/vue.min.js' integrity='sha512-yNMXFsZbP+Hii2fM4n1EvhKbBCZ2NAfW1FvlN6yB1ZanH+1sEcNV2rPEg6qCMRT/4dY01ELCdD75WflfTHdKJg==' crossorigin='anonymous'></script>*@
-@*<link href="/css//KaiSu/bootstrap.css" rel="stylesheet" />*@
 <link href="/css/KaiSu/EditPost.css" rel="stylesheet" />
 <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/@@mdi/font@6.x/css/materialdesignicons.min.css" rel="stylesheet">
@@ -56,10 +54,8 @@
                     </div>
 
 
-                    <div class="card-body imgsicon">
-                        @*內文 字太多要隱藏*@
-
                         @*icon*@
+                    <div class="card-body imgsicon">
                         <div class="imgs">
                             <div v-if="!item.state">
                                 <img class="iconheart" :id="item.personalPostId" src="/img/Blackheart.png" alt="Alternate Text" v-on:click="toggle(item.personalPostId,num1)" />
@@ -79,7 +75,6 @@
                         <div class="modal-dialog modal-sm">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    @*<h5 class="modal-title" id="exampleModalLabel">Modal title</h5>*@
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
@@ -93,14 +88,13 @@
                         </div>
                     </div>
 
-                    <div class="">
+                    
                         @*card-footer*@
                         <!-- 貼文的Modal彈出視窗 -->
                         <div class="modal fade" :id="'staticBackdrop'+num1" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                     <div class="modal-header" style="background-color:linen;">
-                                        @*<h5 class="modal-title" id="exampleModalLabel">Modal title</h5>*@
                                         <button type="button" class="btn btn-danger me-1" @*data-bs-target="#exampleModal"*@ data-bs-toggle="modal" :href="'#mmm'+num1">刪除</button>
                                         <button type="button" class="btn " style="background-color: #BDA684; color: #fff" v-on:click="edit($event,num1)" v-bind:value="item.personalPostId">儲存</button>
                                         <label id="saveOk"></label>
@@ -138,9 +132,14 @@
                                             <span>
                                                 <img :src="msg1.headshotPath" class="rounded-circle msgsize" alt="Alternate Text" />
                                             </span>
-                                            <span class="msgcontent">
-                                                {{msg1.userMessage}}
-                                            </span>
+                                            <div class="user-msgcontent ms-2 p-1 ps-2 pe-2">
+                                                <span class=" d-flex msgname fw-bold">
+                                                    {{msg1.userName}}
+                                                </span>
+                                                <span class="msgcontent ">
+                                                    {{msg1.userMessage}}
+                                                </span>
+                                            </div>
                                         </div>
 
                                         <div class=" mes">
@@ -165,7 +164,7 @@
                                     <small class="text-muted updatetime">3 mins ago{{msg.createDate}}</small>
                                 </span>
                             </div>*@
-                    </div>
+                    
                 </div>
             </div>
         </div>
@@ -176,15 +175,9 @@
 
 <script>
 
-    //class content {
-    //    content = "";
-    //}
-
-
     var app = new Vue({
         el: '#app',
         data: {
-
             isLoading: true,
 
             isShow: true,

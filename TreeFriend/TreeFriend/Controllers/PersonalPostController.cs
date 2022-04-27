@@ -235,8 +235,6 @@ namespace TreeFriend.Controllers.Api
                         PostPhotoPath = _context.PersonalPostImages.Where(w => w.PersonalPostId == F).Select(s => s.PostPhotoPath).ToList(),
                         Message = mes
                     }).ToList();
-
-
                     L.AddRange(a);
                 }
                 else
@@ -385,8 +383,10 @@ namespace TreeFriend.Controllers.Api
                 PersonalPostId = mes.PersonalPostId,
                 UserMessage = personalp.Message,
                 HeadshotPath = headshot.HeadshotPath,
-                CreateDate = personalp.CreateDate
-                //TODO 加暱稱
+                CreateDate = personalp.CreateDate,
+                UserName=headshot.UserName,
+                MessageUserId=headshot.UserId
+                
             };
 
             return post;

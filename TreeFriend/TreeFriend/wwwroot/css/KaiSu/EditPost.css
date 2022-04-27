@@ -56,10 +56,6 @@
     padding: 16px;
     justify-content: center
 }
-/*    .imgs {
-        position: absolute;
-        bottom: 2px;
-    }*/
 .messagewidth {
     width: 30vmin;
     border: none;
@@ -96,7 +92,6 @@
 
 .msgcontent {
     font-size: 12px;
-    float: right;
     word-break: break-word;
 }
 

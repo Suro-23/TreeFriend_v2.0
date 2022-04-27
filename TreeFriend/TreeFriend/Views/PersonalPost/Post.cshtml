@@ -61,14 +61,17 @@
                                 </div>
                             </div>
                             @*左右按鈕*@
-                            <button class="carousel-control-prev" :data-bs-target="'#carouselExampleIndicators'+num1" type="button" data-bs-slide="prev">
-                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                <span class="visually-hidden">Previous</span>
-                            </button>
-                            <button class="carousel-control-next" :data-bs-target="'#carouselExampleIndicators'+num1" type="button" data-bs-slide="next">
-                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                <span class="visually-hidden">Next</span>
-                            </button>
+                            <div v-if="item.postPhotoPath.length>1">
+                                <button class="carousel-control-prev" :data-bs-target="'#carouselExampleIndicators'+num1" type="button" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Previous</span>
+                                </button>
+                                <button class="carousel-control-next" :data-bs-target="'#carouselExampleIndicators'+num1" type="button" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Next</span>
+                                </button>
+                            </div>
+                            <div v-else></div>
                         </div>
                         <div class="card-body imgsicon">
                             @*<h5 class="card-title">Card title</h5>*@
@@ -157,9 +160,14 @@
                                                 <span>
                                                     <img :src="msg1.headshotPath" class="rounded-circle msgsize" alt="Alternate Text" />
                                                 </span>
-                                                <span class="msgcontent">
-                                                    {{msg1.userMessage}}
-                                                </span>
+                                                <div class="user-msgcontent ms-2 p-1 ps-2 pe-2">
+                                                    <span class=" d-flex msgname fw-bold">
+                                                        {{msg1.userName}}
+                                                    </span>
+                                                    <span class="msgcontent">
+                                                        {{msg1.userMessage}}
+                                                    </span>
+                                                </div>
                                             </div>
 
                                         </div>
@@ -174,10 +182,6 @@
                                 </div>
                             </div>
                         </div>
-
-
-
-
 
                         <!--<div class="" v-for="(msg,index1) in item.message" v-if="index1 < 1">-->@*card-footer*@
                         <!--{{msg.createDate}} mins ago
@@ -219,7 +223,7 @@
             isLoading: true,
 
             isShow: true,
-
+            isshow: true,
             MessageList: [{
                 content: "",
                 message: [{
@@ -262,7 +266,6 @@
                     self.userList = result.data;
                     console.log(result.data);
                 })
-
             //let personid = 0;
             //for (let p in MessageList) {
             //    for (let id in p) {

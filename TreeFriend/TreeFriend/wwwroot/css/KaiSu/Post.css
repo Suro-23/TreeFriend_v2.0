@@ -116,7 +116,6 @@ body {
 
 .msgcontent {
     font-size: 12px;
-    float: right;
     word-break: break-word;
 }
 .msgname {
@@ -211,9 +210,6 @@ body {
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
 }
-/*    .borderline {
-        border-top: 3px solid #f6e6cd
-    }*/
 .cardtext {
     width: 100%;
     overflow: hidden;

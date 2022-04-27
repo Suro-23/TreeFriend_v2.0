@@ -134,8 +134,9 @@ namespace TreeFriend.Controllers.Api
                         PersonalPostId = F,
                         UserMessage = y.Message,
                         HeadshotPath =_context.usersDetail.Where(x=>x.UserId==y.UserId).FirstOrDefault().HeadshotPath,
-                        CreateDate = y.CreateDate
-                        //TODO 加暱稱
+                        CreateDate = y.CreateDate,
+                        UserName= _context.usersDetail.Where(x => x.UserId == y.UserId).FirstOrDefault().UserName,
+                        MessageUserId=y.UserId
                     }).ToList();
                     //建立貼文內容物件渲染
                     var a = _context.personalPosts.Where(x => x.PersonalPostId == F).OrderByDescending(x => x.CreateDate)
@@ -208,7 +209,6 @@ namespace TreeFriend.Controllers.Api
             //將取出的貼文逐一帶入
             foreach (var F in p.ToList())
             {
-
                 //取出跟每一筆貼文PersonalPostId一樣的PersonalPostMessages  一篇貼文可能有多篇不同使用者的留言
                 var head = _context.PersonalPostMessages.FirstOrDefault(x => x.PersonalPostId == F);
 
@@ -222,8 +222,9 @@ namespace TreeFriend.Controllers.Api
                         PersonalPostId = F,
                         UserMessage = y.Message,
                         HeadshotPath = _context.usersDetail.Where(x => x.UserId == y.UserId).FirstOrDefault().HeadshotPath,
-                        CreateDate = y.CreateDate
-                        //TODO 加暱稱
+                        CreateDate = y.CreateDate,
+                        UserName = _context.usersDetail.Where(x => x.UserId == y.UserId).FirstOrDefault().UserName,
+                        MessageUserId = y.UserId
                     }).ToList();
                     //建立貼文內容物件渲染
                     var a = _context.personalPosts.Where(x => x.PersonalPostId == F).OrderByDescending(x => x.CreateDate)
@@ -234,8 +235,6 @@ namespace TreeFriend.Controllers.Api
                         PostPhotoPath = _context.PersonalPostImages.Where(w => w.PersonalPostId == F).Select(s => s.PostPhotoPath).ToList(),
                         Message = mes
                     }).ToList();
-
-
                     L.AddRange(a);
                 }
                 else
@@ -384,8 +383,10 @@ namespace TreeFriend.Controllers.Api
                 PersonalPostId = mes.PersonalPostId,
                 UserMessage = personalp.Message,
                 HeadshotPath = headshot.HeadshotPath,
-                CreateDate = personalp.CreateDate
-                //TODO 加暱稱
+                CreateDate = personalp.CreateDate,
+                UserName=headshot.UserName,
+                MessageUserId=headshot.UserId
+                
             };
 
             return post;

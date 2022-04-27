@@ -15,7 +15,8 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 
     <style>
-        .container {
+        .containers {
+            width: 100%;
             margin-top: 40px;
             margin-bottom: 40px;
         }
@@ -39,7 +40,7 @@
 
         .post-title {
             color: #313131;
-            font-size: 24px;
+            font-size: 40px;
             text-align: center;
             margin-bottom: 25px;
             letter-spacing: -1px;
@@ -90,8 +91,9 @@
             padding-left: 0;
         }
 
-        .description{
-            white-space:pre-line;
+        .description {
+            white-space: pre-line;
+            font-family: 'Noto Sans TC', sans-serif;
         }
     </style>
 </head>
@@ -99,25 +101,30 @@
 <body>
     <section id="GetAll">
         <div>
-            <div class="container">
+            <div class="containers">
                 <div class="carousel1">
-                    <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+                    <div id="carouselExampleDark" class="carousel carousel-dark slide" data-bs-ride="carousel">
+                        <div class="carousel-indicators">
+                            <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                            <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                            <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                        </div>
                         <div class="carousel-inner">
-                            <template v-for="(item,num1) in Content">
+                            <template v-for="(item,num1) in PicMessage">
                                 <div v-if="num1 == 0" class="carousel-item active">
-                                    <img :src="item.picPath" class="d-block w-100" alt="" style="width:700px; height:500px;">
+                                    <img :src="item.picPath" class="d-block w-100" alt="" style="height:800px;">
                                 </div>
 
                                 <div v-else class="carousel-item">
-                                    <img :src="item.picPath" class="d-block w-100" alt="" style="width:700px; height:500px;">
+                                    <img :src="item.picPath" class="d-block w-100" alt="" style="height:800px;">
                                 </div>
                             </template>
                         </div>
-                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="prev">
                             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                             <span class="visually-hidden">Previous</span>
                         </button>
-                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="next">
                             <span class="carousel-control-next-icon" aria-hidden="true"></span>
                             <span class="visually-hidden">Next</span>
                         </button>
@@ -160,7 +167,7 @@
                             </h4>
                             <ul v-for="item in Content">
                                 <!-- 最新文章 超連結帶id -->
-                                <li> <a :href=`/Home/SystemDetail/${item.articleID}`>{{item.title}}</a> </li>
+                                <li> <a :href="'/Home/SystemDetail/?id=' +item.articleID">{{item.title}}</a> </li>
                             </ul>
                         </aside>
                     </div>
@@ -178,7 +185,8 @@
                                     <li>【交換技能】大家互相學習，分享自己知識的同時，也能學習想了解的領域!</li>
                                 </ul>
                             </aside>
-                        </div>*@
+                     </div>*@
+
                 </div>
             </div>
         </div>
@@ -200,6 +208,7 @@
         data: {
             MessageList: "",
             Content: [],
+            PicMessage: [],
         },
         mounted:
             function () {
@@ -209,9 +218,13 @@
                     self.MessageList = result.data;
                     console.log(self.MessageList);
 
-
                     axios.get("/SystemMessage/GetAllSystemMessage").then(function (result) {
                         self.Content = result.data;
+                        console.log(result);
+                    })
+
+                    axios.get("/SystemMessage/GetSystemMessageCarouselPic").then(function (result) {
+                        self.PicMessage = result.data;
                         console.log(result);
                     })
                 })

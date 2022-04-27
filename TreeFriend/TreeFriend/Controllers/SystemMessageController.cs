@@ -19,11 +19,13 @@ namespace TreeFriend.Controllers
             _db = db;
         }
 
+
+        #region 渲染系統專欄輪播圖
         [AllowAnonymous]
         [HttpGet]
-        public List<SystemlistViewModel> GetAllSystemMessage() //渲染系統文章頁面
+        public List<SystemlistViewModel> GetSystemMessageCarouselPic()
         {
-            var result = _db.SystemPost.OrderByDescending(x => x.ArticleID).Take(5)      // 限制只出現5筆渲染資料
+            var result = _db.SystemPost.OrderByDescending(x => x.ArticleID).Take(3)      // 限制只出現5筆渲染資料
              .Where(x => x.IsDelete == false).Select(x => new SystemlistViewModel()      // 先抓取資料 在改寫資料庫欄位 new一個新的Model
              {
                  ArticleID = x.ArticleID,
@@ -37,7 +39,28 @@ namespace TreeFriend.Controllers
             return result;
 
         }
+        #endregion
 
+        #region 渲染系統文章頁面
+        [AllowAnonymous]
+        [HttpGet]
+        public List<SystemlistViewModel> GetAllSystemMessage() 
+        {
+            var result = _db.SystemPost.OrderByDescending(x => x.ArticleID).Take(7)      // 限制只出現5筆渲染資料
+             .Where(x => x.IsDelete == false).Select(x => new SystemlistViewModel()      // 先抓取資料 在改寫資料庫欄位 new一個新的Model
+             {
+                 ArticleID = x.ArticleID,
+                 CreateDate = x.CreateDate.ToString("yyyy-MM-dd"),
+                 Title = x.Title,
+                 Description = x.Description,
+                 PicPath = "/SystemPicture/" + x.PicPath  //對應資料庫欄位
+
+             }).ToList();
+
+            return result;
+
+        }
+        #endregion
 
         #region 首頁系統專欄文章渲染
         [AllowAnonymous]
@@ -60,7 +83,7 @@ namespace TreeFriend.Controllers
         }
         #endregion
 
-        //詳細頁面
+        #region 系統專欄文章詳細頁面
         [AllowAnonymous]
         [HttpGet]
         //[Route("[controller]/[action]/{articleId}")]
@@ -76,5 +99,6 @@ namespace TreeFriend.Controllers
             return systemPost;
 
         }
+        #endregion
     }
 }

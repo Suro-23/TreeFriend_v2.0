@@ -7,6 +7,8 @@ using TreeFriend.Models.ViewModel;
 using System;
 using Microsoft.AspNetCore.Authorization;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace TreeFriend.Controllers.Api {
     [Authorize]
@@ -175,7 +177,7 @@ namespace TreeFriend.Controllers.Api {
                                     SkillPostId = p.SkillPostId,
                                     UserId = p.UserId,
                                     UserName = p.UserName,
-                                    UserHeadshot = _db.usersDetail.FirstOrDefault( u => u.UserId == p.UserId).HeadshotPath,
+                                    UserHeadshot = _db.usersDetail.FirstOrDefault(u => u.UserId == p.UserId).HeadshotPath,
                                     Content = p.Content
                                 }).ToList();
                             }
@@ -337,17 +339,33 @@ namespace TreeFriend.Controllers.Api {
         //加入留言
         [HttpPost]
         [Route("SkPostMessage")]
-        public void LiveSkillPostMessage([FromBody] SkillPostMessageViewModel skMessage) {
+        public async Task LiveSkillPostMessage([FromBody] SkillPostMessageViewModel skMessage) {
             //拿到當前使用者資訊後將留言寫入技能留言資料表中
             SkillPostMessage post = new SkillPostMessage() {
                 SkillPostId = skMessage.SkillPostId,
                 UserId = Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(u => u.Type == "UserId").Value),
                 UserName = User.Claims.FirstOrDefault(u => u.Type == "UserName").Value,
-                //UserHeadshot = User.Claims?.FirstOrDefault(u => u.Type == "Headshot").Value,
                 Content = skMessage.Content
             };
-            _db.skillPostMessages.Add(post);
-            _db.SaveChanges();
+            await _db.skillPostMessages.AddAsync(post);
+            await _db.SaveChangesAsync();
+        }
+
+        [HttpGet]
+        [Route("GetSkillPostMsgById")]
+        public async Task<List<SkillPostMessageViewModel>> GetSkillPostMsgById(int id) {
+            List<SkillPostMessageViewModel> messageResult = new();
+            var messageList = _db.skillPostMessages.Where(p => p.SkillPostId == id);
+
+            messageResult = await messageList.Select(p => new SkillPostMessageViewModel {
+                SkillPostId = p.SkillPostId,
+                UserId = p.UserId,
+                UserName = p.UserName,
+                UserHeadshot = _db.usersDetail.FirstOrDefault(u => u.UserId == p.UserId).HeadshotPath,
+                Content = p.Content
+            }).ToListAsync();
+
+            return messageResult;
         }
 
         #endregion

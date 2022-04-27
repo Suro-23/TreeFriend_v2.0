@@ -86,7 +86,6 @@ namespace TreeFriend.Controllers
         #region 系統專欄文章詳細頁面
         [AllowAnonymous]
         [HttpGet]
-        //[Route("[controller]/[action]/{articleId}")]
         public SystemPost SystemDetailContent(int articleId)
         {
             var post = _db.SystemPost.FirstOrDefault(x => x.ArticleID == articleId);

@@ -19,9 +19,6 @@ namespace TreeFriend.Models.Entity {
         public string Content { get; set; }
 
         [Required]
-        public string UserHeadshot { get; set; }
-
-        [Required]
         public bool Status { get; set; } = true;
     }
 }

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TreeFriend.Models;
 
 namespace TreeFriend.Migrations
 {
     [DbContext(typeof(TreeFriendDbContext))]
-    partial class TreeFriendDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220427102257_修改留言")]
+    partial class 修改留言
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -95,3 +95,7 @@
 .hashtag-group div + div {
     margin-left: .5rem;
 }
+
+.p-Content {
+    white-space: pre-line;
+}

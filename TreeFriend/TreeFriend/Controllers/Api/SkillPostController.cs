@@ -82,7 +82,7 @@ namespace TreeFriend.Controllers.Api {
                         SkillPostId = p.SkillPostId,
                         UserId = p.UserId,
                         UserName = p.UserName,
-                        UserHeadshot = p.UserHeadshot,
+                        UserHeadshot = _db.usersDetail.FirstOrDefault(u => u.UserId == p.UserId).HeadshotPath,
                         Content = p.Content
                     }).ToList();
                 }
@@ -175,7 +175,7 @@ namespace TreeFriend.Controllers.Api {
                                     SkillPostId = p.SkillPostId,
                                     UserId = p.UserId,
                                     UserName = p.UserName,
-                                    UserHeadshot = p.UserHeadshot,
+                                    UserHeadshot = _db.usersDetail.FirstOrDefault( u => u.UserId == p.UserId).HeadshotPath,
                                     Content = p.Content
                                 }).ToList();
                             }
@@ -303,7 +303,7 @@ namespace TreeFriend.Controllers.Api {
                         SkillPostId = p.SkillPostId,
                         UserId = p.UserId,
                         UserName = p.UserName,
-                        UserHeadshot = p.UserHeadshot,
+                        UserHeadshot = _db.usersDetail.FirstOrDefault(u => u.UserId == p.UserId).HeadshotPath,
                         Content = p.Content
                     }).ToList();
                 }
@@ -343,7 +343,7 @@ namespace TreeFriend.Controllers.Api {
                 SkillPostId = skMessage.SkillPostId,
                 UserId = Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(u => u.Type == "UserId").Value),
                 UserName = User.Claims.FirstOrDefault(u => u.Type == "UserName").Value,
-                UserHeadshot = User.Claims?.FirstOrDefault(u => u.Type == "Headshot").Value,
+                //UserHeadshot = User.Claims?.FirstOrDefault(u => u.Type == "Headshot").Value,
                 Content = skMessage.Content
             };
             _db.skillPostMessages.Add(post);

@@ -31,6 +31,7 @@ namespace TreeFriend.Models.Entity
         [Required]
         public int UserId { get; set; }
 
+        //對應關聯到User表，User表那邊也要新增到這的關聯
         public virtual User User { get; set; }
     }
 }

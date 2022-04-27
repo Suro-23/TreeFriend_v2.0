@@ -12,8 +12,6 @@ namespace TreeFriend.Models.Entity {
 
         [Required]
         public int UserId { get; set; }
-        [Required]
-        public string UserName { get; set; }
 
         [Required]
         public string Content { get; set; }

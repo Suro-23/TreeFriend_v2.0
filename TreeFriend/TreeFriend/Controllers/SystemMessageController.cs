@@ -23,7 +23,7 @@ namespace TreeFriend.Controllers
         [HttpGet]
         public List<SystemlistViewModel> GetAllSystemMessage() //渲染系統文章頁面
         {
-            var result = _db.SystemPost.OrderByDescending(x => x.ArticleID).Take(5)      // 限制只出現5筆渲染資料
+            var result = _db.SystemPost.OrderByDescending(x => x.ArticleID).Take(7)      // 限制只出現5筆渲染資料
              .Where(x => x.IsDelete == false).Select(x => new SystemlistViewModel()      // 先抓取資料 在改寫資料庫欄位 new一個新的Model
              {
                  ArticleID = x.ArticleID,

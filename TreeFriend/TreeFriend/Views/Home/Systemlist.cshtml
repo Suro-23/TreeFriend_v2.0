@@ -198,7 +198,7 @@
                                 最新文章
                             </h4>
                             <ul v-for="item in MessageList">
-                                <li> <a :href="'/Home/SystemDetail/?id=' +item.articleID">【技能分享】{{item.title}}</a> </li>
+                                <li> <a :href="'/Home/SystemDetail/?id=' +item.articleID">{{item.title}}</a> </li>
                             </ul>
                         </aside>
                     </div>
@@ -206,6 +206,7 @@
             </div>
         </div>
     </div>
+
 </body>
 </html>
 
@@ -227,25 +228,17 @@
             message1:new mesagge1(),
             MessageList: [],
             newMessage: [],
-            num:[],
-
+            num: [],
         },
+
         mounted: function () {
             var self = this;
             axios.get("/SystemMessage/GetAllSystemMessage").then(function (result) {
                 self.MessageList = result.data;
                 console.log(result);
-
-                //最新文章 迴圈跑出渲染的東西
-                //for (let i = 0; i < result.data.length; i++) {
-                //    console.log(result.data[i]);
-                //    var newmessageobject = new mesagge1;
-                //    newmessageobject.title = result.data[i].title;
-                //    app.newMessage.push(newmessageobject);
-                //}
-                //console.log(app.newMessage);
             })
-        }
+        },
+      
     });
 </script>
 

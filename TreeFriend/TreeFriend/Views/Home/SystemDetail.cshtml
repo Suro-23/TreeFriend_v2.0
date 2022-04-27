@@ -160,7 +160,7 @@
                             </h4>
                             <ul v-for="item in Content">
                                 <!-- 最新文章 超連結帶id -->
-                                <li> <a :href=`/Home/SystemDetail/${item.articleID}`>{{item.title}}</a> </li>
+                                <li> <a :href="'/Home/SystemDetail/?id=' +item.articleID">{{item.title}}</a> </li>
                             </ul>
                         </aside>
                     </div>
@@ -178,7 +178,8 @@
                                     <li>【交換技能】大家互相學習，分享自己知識的同時，也能學習想了解的領域!</li>
                                 </ul>
                             </aside>
-                        </div>*@
+                     </div>*@
+
                 </div>
             </div>
         </div>
@@ -208,7 +209,6 @@
                     /*axios.get("/SystemMessage/FullContent1/3").then(function (result) {*/
                     self.MessageList = result.data;
                     console.log(self.MessageList);
-
 
                     axios.get("/SystemMessage/GetAllSystemMessage").then(function (result) {
                         self.Content = result.data;

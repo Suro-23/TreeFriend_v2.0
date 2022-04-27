@@ -36,7 +36,7 @@ namespace TreeFriend.Controllers.Api {
                             _db.personalPosts.Where(p => p.UserId == u.UserId).Count(),
                 TotalAmount = _db.OrderDetails.Where(od => od.UserId == u.UserId && od.PaymentStatus == true)
                             .Sum(od => od.Price * od.Count),
-                TotalTime = (DateTime.UtcNow.AddHours(8) - u.UserDetail.UpdateTime).ToString()
+                TotalTime = (DateTime.UtcNow.AddHours(8) - u.CreateDate).ToString()
             }).ToListAsync();
             return userData;
         }

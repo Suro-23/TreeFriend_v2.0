@@ -21,7 +21,7 @@ namespace TreeFriend.Extensions
             this.mail = mail;
         }
 
-        public bool Send(MailMessage mail)
+        public bool Send()
         {
             client.Credentials = new System.Net.NetworkCredential("tfm104.2@gmail.com", "aqdmbraojqyuggpo");
             client.EnableSsl = true;

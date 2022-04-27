@@ -94,6 +94,7 @@ namespace TreeFriend.Controllers {
         private string Decrypt(string str) ////解密字符串
         {
             try {
+                str = str.Replace(' ', '+');
                 byte[] key = Encoding.Unicode.GetBytes(encryptKey);//密鑰
                 byte[] data = Convert.FromBase64String(str);//待解密字符串
 
@@ -122,7 +123,7 @@ namespace TreeFriend.Controllers {
             var secretcode = Encrypt(members.UserId.ToString() + "&y=true");
             //string g = Guid.NewGuid().ToString("d").Substring(0, 7);
             var message = new Message(new string[] { $"{members.Email}" }, "技能交換網站驗證碼", "親愛的" + $"{ members.Email }" + "先生/小姐" +
-                "您好，請點擊以下網址註冊:" + "https://localhost:44341/register/get?d=" + secretcode);
+                "您好，請點擊以下網址註冊:" + "https://treefriends.azurewebsites.net/register/get?d=" + secretcode);
             _emailSender.SendEmail(message);
 
             return Content("信已寄出");

@@ -39,7 +39,7 @@ namespace TreeFriend.Controllers
             HashKey = "DIQL4I5DZ6sG6aVcBnQ6sFgkzmxUHSdP",
             HashIV = "CNnhZ4oa0qTNVUMP",
             ReturnURL = "http://yourWebsitUrl/Bank/SpgatewayReturn", //ngrok網址要更改 https://0d54-1-164-234-176.ngrok.io/Home/HomePage 跳過NotifyUEL頁面 
-            NotifyURL = "https://f699-49-158-79-227.ngrok.io/Bank/SpgatewayReturn",
+            NotifyURL = "https://treefriends.azurewebsites.net/Bank/SpgatewayReturn",
             CustomerURL = "http://yourWebsitUrl/Bank/SpgatewayCustomer",
             AuthUrl = "https://ccore.spgateway.com/MPG/mpg_gateway",
             CloseUrl = "https://core.newebpay.com/API/CreditCard/Close"
@@ -145,7 +145,7 @@ namespace TreeFriend.Controllers
                 // 商店取號網址
                 CustomerURL = _bankInfoModel.CustomerURL,
                 // 支付取消 返回商店網址
-                ClientBackURL = "https://f699-49-158-79-227.ngrok.io/home/PersonalOrderHistory",//返回商店網址 ngrok網址要更改
+                ClientBackURL = "https://treefriends.azurewebsites.net/home/PersonalOrderHistory",//返回商店網址 ngrok網址要更改
                 // * 付款人電子信箱
                 Email = string.Empty,
                 // 付款人電子信箱 是否開放修改(1=可修改 0=不可修改)
@@ -254,29 +254,29 @@ namespace TreeFriend.Controllers
                     
                     var user = _db.users.SingleOrDefault(x => x.UserId == od.UserId);
 
-                    //var mails = new string[] {user.Email};
+                    var mails = new string[] { user.Email };
 
                     var mailhelper = new MailHelper();
-                    //部署後確認可不可以寄發圖片再更改
-                    //mailhelper.CreateMail(mails,"TreeFriend講座入場資訊", $@"親愛會員您好，感謝您購買TreeFriend講座，活動當日請出示此憑證即可確認入場。<div><img src='img/LecturePic/T1.png' width='500'/ ></div><div><img src='img/LecturePic/T2.png' width='500'/></div>"<div>此為系統主動發送信函，請勿直接回覆此封信件。</div>);
-                    //mailhelper.Send();
-                    //return Content("寄信成功");
-                    //電腦上傳圖片
-                    var mail = new MailMessage();
-                    mail.IsBodyHtml = true;
-                    var res = new LinkedResource($@"C:\Users\Tibame_T14\Documents\GitHub\TreeFriend_v2.0\TreeFriend\TreeFriend\wwwroot\img\LecturePic\T1.Png");
-                    res.ContentId = Guid.NewGuid().ToString();
-                    var htmlBody = $@"親愛會員您好，感謝您購買TreeFriend講座，活動當日請出示此憑證即可確認入場。<div><img width='500' src='cid:{res.ContentId}'/></div><div>此為系統主動發送信函，請勿直接回覆此封信件。</div>";
-                    var altView = AlternateView.CreateAlternateViewFromString(htmlBody, null, MediaTypeNames.Text.Html);
-
-                    altView.LinkedResources.Add(res);
-
-                    mail.AlternateViews.Add(altView);
-                    mail.To.Add(user.Email);
-                    mail.From = new MailAddress("tfm104.2@gmail.com");
-                    mail.Subject = "TreeFriend講座入場資訊";
-                    mailhelper.Send(mail);
+                    
+                    mailhelper.CreateMail(mails, "TreeFriend講座入場資訊", $@"親愛會員您好，感謝您購買TreeFriend講座，活動當日請出示此憑證即可確認入場。<div><img src='https://treefriends.azurewebsites.net/img/LecturePic/T1.png' width='500'/ ></div><div><img src='https://treefriends.azurewebsites.net/img/LecturePic/T2.png' width='500'/></div><div>此為系統主動發送信函，請勿直接回覆此封信件。</div>");
+                    mailhelper.Send();
                     return Content("寄信成功");
+                    //電腦上傳圖片
+                    //var mail = new MailMessage();
+                    //mail.IsBodyHtml = true;
+                    //var res = new LinkedResource($@"C:\Users\Tibame_T14\Documents\GitHub\TreeFriend_v2.0\TreeFriend\TreeFriend\wwwroot\img\LecturePic\T1.Png");
+                    //res.ContentId = Guid.NewGuid().ToString();
+                    //var htmlBody = $@"親愛會員您好，感謝您購買TreeFriend講座，活動當日請出示此憑證即可確認入場。<div><img width='500' src='cid:{res.ContentId}'/></div><div>此為系統主動發送信函，請勿直接回覆此封信件。</div>";
+                    //var altView = AlternateView.CreateAlternateViewFromString(htmlBody, null, MediaTypeNames.Text.Html);
+
+                    //altView.LinkedResources.Add(res);
+
+                    //mail.AlternateViews.Add(altView);
+                    //mail.To.Add(user.Email);
+                    //mail.From = new MailAddress("tfm104.2@gmail.com");
+                    //mail.Subject = "TreeFriend講座入場資訊";
+                    //mailhelper.Send(mail);
+                    //return Content("寄信成功");
                 }
 
                 if (convertModel.Status != "SUCCESS")

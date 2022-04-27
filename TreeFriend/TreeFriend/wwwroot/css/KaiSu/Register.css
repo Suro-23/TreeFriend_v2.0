@@ -62,12 +62,12 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background-color: #C5B9AD;
+    background-color: #7f947f;
     transition: 0.5s;
 }
 
     body.active {
-        background: #D2C4AA;
+        background: #9DB6A5;
     }
 
 .container {
@@ -251,7 +251,7 @@ body {
     border-radius: 5px;
     width: 90px;
     padding: 10px 0px;
-    background-color: #BDA684;
+    background-color: #899f90;
     border: none;
     color: #FFF;
 }
@@ -325,7 +325,7 @@ body {
 }
 
 .formBx .form form input[type="submit"] {
-    background: #BDA684;
+    background: #899f90;
     border: none;
     color: #fff;
     max-width: 100px;
@@ -333,7 +333,7 @@ body {
 }
 
 .formBx.active .signupForm input[type="submit"] {
-    background: #BDA684;
+    background: #899f90;
 }
 
 .formBx .form form .forget {

@@ -12,10 +12,10 @@ namespace TreeFriend.Controllers.Api {
     [Authorize(Roles = "Admin")]
     [Route("api/[controller]")]
     [ApiController]
-    public class ManageUser : ControllerBase {
+    public class ManageUserController : ControllerBase {
         private readonly TreeFriendDbContext _db;
 
-        public ManageUser(TreeFriendDbContext db) {
+        public ManageUserController(TreeFriendDbContext db) {
             _db = db;
         }
 

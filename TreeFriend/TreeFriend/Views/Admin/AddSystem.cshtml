@@ -8,6 +8,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/countdown/2.6.0/countdown.min.js" integrity="sha512-FkM4ZGExuYz4rILLbNzw8f3HxTN9EKdXrQYcYfdluxJBjRLthYPxxZixV/787qjN3JLs2607yN5XknR/cQMU8w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="~/js/moment-countdown.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <style>
@@ -58,7 +59,7 @@
                     <h5 class="modal-title" id="addLabel">Add</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form style=" padding: 1rem;">
+                <form  style="padding: 1rem;" v-on:submit.prevent="send">
                     <div class="form-group row" style="margin-top: 1rem;">
                         <label for="title" class="col-sm-4 col-form-label">主標題</label>
                         <div class="col-sm-8">
@@ -69,7 +70,6 @@
                         <label for="description" class="col-sm-4 col-form-label">內容</label>
                         <div class="col-sm-8">
                             <textarea class="form-control" id="description" required v-model="hello.description"></textarea>
-                            @*<input type="text" class="form-control" id="description" v-model="hello.description">*@
                         </div>
                     </div>
                     <div class="form-group row" style="margin-top: 1rem; margin-bottom: 1rem;">
@@ -82,7 +82,7 @@
 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary btn-sm content" @@click="send">新增</button>@*寫一個send的方法 *@
+                        <button type="submit" class="btn btn-primary btn-sm content">新增</button>@*寫一個send的方法 *@
                     </div>
                 </form>
 
@@ -112,7 +112,6 @@
                     <td v-show="isShow">{{item.articleID}}</td>
                     <td>{{item.createDate}}</td>
                     <td style="text-overflow: ellipsis;">{{item.title}}</td>
-                    @*<td>{{item.content}}</td>*@
                     <td>
                         <button type="button" class="btn btn-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#staticBackdrop" v-bind:value="item.articleID" v-on:click="edit($event)">
                             修改
@@ -167,7 +166,6 @@
                     <div class="modal-body">
                         <div class="form-row">
                             <input disabled type="text" required v-model="article.articleID"> @* 修改 id寫死 *@
-                            @*<input type="hidden" required v-model="lecture.lectureId"> 正式的時候要藏起來*@
                         </div>
 
                         <div class="form-row">
@@ -186,9 +184,6 @@
                                 <img :src="article.picPath" style="max-height:235px" v-show="isPhotoShow" />  @*抓取原先圖片*@
 
                             </div>
-
-
-                            @*<textarea cols="20" rows="5" required v-model="lecture.content"></textarea>*@
                         </div>
 
                     </div>
@@ -277,7 +272,6 @@
 
                     })
                     .catch(function (response) {
-                        //handle error
                         console.log(response);
                     });
             }
@@ -323,9 +317,6 @@
         },
 
         methods: {
-            //add: function () {
-            //    window.location.href = "/System/Upload";
-            //},
 
             setPage: function (idx) {
                 if (idx <= 0 || idx > this.totalPage) {
@@ -340,15 +331,7 @@
                 let self = this;
 
                 axios.delete(`/AddSystemMessage/DeleteMessage/?articleID=${self.target.articleID}`)
-                    //.then(res => {
-                    //    if (res.data == true) {
-                    //        SWdelete("刪除成功","","close");
-                    //        //window.location.reload();
-                    //    } else {
-                    //        SWerror("刪除失敗", "在檢查一下", "close");
-                    //    }
-                    //}
-                    //).catch(err => console.log(err));
+
                 Swal.fire({
                     title: '確定要刪除嗎?',
                     text: "刪除就無法復原囉!",
@@ -420,32 +403,21 @@
                     data: bodyFormData,
                     Headers: { "Content-Type": "multipart/form-data" },
                 })
-                    //.then(function (response) {
-                    //    if (response.data == true) {
-                    //        SWseccess("修改成功","","close");
-                    //        //window.location.reload();
-                    //    } else {
-                    //        SWerror("修改失敗","在檢查一下","close");
-                    //    }
-                    //})
-                    //.catch(function (response) {
-                    //    console.log(response);
-                    //})
+
                 Swal.fire({
                     title: '確定要修改嗎?',
                     showDenyButton: true,
-                    //showCancelButton: true,
                     confirmButtonText: 'Save',
                     denyButtonText: `Don't save`,
-                }).then((result) => {
-                    /* Read more about isConfirmed, isDenied below */
+                })
+                    .then((result) => {
                     if (result.isConfirmed) {
                         Swal.fire('修改成功!', '', 'success')
                         window.location.reload();
                     } else if (result.isDenied) {
                         Swal.fire('修改失敗', '', 'info')
                     }
-                })
+                    })
             },
             setPage: function (idx) {
                 if (idx <= 0 || idx > this.totalPage) {
@@ -459,7 +431,6 @@
 
 
 <!--SweetAlert-->
-<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     function SWUploadFile(title, text, close) {
         Swal.fire({
@@ -488,14 +459,6 @@
         })
     }
 
-    function SWdelete(title, text, ok) {
-        Swal.fire({
-            title: '確定要刪除嗎?',
-            text: text,
-            icon: 'error',
-            confirmButtonText: ok
-        })
-    }
 </script>
 
 

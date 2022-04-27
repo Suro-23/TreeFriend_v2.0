@@ -36,16 +36,16 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNavDropdown">
                 <ul class="navbar-nav d-flex align-items-center">
+                    <li class="nav-item icon-img">
+                        <a class="nav-link" href="@Url.Action("LectureList","Home")"><img src="~/icon/lecture.png"/></a>
+                    </li>
                     @if (User.IsInRole("Admin")) {
-                    <li class="nav-item">
-                        <a class="nav-link" href="@Url.Action("AddCategory","Admin")">管理員</a>
-                    </li>
+                        <li class="nav-item icon-img">
+                            <a class="nav-link" href="@Url.Action("ChartPage","Admin")"><img src="~/icon/admin.png"/></a>
+                        </li>
                     }
-                    <li class="nav-item">
-                        <a class="nav-link" href="@Url.Action("AllSkillPostPage","Home")">技能貼文</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="@Url.Action("LectureList","Home")">講座</a>
+                    <li class="nav-item icon-img">
+                        <a class="nav-link" href="@Url.Action("AllSkillPostPage","Home")"><img src="~/icon/skillpost.png"/></a>
                     </li>
                     @{
                     if (Context.User.Identity.IsAuthenticated) {
@@ -57,14 +57,14 @@
                             <img class="headshot" src="@imgPath" alt="">
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
-                            <li><a class="dropdown-item" href="@Url.Action(" MemberInfo","Home")">基本資料</a></li>
-                            <li><a class="dropdown-item" href="@Url.Action(" AddSkillPostPage","Home")">交換技能</a></li>
+                            <li><a class="dropdown-item" href="@Url.Action("MemberInfo","Home")">基本資料</a></li>
+                            <li><a class="dropdown-item" href="@Url.Action("AddSkillPostPage","Home")">交換技能</a></li>
                             <li><a class="dropdown-item" v-on:click="logout">登出</a></li>
                         </ul>
                     </li>
                     } else {
                     <li class="nav-item">
-                        <a class="nav-link" href="@Url.Action(" Create","Register")">登入</a>
+                        <a class="nav-link" href="@Url.Action("Create","Register")">登入</a>
                     </li>
                     }
                     }

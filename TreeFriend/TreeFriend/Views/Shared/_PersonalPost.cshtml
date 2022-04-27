@@ -36,16 +36,16 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNavDropdown">
                 <ul class="navbar-nav d-flex align-items-center">
+                    <li class="nav-item icon-img">
+                        <a class="nav-link" href="@Url.Action("LectureList","Home")"><img src="~/icon/lecture.png"/></a>
+                    </li>
                     @if (User.IsInRole("Admin")) {
-                    <li class="nav-item">
-                        <a class="nav-link" href="@Url.Action("AddCategory","Admin")">管理員</a>
-                    </li>
+                        <li class="nav-item icon-img">
+                            <a class="nav-link" href="@Url.Action("ChartPage","Admin")"><img src="~/icon/admin.png"/></a>
+                        </li>
                     }
-                    <li class="nav-item">
-                        <a class="nav-link" href="@Url.Action("AllSkillPostPage","Home")">技能貼文</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="@Url.Action("LectureList","Home")">講座</a>
+                    <li class="nav-item icon-img">
+                        <a class="nav-link" href="@Url.Action("AllSkillPostPage","Home")"><img src="~/icon/skillpost.png"/></a>
                     </li>
                     @{
                     if (Context.User.Identity.IsAuthenticated) {

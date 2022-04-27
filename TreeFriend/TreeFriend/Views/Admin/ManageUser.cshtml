@@ -142,11 +142,9 @@
             clickUserInfo: function(item) {
                 const user = this.selectUser;
                 const birthday = new Date(item.birthday);
-                const totalTime = new Date(item.totalTime).getDate();
 
                 user.userInfo = item;
                 user.userInfo.birthday = `${birthday.getMonth()} / ${birthday.getDate()}`;
-                user.userInfo.totalTime = `${totalTime}`;
 
                 user.clickUser = true;
             },

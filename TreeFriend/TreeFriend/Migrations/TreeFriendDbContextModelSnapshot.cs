@@ -202,18 +202,6 @@ namespace TreeFriend.Migrations
                     b.Property<DateTime>("CreateDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("PostPhotoPath")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Subtitle")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
@@ -221,7 +209,56 @@ namespace TreeFriend.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("PersonalPost");
+                    b.ToTable("personalPosts");
+                });
+
+            modelBuilder.Entity("TreeFriend.Models.Entity.PersonalPostImage", b =>
+                {
+                    b.Property<int>("PersonalPostImageId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("PersonalPostId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("PostPhotoPath")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("PersonalPostImageId");
+
+                    b.HasIndex("PersonalPostId");
+
+                    b.ToTable("PersonalPostImages");
+                });
+
+            modelBuilder.Entity("TreeFriend.Models.Entity.PersonalPostMessage", b =>
+                {
+                    b.Property<int>("MessageId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PersonalPostId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("MessageId");
+
+                    b.ToTable("PersonalPostMessages");
                 });
 
             modelBuilder.Entity("TreeFriend.Models.Entity.SkillPost", b =>
@@ -239,9 +276,7 @@ namespace TreeFriend.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreateDate")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("getdate()");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Region")
                         .IsRequired()
@@ -299,6 +334,41 @@ namespace TreeFriend.Migrations
                     b.ToTable("skillPostMessages");
                 });
 
+            modelBuilder.Entity("TreeFriend.Models.Entity.SystemPost", b =>
+                {
+                    b.Property<int>("ArticleID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("PicPath")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ArticleID");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("SystemPost");
+                });
+
             modelBuilder.Entity("TreeFriend.Models.Entity.User", b =>
                 {
                     b.Property<int>("UserId")
@@ -307,9 +377,7 @@ namespace TreeFriend.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<DateTime>("CreateDate")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("getdate()");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -318,6 +386,9 @@ namespace TreeFriend.Migrations
                     b.Property<string>("Password")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<byte[]>("Salt")
+                        .HasColumnType("varbinary(max)");
 
                     b.Property<bool>("Status")
                         .HasColumnType("bit");
@@ -351,9 +422,7 @@ namespace TreeFriend.Migrations
                         .HasColumnType("bit");
 
                     b.Property<DateTime>("UpdateTime")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("getdate()");
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("UserName")
                         .HasColumnType("nvarchar(max)");
@@ -445,6 +514,17 @@ namespace TreeFriend.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("TreeFriend.Models.Entity.PersonalPostImage", b =>
+                {
+                    b.HasOne("TreeFriend.Models.Entity.PersonalPost", "PersonalPost")
+                        .WithMany("PersonalPostImages")
+                        .HasForeignKey("PersonalPostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("PersonalPost");
+                });
+
             modelBuilder.Entity("TreeFriend.Models.Entity.SkillPost", b =>
                 {
                     b.HasOne("TreeFriend.Models.Entity.Category", "Category")
@@ -460,6 +540,17 @@ namespace TreeFriend.Migrations
                         .IsRequired();
 
                     b.Navigation("Category");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("TreeFriend.Models.Entity.SystemPost", b =>
+                {
+                    b.HasOne("TreeFriend.Models.Entity.User", "User")
+                        .WithMany("SystemPosts")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("User");
                 });
@@ -490,6 +581,11 @@ namespace TreeFriend.Migrations
                     b.Navigation("OrderDetails");
                 });
 
+            modelBuilder.Entity("TreeFriend.Models.Entity.PersonalPost", b =>
+                {
+                    b.Navigation("PersonalPostImages");
+                });
+
             modelBuilder.Entity("TreeFriend.Models.Entity.SkillPost", b =>
                 {
                     b.Navigation("Hashtags");
@@ -508,6 +604,8 @@ namespace TreeFriend.Migrations
                     b.Navigation("Posts");
 
                     b.Navigation("SkillPosts");
+
+                    b.Navigation("SystemPosts");
 
                     b.Navigation("UserDetail");
                 });

@@ -1,0 +1,399 @@
+﻿
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+    vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+    display: block;
+}
+
+body {
+    line-height: 1;
+}
+
+ol, ul {
+    list-style: none;
+}
+
+blockquote, q {
+    quotes: none;
+}
+
+    blockquote:before, blockquote:after,
+    q:before, q:after {
+        content: '';
+        content: none;
+    }
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+@import url("https://fonts.googleapis.com/css?family=Poppins:200,300,400,500,600,700,800,900&display=swap");
+
+* {
+    margin: 0; /*取消瀏覽器預設樣式 */
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #C5B9AD;
+    transition: 0.5s;
+}
+
+    body.active {
+        background: #D2C4AA;
+    }
+
+.container {
+    position: relative;
+    width: 800px;
+    height: 500px;
+    margin: 20px;
+}
+
+.Brownbg {
+    position: relative;
+    top: 40px;
+    width: 100%;
+    height: 420px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(255, 225, 255, 0.2);
+    box-shadow: 0 5px 45px rgba(0, 0, 0, 0.15);
+}
+
+.signinBtn {
+    width: 80px;
+    height: 30px;
+    display: block;
+    text-align: center;
+    cursor: pointer;
+    line-height: 30px;
+    color: #000;
+    background-color: transparent;
+    position: relative;
+    transition: all .3s linear;
+}
+
+    .signinBtn > p {
+        position: relative;
+        z-index: 1;
+    }
+
+    .signinBtn::before {
+        content: "";
+        width: 20px;
+        height: 20px;
+        display: block;
+        box-sizing: border-box;
+        border-top: 1px solid #000;
+        border-left: 1px solid #000;
+        position: absolute;
+        top: 0;
+        left: 0;
+        transition: all .3s linear;
+    }
+
+    .signinBtn::after {
+        content: "";
+        width: 20px;
+        height: 20px;
+        display: block;
+        box-sizing: border-box;
+        border-bottom: 1px solid #000;
+        border-right: 1px solid #000;
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        transition: all .3s linear;
+    }
+
+    .signinBtn:hover::before,
+    .signinBtn:hover::after {
+        width: 100%;
+        height: 100%;
+    }
+
+.signupBtn {
+    width: 80px;
+    height: 30px;
+    display: block;
+    text-align: center;
+    cursor: pointer;
+    line-height: 30px;
+    color: #000;
+    background-color: transparent;
+    position: relative;
+    transition: all .3s linear;
+}
+
+    .signupBtn > p {
+        position: relative;
+        z-index: 1;
+    }
+
+    .signupBtn::before {
+        content: "";
+        width: 20px;
+        height: 20px;
+        display: block;
+        box-sizing: border-box;
+        border-top: 1px solid #000;
+        border-left: 1px solid #000;
+        position: absolute;
+        top: 0;
+        left: 0;
+        transition: all .3s linear;
+    }
+
+    .signupBtn::after {
+        content: "";
+        width: 20px;
+        height: 20px;
+        display: block;
+        box-sizing: border-box;
+        border-bottom: 1px solid #000;
+        border-right: 1px solid #000;
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        transition: all .3s linear;
+    }
+
+    .signupBtn:hover::before,
+    .signupBtn:hover::after {
+        width: 100%;
+        height: 100%;
+    }
+
+.Brownbg .box {
+    position: relative;
+    width: 50%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+    .Brownbg .box h2 {
+        color: #fff;
+        font-size: 1.2em;
+        font-weight: 500;
+        margin-bottom: 10px;
+    }
+
+    .Brownbg .box button {
+        cursor: pointer; /*游標*/
+        padding: 10px, 20px;
+        background: #fff;
+        color: #333;
+        font-size: 16px;
+        font-weight: 500;
+        border: none;
+    }
+
+.formBx {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 50%;
+    height: 100%;
+    background: #fff;
+    z-index: 1000; /*控制z軸*/
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 5px 45px rgba(0, 0, 0, 0.25);
+    transition: 0.5s ease-in-out;
+    overflow: hidden; /* 自動隱藏超出的文字或圖片 */
+}
+
+.inputlogin {
+    border-radius: 5px;
+    width: 280px;
+    padding: 10px 5px;
+    border: 0.5px solid;
+}
+
+.inputregister {
+    padding: 0 10px;
+}
+
+.inputloginbtn {
+    border-radius: 5px;
+    width: 90px;
+    padding: 10px 0px;
+    background-color: #BDA684;
+    border: none;
+    color: #FFF;
+}
+
+.loginwords {
+    font-size: 25px;
+}
+
+.formBx.active {
+    left: 50%;
+}
+
+.formBx .form {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    padding: 50px;
+    transition: 0.5s;
+}
+
+.formBx .signinForm {
+    transition-delay: 0.25s;
+}
+
+
+.formBx.active .signinForm {
+    left: -100%;
+    transition-delay: 0s; /* 取消註冊畫面延遲 */
+}
+
+.formBx .signupForm {
+    left: 100%;
+    transition-delay: 0s;
+}
+
+
+.formBx.active .signupForm {
+    left: 0;
+    transition-delay: 0.25s;
+}
+
+
+.formBx .form form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+    .formBx .form form h3 {
+        font-size: 1.5em;
+        color: #333;
+        margin-bottom: 20px;
+        font-weight: 500;
+    }
+
+    .formBx .form form input {
+        width: 100%;
+        margin-bottom: 20px;
+        padding: 10px;
+        outline: none;
+        font-size: 16px;
+        border: 1px solid #333;
+    }
+
+.signinForm2 {
+    width: 100%;
+    margin-bottom: 20px;
+    padding: 10px;
+    outline: none;
+    font-size: 16px;
+}
+
+.formBx .form form input[type="submit"] {
+    background: #BDA684;
+    border: none;
+    color: #fff;
+    max-width: 100px;
+    cursor: pointer;
+}
+
+.formBx.active .signupForm input[type="submit"] {
+    background: #BDA684;
+}
+
+.formBx .form form .forget {
+    color: #333;
+}
+
+@media(max-width: 991px) {
+    .container {
+        max-width: 400px;
+        height: 650px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+        .container .Brownbg {
+            top: 0;
+            height: 100%;
+        }
+
+    .formBx {
+        width: 100%;
+        height: 500px;
+        top: 0;
+        box-shadow: none;
+    }
+
+    .Brownbg .box {
+        position: absolute;
+        width: 100%;
+        height: 150px;
+        bottom: 0;
+    }
+
+    .box.signin {
+        top: 0;
+    }
+
+    .box.signup {
+        bottom: 0;
+    }
+    /* !*/
+
+
+    .formBx.active {
+        left: 0;
+        top: 150px;
+    }
+}
+
+.alerttext {
+    color: red;
+    font-size: 12px;
+}
+
+.alerttextOK {
+    color: green;
+    font-size: 12px;
+}
+.img_btn{
+    cursor:pointer;
+}
+

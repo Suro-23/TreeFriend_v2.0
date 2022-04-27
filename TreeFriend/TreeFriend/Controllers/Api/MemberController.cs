@@ -80,14 +80,17 @@ namespace TreeFriend.Controllers.Api {
             }
             return "未選擇圖片";
         }
-        [Route("GetOrderHistory")]
+
+        #region 歷史訂單
+
+        [Route("GetOrder")]
         [HttpGet]
-        public List<OrderHistoryViewModel> GetOrderHistory() {
+        public List<OrderHistoryViewModel> GetOrder() {
             int userId = Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(u => u.Type == "UserId").Value);
-            var result = _db.OrderDetails.Where(od => od.UserId == userId).Select(od => new OrderHistoryViewModel
+            var result = _db.OrderDetails.Where(od => od.UserId == userId && od.Lecture.EventDate>=DateTime.Now && od.OrderStatus==true).OrderByDescending(od => od.CreateDate).Select(od => new OrderHistoryViewModel
             {
                 OrderDetailId=od.OrderDetailId,
-                CreateDate=od.CreateDate.ToString("yyyy-MM-dd"),
+                CreateDate=od.CreateDate.ToString("yyyy-MM-dd HH:mm"),
                 TotoalAmount = Convert.ToInt32(od.Price*od.Count),
                 PayTime=od.PayTime.HasValue ? od.PayTime.Value.ToString("yyyy-MM-dd HH:mm"):"",
                 PaymentStatus=od.PaymentStatus,
@@ -99,10 +102,41 @@ namespace TreeFriend.Controllers.Api {
                 Venue= od.Lecture.Venue,
                 Price=od.Price,
                 Count=od.Count,
+                ImgPath=od.Lecture.ImgPath,
+                LectureId=od.LectureId
             }).ToList();
 
             return result;
 
         }
+
+        [Route("GetOrderHistory")]
+        [HttpGet]
+        public List<OrderHistoryViewModel> GetOrderHistory()
+        {
+            int userId = Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(u => u.Type == "UserId").Value);
+            var result = _db.OrderDetails.Where(od => od.UserId == userId &&( od.Lecture.EventDate < DateTime.Now || od.OrderStatus == false)).OrderByDescending(od=>od.CreateDate).Select(od => new OrderHistoryViewModel
+            {
+                OrderDetailId = od.OrderDetailId,
+                CreateDate = od.CreateDate.ToString("yyyy-MM-dd HH:mm"),
+                TotoalAmount = Convert.ToInt32(od.Price * od.Count),
+                PayTime = od.PayTime.HasValue ? od.PayTime.Value.ToString("yyyy-MM-dd HH:mm") : "",
+                PaymentStatus = od.PaymentStatus,
+                OrderStatus = od.OrderStatus,
+                Theme = od.Lecture.Theme,
+                EventDate = od.Lecture.EventDate.ToString("yyyy-MM-dd"),
+                EventTimeStart = od.Lecture.EventTimeStart.ToString("HH:mm"),
+                EventTimeEnd = od.Lecture.EventTimeEnd.ToString("HH:mm"),
+                Venue = od.Lecture.Venue,
+                Price = od.Price,
+                Count = od.Count,
+                ImgPath = od.Lecture.ImgPath
+            }).ToList();
+
+            return result;
+
+        }
+        
+        #endregion
     }
 }

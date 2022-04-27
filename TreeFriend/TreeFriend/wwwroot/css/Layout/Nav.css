@@ -1,9 +1,23 @@
-﻿.navbar-collapse {
+﻿@import url('https://fonts.googleapis.com/css2?family=Mali:wght@600&display=swap');
+
+.navbar-collapse {
     justify-content: flex-end;
+}
+
+.header-bg {
+    background-color: #9fb6a8;
+}
+
+.icon-img img {
+    width: 35px;
 }
 
 .logo {
     height: 40px;
+}
+
+.aline {
+    text-decoration: none;
 }
 
 .headshot {
@@ -21,4 +35,14 @@
 
 .dropdown-toggle::after {
     display: none;
+}
+.treefriend {
+    font-family: 'Mali', cursive, sans-serif;
+    font-size: 24px;
+    color: #227D51;
+}
+.friend {
+    font-family: 'Mali', cursive, sans-serif;
+    font-size: 24px;
+    color: #6E552F;
 }

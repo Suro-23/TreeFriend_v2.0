@@ -21,11 +21,12 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.26.1/axios.min.js" integrity="sha512-bPh3uwgU5qEMipS/VOmRqynnMXGGSRv+72H/N260MQeXZIK4PG48401Bsby9Nq5P5fz7hy5UGNmC/W1Z51h2GQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-    <!--欣宜引用時間相關CDN-->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/countdown/2.6.0/countdown.min.js" integrity="sha512-FkM4ZGExuYz4rILLbNzw8f3HxTN9EKdXrQYcYfdluxJBjRLthYPxxZixV/787qjN3JLs2607yN5XknR/cQMU8w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="~/js/moment-countdown.min.js"></script>
-    <!---->
+    <!--sweetalert2相關CDN-->
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    @*圖表*@
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 </head>
 <body>
     <div class="wrap row m-0">
@@ -34,10 +35,13 @@
                 <img src="@pic" alt="">
                 <span class="user-name fs-4">@userName</span>
             </div>
-            <div class="menu row p-0 fs-3 text-center flex-column">
+            <div class="menu row p-0 fs-4 text-center flex-column">
                 <div><a href="@Url.Action("ChartPage","Admin")">圖表</a></div>
+                <div><a href="@Url.Action("ManageUser","Admin")">會員</a></div>
                 <div><a href="@Url.Action("AddCategory","Admin")">分類</a></div>
                 <div><a href="@Url.Action("AddLecture","Admin")">講座</a></div>
+                <div><a href="@Url.Action("AddSystem","Admin")">文章</a></div>
+                <div><a href="@Url.Action("OrderDetails","Admin")">訂單</a></div>
                 <div><a href="@Url.Action("HomePage","Home")">首頁</a></div>
             </div>
             <div class="row logout fs-4">
@@ -62,7 +66,54 @@
                     .then(res => {
                         window.location.href = res.data;
                     });
-            }
+            },
+
         }
     });
+</script>
+<script>
+    function successAlert(title) {
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'bottom-end',
+            showConfirmButton: false,
+            timer: 2000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+            },
+            willClose: (toast) => {
+                location.reload();
+            }
+        })
+
+        Toast.fire({
+            icon: 'success',
+            title: title
+        })
+    }
+
+    function errorAlert(title) {
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'bottom-end',
+            showConfirmButton: false,
+            timer: 2000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+            },
+            //willClose: (toast) => {
+            //    location.reload();
+            //}
+        })
+
+        Toast.fire({
+            icon: 'error',
+            title: title
+        })
+    }
+
 </script>

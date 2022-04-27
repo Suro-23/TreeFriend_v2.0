@@ -1,38 +1,24 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
 using System;
-using TreeFriend.Models.Entity;
-using TreeFriend.Models;
+using System.Collections.Generic;
 using System.Linq;
-using Microsoft.AspNetCore.Authorization;
+using TreeFriend.Models;
+using TreeFriend.Models.Entity;
+using TreeFriend.Models.ViewModel;
 
 namespace TreeFriend.Controllers.Api {
-    [Authorize(Roles = "Admin,Member")]
+    [Authorize(Roles = "Admin")]
     [Route("api/[controller]")]
     [ApiController]
     public class CategoryController : ControllerBase {
         private readonly TreeFriendDbContext _db;
 
-        //注入DbContext
+        //注入DbContext test
         public CategoryController(TreeFriendDbContext db) {
             _db = db;
         }
-
-        //新增使用者
-        //[AllowAnonymous]
-        //[Route("CreateUser")]
-        //[HttpPost]
-        //public string CreateUser([FromBody] User user) {
-        //    var AddUser = user;
-        //    try {
-        //        _db.users.Add(AddUser);
-        //        _db.SaveChanges();
-        //        return "新增成功";
-        //    } catch (System.Exception) {
-        //        return "新增失敗";
-        //    }
-        //}
 
         #region 類別功能
 
@@ -47,27 +33,41 @@ namespace TreeFriend.Controllers.Api {
             return false;
         }
 
-        //新增類別
-        [Authorize(Roles ="Admin")]
+        //新增類別or標籤
         [Route("AddCategory")]
         [HttpPost]
-        public bool AddCategory([FromBody] Category category) {
-            //取的當前使用者ID
-            var UserId = Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(u => u.Type == "UserId").Value);
-            category.UserId = UserId;
-            //寫入資料庫
-            var AddCategory = category;
-            try {
-                _db.categories.Add(AddCategory);
-                _db.SaveChanges();
-                return true;
-            } catch (Exception) {
-                return false;
+        public bool AddCategory([FromBody] CategoryViewModel category) {
+            //取的使用者ID
+            int userId = Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(u => u.Type == "UserId").Value);
+            if (category.id == 1) {
+                _db.categories.Add(new Category {
+                    CategoryName = category.input,
+                    UserId = userId
+                });
+            } else {
+                _db.hashtags.Add(new Hashtag {
+                    HashtagName = category.input,
+                    UserId = userId
+                });
             }
+            _db.SaveChanges();
+            return true;
+        }
+
+        //編輯類別or標籤
+        [Route("EditCategory")]
+        [HttpPut]
+        public bool EditCategory([FromBody] CategoryViewModel category) {
+            if (category.id == 1) {
+                _db.categories.Find(category.cId).CategoryName = category.input;
+            } else {
+                _db.hashtags.Find(category.cId).HashtagName = category.input;
+            }
+            _db.SaveChanges();
+            return true;
         }
 
         //刪除類別
-        [Authorize(Roles = "Admin")]
         [Route("DeleteCategory")]
         [HttpDelete]
         public bool DeleteCategory(int categoryId) {
@@ -82,6 +82,7 @@ namespace TreeFriend.Controllers.Api {
             }
         }
 
+        [AllowAnonymous]
         //列出現有類別
         [Route("GetAllCategory")]
         [HttpGet]
@@ -104,27 +105,7 @@ namespace TreeFriend.Controllers.Api {
             return false;
         }
 
-        //新增標籤
-        [Authorize(Roles = "Admin")]
-        [Route("AddHashTag")]
-        [HttpPost]
-        public bool AddTag([FromBody] Hashtag hashtag) {
-            //取的當前使用者ID
-            var UserId = Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(u => u.Type == "UserId").Value);
-            hashtag.UserId = UserId;
-            //寫入資料庫
-            var AddCategory = hashtag;
-            try {
-                _db.hashtags.Add(hashtag);
-                _db.SaveChanges();
-                return true;
-            } catch (Exception) {
-                return false;
-            }
-        }
-
-        //刪除類別
-        [Authorize(Roles = "Admin")]
+        //刪除標籤
         [Route("DeleteHashtag")]
         [HttpDelete]
         public bool DeleteHashtag(int hashtagId) {
@@ -139,6 +120,7 @@ namespace TreeFriend.Controllers.Api {
             }
         }
 
+        [AllowAnonymous]
         //列出現有類別
         [Route("GetAllHashtag")]
         [HttpGet]

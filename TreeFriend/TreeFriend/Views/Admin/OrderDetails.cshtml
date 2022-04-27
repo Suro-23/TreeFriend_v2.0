@@ -1,0 +1,266 @@
+﻿@{
+    Layout = "_AdminLayout";
+}
+
+<link href="https://fonts.googleapis.com/css?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Two+Tone|Material+Icons+Round|Material+Icons+Sharp" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.sandbox.google.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20,100,0,-25" />
+<link rel="stylesheet" href="~/css/Yie/orderdetails.css">
+
+
+<fieldset id="od" class="col-12">
+    <div class="container" style="height:83%;">
+        <div class="mt-5 ms-5">
+            <label for="search"><span class="material-symbols-outlined">search</span></label>
+            <input type="text" v-model="filter_name" id="search" placeholder="搜尋">
+        </div>
+        <div class="table-responsive mt-3 ms-5 d-flex justify-content-center align-content-center ">
+
+            <table class="table table-hover table-sm align-middle">
+                <thead>
+                    <tr>
+                        @*<th scope="col">編號</th>*@
+                        <th scope="col">訂單編號</th>
+                        <th scope="col">訂購日期</th>
+                        <th scope="col">訂購人</th>
+                        <th scope="col">
+                            <div class="d-flex align-items-center">
+                                訂單總金額
+                                <span class="material-symbols-outlined icon" @@click="sort(),isReverse = !isReverse" v-bind:class="{'inverse': isReverse}">
+                                    arrow_drop_down
+                                </span>
+                                @*<span class="material-symbols-outlined" @@click="reset">
+                                    arrow_drop_up
+                                </span>*@
+                            </div>
+                        </th>
+                        <th scope="col">付款狀態</th>
+                        <th scope="col">訂單狀態</th>
+                        <th scope="col">訂購詳情</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(item,index) in filteredorderList.slice(pageStart, pageStart + countOfPage)" :key="index">
+                        @*<td v-cloak>{{(currPage-1)*countOfPage + index + 1}}</td>*@
+                        <td v-cloak>{{item.orderDetailId}}</td>
+                        <td class="col-2" v-cloak >{{item.createDate}}</td>
+                        <td v-cloak>{{item.userName}}</td>
+                        <td v-cloak>NT${{item.totoalAmount}}</td>
+                        <td v-if="item.paymentStatus">付款成功</td>
+                        <td v-else="item.paymentStatus">未付款</td>
+                        <td v-if="item.orderStatus"><span class="badge bg-success">成立</span></td>
+                        <td v-else="item.orderStatus"><span class="badge bg-danger">不成立</span></td>
+                        <td>
+                            <button type="button" class="btn-secondary btn-sm " data-bs-toggle="modal" data-bs-target="#deleteModel" v-bind:value="item.orderDetailId" v-on:click="gettarget($event)">
+                                Detail
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!--分頁-->
+    <div class="d-flex justify-content-center">
+        <nav aria-label="Page navigation example">
+            <ul class="pagination pagination-sm ">
+                <li class="page-item" v-bind:class="{'disabled': (currPage === 1)}"
+                    @@click.prevent="setPage(currPage-1)">
+                    <a class="page-link" href="#" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+
+                <li class="page-item" v-for="n in totalPage"
+                    v-bind:class="{'active': (currPage === (n))}"
+                    @@click.prevent="setPage(n)"><a :id=`page-${n}` class="page-link" href="#" v-cloak>{{n}}</a></li>
+
+                <li class="page-item" v-bind:class="{'disabled': (currPage === totalPage)}"
+                    @@click.prevent="setPage(currPage+1)">
+                    <a class="page-link" href="#" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+
+            </ul>
+        </nav>
+    </div>
+
+
+    <!--  DetailModal -->
+    <div class="modal fade" id="deleteModel" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog" >
+            <div class="modal-content">
+                <div class="modal-header">
+                    <p class="modal-title" id="deleteLabel">訂單詳情</p>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="container col-12" >
+                            <div class="table-responsive">
+                                <table class="table align-middle">
+                                    <thead>
+                                        <tr>
+                                            <th>編號</th>
+                                            <th>訂購人</th>
+                                            <th>訂單資訊</th>
+                                            <th>金額</th>
+                                            <th>狀態</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td v-cloak>{{order.orderDetailId}}</td>
+                                            <td class="col-2" v-cloak>{{order.userName}} </td>
+                                            <td class="col-3" nowrap="nowrap">
+                                                <div class="d-flex align-items-center" v-cloak>
+                                                    {{order.theme}}
+                                                </div>
+                                                <div class="d-flex align-items-center" v-cloak>
+                                                    {{order.eventDate}} {{order.eventTimeStart}}-{{order.eventTimeEnd}}
+                                                </div>
+                                                <div class="d-flex align-items-center" v-cloak>
+                                                    <span class="material-icons-sharp " style="color:#db5a6b">location_on</span>{{order.venue}}
+                                                </div>
+
+                                            </td>
+                                            <td class="col-1" v-cloak>${{order.price}}×{{order.count}}<br />NT${{order.totoalAmount}}</td>
+                                            <td v-if="order.orderStatus"><span class="badge bg-success">成立</span></td>
+                                            <td v-else="order.orderStatus" class="col-3"><span class="badge bg-danger">不成立</span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</fieldset>
+
+
+<script>
+    let odapp = new Vue({
+        el: '#od',
+        data: {
+            searchList:[],
+            orderList: [],
+            order: {},
+            countOfPage:8,
+            currPage: 1,
+            target:null,
+            filter_name: '',
+            isReverse:true,
+
+        },
+        mounted: function () {
+            let self = this;
+            axios.get("/OrderDetails/GetAllOrders").then(function (res) {
+                self.orderList = res.data;
+                console.log(res.data);
+            })
+        },
+        computed: {
+
+            filteredorderList: function () {
+
+                let filter_name = this.filter_name.toLowerCase();
+                let payment;
+                if (filter_name === "成立" ) {
+                    filter_name = true;
+                }
+                if (filter_name === "不成立") {
+                    filter_name =false;
+                }
+                if (filter_name === "付款成功") {
+                    payment = true;
+                }
+                if (filter_name === "未付款") {
+                    payment = false;
+                }
+               
+
+                if (this.filter_name.trim() !== '')
+                {
+                    this.searchList = this.orderList.filter(function (od) {
+                        return od.orderDetailId === Number(filter_name) || od.userName.toLowerCase().includes(filter_name) 
+                            || od.orderStatus === filter_name || od.paymentStatus === payment || od.createDate.toLowerCase().includes(filter_name)
+
+                   })
+
+                    return this.searchList;
+                }
+                else {
+                    return this.orderList;
+                    }
+
+                 //return (this.filter_name.trim() !== '') ?
+                //    this.searchList = this.orderList.filter(function (d) { return d.userName.toLowerCase().indexOf(filter_name) > -1; }) :
+                //    this.orderList;
+                
+            },
+            pageStart: function () {
+                return (this.currPage - 1) * this.countOfPage;
+            },
+            totalPage: function () {
+                return Math.ceil((this.filteredorderList.length / this.countOfPage))
+            },
+
+        },
+        methods: {
+            setPage: function (idx) {
+                if (idx <= 0 || idx > this.totalPage) {
+                    return;
+                }
+                this.currPage = idx;
+            },
+            gettarget: function (event) {
+                let self = this;
+                let orderId = event.target.value;
+                console.log(orderId);
+                self.target = self.orderList.find((sourceItem) => { return sourceItem.orderDetailId == orderId});
+                console.log(self.target);
+                self.order = self.target;
+                console.log(orderId);
+            },
+            sort: function () {
+
+                let self = this;
+                if (self.isReverse) {
+
+                    axios.get("/OrderDetails/GetOrderByDescendingOrders").then(function (res) {
+                        self.orderList = res.data;
+                        document.querySelector("#page-1").click();
+                        console.log(res.data);
+                    })
+                } else {
+                    axios.get("/OrderDetails/GetAllOrders").then(function (res) {
+                        self.orderList = res.data;
+                        document.querySelector("#page-1").click();
+                        console.log(res.data);
+                    })
+                }
+            },
+           
+        },
+        watch: {
+            searchList: function () {
+                if (this.searchList.length === 0 || document.querySelector("#page-1") === null) {
+                    console.log(this.searchList);
+                } else {
+                    document.querySelector("#page-1").click();
+                    console.log(this.searchList);
+                }
+            }
+
+
+
+        }
+    });
+</script>
+
+
+

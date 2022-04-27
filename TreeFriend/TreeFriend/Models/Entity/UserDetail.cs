@@ -12,14 +12,14 @@ namespace TreeFriend.Models.Entity {
         
         public bool Sex { get; set; }
 
-        public DateTime Birthday { get; set; } = DateTime.Now;
+        public DateTime Birthday { get; set; } = DateTime.UtcNow.AddHours(8);
 
         public string SelfIntrodution { get; set; }
 
-        public string HeadshotPath { get; set; } = "./icon/headshot.jpg";
+        public string HeadshotPath { get; set; } = "/icon/headshot.jpg";
 
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        public DateTime UpdateTime { get; set; }
+        //[DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        public DateTime UpdateTime { get; set; } = DateTime.UtcNow.AddHours(8);
 
         public User User { get; set; }
     }

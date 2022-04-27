@@ -1,0 +1,219 @@
+﻿
+@{
+    ViewData["Title"] = "系統文章完整頁面";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+
+    <style>
+        .containers {
+            width: 100%;
+            margin-top: 40px;
+            margin-bottom: 40px;
+        }
+
+        .carousel-inner {
+            width: 70%;
+            margin: 0 auto;
+        }
+
+
+        .container-single-box {
+            display: flex;
+            width: 90%;
+            margin: 0 auto;
+        }
+
+        .container-article-box {
+            width: 74.5%;
+            padding-right: 50px;
+        }
+
+        .post-title {
+            color: #313131;
+            font-size: 40px;
+            text-align: center;
+            margin-bottom: 25px;
+            letter-spacing: -1px;
+            font-weight: 700;
+        }
+
+        .right-message {
+            width: 25%;
+        }
+
+        .message-title {
+            border: 1px solid #313131;
+            background: #fff;
+            position: relative;
+            display: block;
+            text-transform: uppercase;
+            padding: 8px 12px 7px;
+            z-index: 3;
+            font-size: 14px;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .message-title-box{
+            width:80%
+        }
+
+        .message-title-box li {
+            margin-bottom: 11px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #dedede;
+            font-size: 14px;
+            color: black;
+            list-style-type: none;
+        }
+
+        .message-title-box a {
+            text-decoration: none;
+            color: black;
+        }
+
+            .message-title-box a:hover {
+                color: rgb(75, 46, 8);
+                text-decoration: underline;
+            }
+
+        .message-title-box ul {
+            padding-left: 0;
+        }
+
+        .description {
+            white-space: pre-line;
+            font-family: 'Noto Sans TC', sans-serif;
+        }
+    </style>
+</head>
+
+<body>
+    <section id="GetAll">
+        <div>
+            <div class="containers">
+                <div class="carousel1">
+                    <div id="carouselExampleDark" class="carousel carousel-dark slide" data-bs-ride="carousel">
+                        <div class="carousel-indicators">
+                            <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                            <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                            <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                        </div>
+                        <div class="carousel-inner">
+                            <template v-for="(item,num1) in PicMessage">
+                                <div v-if="num1 == 0" class="carousel-item active">
+                                    <img :src="item.picPath" class="d-block w-100" alt="" style="height:800px;">
+                                </div>
+
+                                <div v-else class="carousel-item">
+                                    <img :src="item.picPath" class="d-block w-100" alt="" style="height:800px;">
+                                </div>
+                            </template>
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 大框架 -->
+        <div class="container-single-box">
+            <!-- 文章內容框架 -->
+            <div class="container-article-box">
+                <div>
+                    <div class="container-header">
+                        <h1 class="post-title">{{MessageList.title}}</h1>
+                    </div>
+
+                    <!-- 照片的事件 -->
+                    <div class="contaniner-img">
+                        <img v-bind:src="MessageList.picPath" alt="" style="width: 85%;">
+                    </div>
+
+                    <div class="description">
+                        @*文章內容*@
+                        {{MessageList.description}}
+
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- 右邊共版 -->
+            <div class="right-message">
+                <div class="col">
+
+                    <div class="message-new-article">
+                        <aside class="message-title-box">
+                            <h4 class="message-title">
+                                最新文章
+                            </h4>
+                            <ul v-for="item in Content">
+                                <!-- 最新文章 超連結帶id -->
+                                <li> <a :href="'/Home/SystemDetail/?id=' +item.articleID">{{item.title}}</a> </li>
+                            </ul>
+                        </aside>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+</html>
+
+
+
+<script>
+
+
+    let getUrlString = location.search; //URL 解析
+    console.log(getUrlString);
+    let articleId = getUrlString.replace("?id=", ""); // 取代?id=
+
+    let GetAllVUE = new Vue({
+        el: '#GetAll',
+        data: {
+            MessageList: "",
+            Content: [],
+            PicMessage: [],
+        },
+        mounted:
+            function () {
+                var self = this;
+                axios.get("/SystemMessage/SystemDetailContent/?articleId=" + articleId).then(function (result) {
+                    self.MessageList = result.data;
+                    console.log(self.MessageList);
+
+
+                    axios.get("/SystemMessage/GetAllSystemMessage").then(function (result) {
+                        self.Content = result.data;
+                        console.log(result);
+                    })
+
+                    axios.get("/SystemMessage/GetSystemMessageCarouselPic").then(function (result) {
+                        self.PicMessage = result.data;
+                        console.log(result);
+                    })
+                })
+            },
+    })
+</script>
+
+

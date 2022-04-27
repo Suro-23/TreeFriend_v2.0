@@ -10,19 +10,24 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.26.1/axios.min.js" integrity="sha512-bPh3uwgU5qEMipS/VOmRqynnMXGGSRv+72H/N260MQeXZIK4PG48401Bsby9Nq5P5fz7hy5UGNmC/W1Z51h2GQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <link href="~/css/Layout/Nav.css" rel="stylesheet" />
-    <link rel="stylesheet" href="~/css/Reset.css" />
-    @*<link rel="stylesheet" href="~/css/HomePage.css" />*@
-    @*<link rel="stylesheet" href="~/css/site.css" />*@
-    
+    <!--sweetalert2相關CDN-->
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    @*<script src="sweetalert2.all.min.js"></script>
+    <script src="sweetalert2.min.js"></script>
+    <link rel="stylesheet" href="sweetalert2.min.css">*@
+
     <!--欣宜引用時間相關CDN-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.js"></script>
     <!---->
 </head>
 <body>
-    <nav id="header-nav" class="navbar navbar-expand-lg navbar-light bg-brown">
+    <nav id="header-nav" class="navbar navbar-expand-lg navbar-light header-bg">
         <div class="container-fluid">
-            <a href="@Url.Action("HomePage","Home")">
-                <img src="~/icon/Logo.png" alt="" class="logo">
+            <a href="@Url.Action("HomePage","Home")" class="aline">
+                <div class="d-flex align-items-center">
+                    <img src="/img/logo1.png" alt="" class="logo">
+                    <span class="treefriend">Tree<span class="friend">Friend</span></span>
+                </div>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
                     aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
@@ -30,30 +35,37 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNavDropdown">
                 <ul class="navbar-nav d-flex align-items-center">
-                    @if (User.IsInRole("Admin")) {
+                    @if (User.IsInRole("Admin"))
+                    {
                         <li class="nav-item">
                             <a class="nav-link" href="@Url.Action("ChartPage","Admin")">管理員</a>
                         </li>
                     }
                     <li class="nav-item">
+                        <a class="nav-link" href="@Url.Action("AllSkillPostPage","Home")">技能貼文</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="@Url.Action("LectureList","Home")">講座</a>
                     </li>
                     @{
-                        if (Context.User.Identity.IsAuthenticated) {
+                        if (Context.User.Identity.IsAuthenticated)
+                        {
                             var imgPath = Context.User.Claims.FirstOrDefault(c => c.Type == "Headshot").Value;
 
                             <li class="nav-item dropdown d-flex align-items-center">
                                 <a class="nav-link dropdown-toggle head-area" href="#" id="navbarDropdownMenuLink" role="button"
-                               data-bs-toggle="dropdown" aria-expanded="false">
+                                   data-bs-toggle="dropdown" aria-expanded="false">
                                     <img class="headshot" src="@imgPath" alt="">
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
                                     <li><a class="dropdown-item" href="@Url.Action("MemberInfo","Home")">基本資料</a></li>
-                                    <li><a class="dropdown-item" href="@Url.Action("AddSkillPostPage","Home")">技能發文</a></li>
+                                    <li><a class="dropdown-item" href="@Url.Action("AddSkillPostPage","Home")">交換技能</a></li>
                                     <li><a class="dropdown-item" v-on:click="logout">登出</a></li>
                                 </ul>
                             </li>
-                        } else {
+                        }
+                        else
+                        {
                             <li class="nav-item">
                                 <a class="nav-link" href="@Url.Action("Create","Register")">登入</a>
                             </li>
@@ -83,4 +95,60 @@
             }
         }
     });
+</script>
+<script>
+    function SWerror(title, text, close) {
+        Swal.fire({
+            title: title,
+            text: text,
+            icon: 'error',
+            confirmButtonText: close
+        });
+    }
+
+    function SWseccess(title, text, ok) {
+        Swal.fire({
+            title: title,
+            text: text,
+            icon: 'success',
+            confirmButtonText: ok
+        });
+    }
+
+    function SWwarning(title, text, ok) {
+        Swal.fire({
+            title: title,
+            text: text,
+            icon: 'warning',
+            confirmButtonText: ok
+        });
+    }
+
+    function SWinfo(title, text, ok) {
+        Swal.fire({
+            title: title,
+            text: text,
+            icon: 'info',
+            confirmButtonText: ok
+        });
+    }
+
+    function SWmini(icon,title) {
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 1000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+            }
+        });
+
+        Toast.fire({
+            icon: icon,
+            title: title
+        });
+    }
 </script>

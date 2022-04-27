@@ -26,7 +26,7 @@ namespace TreeFriend.Models.Entity {
         [Required]
         public string Content { get; set; }
 
-        public DateTime CreateDate { get; set; }
+        public DateTime CreateDate { get; set; }= DateTime.UtcNow.AddHours(8);
 
         //是否為啟用狀態，flase為刪除貼文(軟刪除)
         [Required]

@@ -4,203 +4,204 @@
 <link rel="stylesheet" href="~/css/Admin/addCategory.css">
 
 
-<div class="item" id="category">
-    <div class="item-head">
-        <label for="category-name">分類 :</label>
-        <input type="text" id="input-category" v-model="category.categoryName" v-on:blur="checkName">
-        <button id="btn-category" v-on:click="addCategory">新增</button>
-        <label id="error-msg" v-if="isExists">類別已存在</label>
+<div id="resultDiv" class="container-fluid">
+    <div class="row justify-content-around h-100">
+        <div class="col-5 d-flex flex-column justify-content-between">
+            <div class="input-div d-flex flex-column justify-content-center">
+                <div class="d-flex justify-content-center m-0">
+                    <select v-model="addItem.id" class="form-select w-auto border-0 item" aria-label="Default select example">
+                        <option value="1">分類</option>
+                        <option value="2">標籤</option>
+                    </select>
+                    <input v-model="addItem.input" class="w-50 ps-2 pe-2 ms-4 item" :class="{inputErr: isExists}" type="text">
+                    <button @@click="addCategory" class="w-auto ms-4 btn btn-secondary" :disabled="isExists">新增</button>
+                </div>
+            </div>
+
+            <div class="result-category item">
+                <div class="row justify-content-around m-0 list-header">
+                    <div class="col-1">ID</div>
+                    <div class="col-3">分類名稱</div>
+                    <div class="col-3">管理員</div>
+                    <div class="col-3"></div>
+                </div>
+                <div class="m-0 list-wrap">
+                    <div v-for="item in category.resultList" class="row justify-content-around align-items-center m-0 list-content">
+                        <div class="col-1">{{item.categoryId}}</div>
+                        <div class="col-3">{{item.categoryName}}</div>
+                        <div class="col-2">{{item.userId}}</div>
+                        <div class="col-3 d-flex p-0 justify-content-center">
+                            <button @@click="setCategoryId(1,item.categoryId)" class="btn pt-0 pb-0"><img src="~/icon/pen.png" alt=""></button>
+                            <button @@click="deleteCategory(item.categoryId)" class="btn pt-0 pb-0"><img src="~/icon/delete.png" alt=""></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="result-hashtag item col-5 p-0">
+            <div class="row justify-content-around m-0 list-header">
+                <div class="col-1">ID</div>
+                <div class="col-3">標籤名稱</div>
+                <div class="col-2">管理員</div>
+                <div class="col-3"></div>
+            </div>
+            <div class="m-0 list-wrap">
+                <div v-for="item in hashtag.resultList" class="row justify-content-around align-items-center m-0 list-content">
+                    <div class="col-1">{{item.hashtagId}}</div>
+                    <div class="col-3">{{item.hashtagName}}</div>
+                    <div class="col-2">{{item.userId}}</div>
+                    <div class="col-3 d-flex p-0 justify-content-center">
+                        <button @@click="setCategoryId(2,item.hashtagId)" class="btn pt-0 pb-0" class="btn pt-0 pb-0"><img src="~/icon/pen.png" alt=""></button>
+                        <button @@click="deleteHashtag(item.hashtagId)" class="btn pt-0 pb-0"><img src="~/icon/delete.png" alt=""></button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    <table>
-        <thead>
-            <tr>
-                <th class="tb-id">ID</th>
-                <th class="tb-name">分類名稱</th>
-                <th class="tb-user">管理員</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr v-for="item in resultList">
-                <td class="tb-id">{{item.categoryId}}</td>
-                <td class="tb-name">{{item.categoryName}}</td>
-                <td class="tb-user">{{item.userId}}</td>
-                <td class="tb-btn">
-                    <button>edit</button>
-                    <button v-on:click="deleteCategory" v-bind:value="item.categoryId">x</button>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</div>
-<div class="item" id="hashtag">
-    <div class="item-head">
-        <label for="input-hashtag">標籤 :</label>
-        <input type="text" id="input-hashtag" v-model="hashtag.hashtagName" v-on:blur="checkName">
-        <button id="btn-hashtag" v-on:click="addHashtag">新增</button>
-        <label id="error-msg" v-if="isExists">標籤已存在</label>
+    @*修改視窗*@
+    <div class="modal fade" id="editItem" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title" id="exampleModalLabel">修改</h3>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3 d-flex">
+                        <label for="recipient-name" class="col-form-label col-2 fs-4">名稱:</label>
+                        <input v-model="editItem.input" type="text" class="form-control">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button @@click="editCategory" type="button" class="btn btn-primary">儲存</button>
+                </div>
+            </div>
+        </div>
     </div>
-    <table>
-        <thead>
-            <tr>
-                <th class="tb-id">ID</th>
-                <th class="tb-name">標籤名稱</th>
-                <th class="tb-user">管理員</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr v-for="item in resultList">
-                <td class="tb-id">{{item.hashtagId}}</td>
-                <td class="tb-name">{{item.hashtagName}}</td>
-                <td class="tb-user">{{item.userId}}</td>
-                <td class="tb-btn">
-                    <button>edit</button>
-                    <button v-on:click="deleteHashtag" v-bind:value="item.hashtagId">x</button>
-                </td>
-            </tr>
-        </tbody>
-    </table>
 </div>
+
+
 
 <script>
-    let getAll= function (e,name) {
-                const self = e;
-                axios.get(`../Api/Category/GetAll${name}`)
-                    .then(res => {
-                        self.resultList = res.data;
-                        console.log(self.resultList);
-                    })
-            }
+    class edit{
+        id= "";
+        cId= "";
+        input= "";
+    }
+    let editItem;
 
-
-    //分類區塊
-    let appCategory = new Vue({
-        el: "#category",
-        data: {
-            resultList:[],
+    let resultDiv = new Vue({
+        el:"#resultDiv",
+        data:{
+            addItem:{
+                id:"1",
+                input:""
+            },
+            editItem: new edit(),
+            //editItem:{
+            //    id: "",
+            //    cId: "",
+            //    input:""
+            //},
             category:{
-                categoryName: "",
-                //userId: "4",
+                resultList:[],
+                name:""
             },
-            isExists: false
-        },
-        mounted:function(){
-            getAll(this,"category");
-        },
-        methods:{
-            //驗證類別是否存在
-            checkName: function(){
-                const btn = document.querySelector("#btn-category")
-                const self = this;
-                axios.get(`../Api/Category/CheckCategory/?categoryName=${self.category.categoryName}`)
-                .then(res =>{
-                    console.log(res);
-                    if(res.data === true){
-                        //如果存在的話把按鈕禁用
-                        self.isExists = true;
-                        btn.disabled = true;
-                    }else {
-                        self.isExists = false;
-                        btn.disabled = false;
-                    }
-                })
-                .catch(err => console.log(err));
-            },
-            addCategory: function(){
-                const self = this;
-                axios.post("../Api/Category/AddCategory",self.category)
-                .then(res =>{
-                    if(res.data === true){
-                        alert(`類別 : ${self.category.categoryName}，新增成功`)
-                        getAll(self,"category");
-                        self.category.categoryName =""
-                    }else {
-                        alert("新增失敗");
-                    }
-                })
-                .catch(err => console.log(err));
-            },
-            deleteCategory: function (event) {
-                const self = this;
-                const categoryId = event.target.value;
-                console.log(categoryId);
-                axios.delete(`../Api/Category/DeleteCategory/?categoryId=${categoryId}`)
-                    .then(res => {
-                        if (res.data === true) {
-                            alert("類別刪除成功!");
-                            getAll(self,"category");
-                        }else {
-                            alert("類別刪除失敗!");
-                        }
-                    }
-                    ).catch(err => console.log(err));
-            }
-        }
-    });
-
-
-    //標籤區塊
-    let appHashtag = new Vue({
-        el: "#hashtag",
-        data: {
-            resultList:[],
             hashtag:{
-                hashtagName: "",
-                //userId: "4",
+                resultList:[],
+                name:""
             },
             isExists: false
         },
         mounted: function(){
-            getAll(this,"hashTag");
+            this.getCategoryList();
+            this.getHashtagList();
+            editItem = new bootstrap.Modal(document.getElementById('editItem'), {
+              keyboard: false
+            });
+        },
+        watch:{
+            addItem: {
+                handler(newValue,oldValue){
+                        const self = this;
+                        const item = this.addItem;
+                        if(item.id === 1){
+                            axios.get(`../Api/Category/CheckCategory/?categoryName=${item.input}`)
+                            .then(res => {
+                                if(res.data === true){
+                                    self.isExists = true;
+                                }else{
+                                    self.isExists = false;
+                                }
+                            })
+                        }else{
+                            axios.get(`../Api/Category/CheckHashtag/?hashtagName=${item.input}`)
+                            .then(res => {
+                                if(res.data === true){
+                                    self.isExists = true;
+                                }else{
+                                    self.isExists = false;
+                                }
+                            })
+                        }
+                },deep: true}
         },
         methods:{
-            //驗證類別是否存在
-            checkName: function(){
-                const btn = document.querySelector("#btn-hashtag")
+            getCategoryList: function(){
                 const self = this;
-                axios.get(`../Api/Category/CheckHashTag/?hashtagName=${self.hashtag.hashtagName}`)
-                .then(res =>{
-                    console.log(res);
-                    if(res.data === true){
-                        //如果存在的話把按鈕禁用
-                        self.isExists = true;
-                        btn.disabled = true;
-                    }else {
-                        self.isExists = false;
-                        btn.disabled = false;
-                    }
-                })
-                .catch(err => console.log(err));
+                axios.get("../Api/Category/GetAllCategory")
+                .then(res => {
+                    self.category.resultList = res.data;
+                    console.log(self.category.resultList);
+                });
             },
-            addHashtag: function(){
+            getHashtagList: function(){
                 const self = this;
-                axios.post("../Api/Category/AddHashtag",self.hashtag)
-                .then(res =>{
-                    if(res.data === true){
-                        alert(`類別 : ${self.hashtag.hashtagName}，新增成功`)
-                        getAll(self,"hashtag");
-                        self.hashtag.hashtagName ="";
-                    }else {
-                        alert("新增失敗");
-                    }
-                })
-                .catch(err => console.log(err));
+                axios.get("../Api/Category/GetAllHashtag")
+                .then(res => {
+                    self.hashtag.resultList = res.data;
+                    console.log(self.hashtag.resultList);
+                });
             },
-            deleteHashtag: function (event) {
+            addCategory: function(){
                 const self = this;
-                const hashtagId = event.target.value;
-                console.log(hashtagId);
-                axios.delete(`../Api/Category/DeleteHashtag/?hashtagId=${hashtagId}`)
-                    .then(res => {
-                        if (res.data === true) {
-                            alert("類別刪除成功!");
-                            getAll(self,"hashTag");
-                        }else {
-                            alert("類別刪除失敗!");
-                        }
+                axios.post("../Api/Category/AddCategory",self.addItem)
+                .then(res => {
+                    if(res.data === true){
+                        self.addItem.input="";
+                        if(self.addItem.id === "1"){self.getCategoryList();}
+                        else {self.getHashtagList();}
                     }
-                    ).catch(err => console.log(err));
+                });
+            },
+            setCategoryId: function(id,cId){
+                this.editItem.id = id;
+                this.editItem.cId = cId;
+                editItem.show();
+            },
+            editCategory: function(){
+                const self = this;
+                axios.put("../Api/Category/EditCategory",self.editItem)
+                .then(res => {
+                    if(self.editItem.id === 1) {self.getCategoryList();}
+                    else{self.getHashtagList()}
+                    self.editItem = new edit();
+                });
+                editItem.hide();
+            },
+            deleteCategory: function(id){
+                const self = this;
+                axios.delete(`../Api/Category/DeleteCategory/?categoryId=${id}`)
+                .then(res => {
+                    res.data? self.getCategoryList() : alert("刪除失敗");
+                });
+            },
+            deleteHashtag: function(id){
+                const self = this;
+                axios.delete(`../Api/Category/DeleteHashtag/?hashtagId=${id}`)
+                .then(res => {
+                    res.data? self.getHashtagList() : alert("刪除失敗");
+                });
             }
         }
     });

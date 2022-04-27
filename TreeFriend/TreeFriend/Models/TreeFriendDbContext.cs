@@ -17,23 +17,16 @@ namespace TreeFriend.Models {
         
         public DbSet<SkillPostMessage> skillPostMessages{ get; set; }
         public DbSet<Lecture> Lectures { get; set; }
+        public DbSet<SystemPost> SystemPost { get; set; }
 
         public DbSet<OrderDetail> OrderDetails { get; set; }
 
+        public DbSet<PersonalPost> personalPosts { get; set; }
+        public DbSet<PersonalPostMessage> PersonalPostMessages { get; set; }
+        public DbSet<PersonalPostImage> PersonalPostImages { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
-            //指定日期使用SQL getdate() 自動取得當前時間
-            modelBuilder.Entity<User>()
-                .Property(u => u.CreateDate)
-                .HasDefaultValueSql("getdate()");
-
-            modelBuilder.Entity<UserDetail>()
-                .Property(u => u.UpdateTime)
-                .HasDefaultValueSql("getdate()");
-
-            modelBuilder.Entity<SkillPost>()
-                .Property(p => p.CreateDate)
-                .HasDefaultValueSql("getdate()");
+            
 
             modelBuilder.Entity<HashtagDetail>()
                 .HasKey(d => new { d.HashtagId, d.SkillPostId });
@@ -62,13 +55,7 @@ namespace TreeFriend.Models {
             });
             modelBuilder.Entity<Lecture>().HasOne(x => x.User).WithMany(x => x.Lectures).HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.Cascade);
 
-            //modelBuilder.Entity<PersonalPost>()
-            //    .Property(p => p.CreateDate)
-            //    .HasDefaultValueSql("getdate()");
-
-            //modelBuilder.Entity <PersonalPostMessage>()
-            //    .Property(p => p.CreateDate)
-            //    .HasDefaultValueSql("getdate()");
+           
         }
     }
 }

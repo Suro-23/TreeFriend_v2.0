@@ -14,6 +14,8 @@ namespace TreeFriend.Models.Entity {
         [Required]
         public string Password { get; set; }
 
+        public byte[] Salt { get; set; }
+
         /// <summary>
         /// 是否為啟用狀態? true = 啟用，false = 停用
         /// </summary>
@@ -29,7 +31,7 @@ namespace TreeFriend.Models.Entity {
         //設定GetDate()，自動取的時間
         //[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         //[Required]
-        public DateTime CreateDate { get; set; }
+        public DateTime CreateDate { get; set; } = DateTime.UtcNow.AddHours(8);
 
         [Required]
         public bool Status { get; set; } = true;
@@ -44,5 +46,7 @@ namespace TreeFriend.Models.Entity {
         public virtual ICollection<SkillPost> SkillPosts { get; set; }
         public virtual ICollection<Lecture> Lectures { get; set; }
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }
+
+        public virtual ICollection<SystemPost> SystemPosts { get; set; }
     }
 }

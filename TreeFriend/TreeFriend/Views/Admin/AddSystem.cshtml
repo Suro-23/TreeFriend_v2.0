@@ -1,0 +1,465 @@
+﻿
+@{
+    ViewData["Title"] = "後台發文";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/countdown/2.6.0/countdown.min.js" integrity="sha512-FkM4ZGExuYz4rILLbNzw8f3HxTN9EKdXrQYcYfdluxJBjRLthYPxxZixV/787qjN3JLs2607yN5XknR/cQMU8w==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="~/js/moment-countdown.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+
+<style>
+    .form-row {
+        margin: 15px 5px;
+    }
+
+    .addsystem {
+        margin: 20px 30px 15px 10px;
+    }
+
+    .addsystemlist {
+        margin: 60px 0 0 0;
+    }
+
+    .page-item.active .page-link {
+        color: aliceblue;
+        background-color: cadetblue;
+        border-color: aliceblue;
+    }
+
+    .wrap a {
+        color: black;
+    }
+
+    .page-link {
+        border-color: aliceblue;
+    }
+
+    textarea {
+        height: 250px;
+    }
+</style>
+
+
+<!-- 新增文章 -->
+<div id="form1" class="addsystem">
+    <!-- Button trigger modal -->
+    <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#addModel">
+        Add
+    </button>
+
+    <!-- Modal -->
+    <div class="modal fade" id="addModel" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="addModelLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addLabel">Add</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form  style="padding: 1rem;" v-on:submit.prevent="send">
+                    <div class="form-group row" style="margin-top: 1rem;">
+                        <label for="title" class="col-sm-4 col-form-label">主標題</label>
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="title" required v-model="hello.title">
+                        </div>
+                    </div>
+                    <div class="form-group row" style="margin-top: 1rem;">
+                        <label for="description" class="col-sm-4 col-form-label">內容</label>
+                        <div class="col-sm-8">
+                            <textarea class="form-control" id="description" required v-model="hello.description"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-group row" style="margin-top: 1rem; margin-bottom: 1rem;">
+                        <label for="pic" class="col-sm-4 col-form-label">上傳照片</label>
+                        <div class="col-sm-8">
+                            <input type="file" class="form-control" id="picPath" required v-on:change="up($event)"> @*寫一個up的方法  *@
+                            <img v-if="hello.Preview" :src="hello.Preview" style="max-height: 170px; margin-top: 10px; ">       @*這裡不能用v-model去綁 要寫一個v-on:change事件*@
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary btn-sm content">新增</button>@*寫一個send的方法 *@
+                    </div>
+                </form>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+@*SystemList*@
+<fieldset id="list" class="addsystemlist">
+    <div class="table-responsive">
+        <table class="table table-hover table-sm align-middle ">
+            <thead>
+                <tr>
+                    <th scope="col">編號</th>
+                    <th scope="col" v-show="isShow">系統編號</th>
+                    <th scope="col">新增日期</th>
+                    <th scope="col">文章標題</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="(item,index) in systemlist.slice(pageStart, pageStart + countOfPage)" :key="index">
+                    <td>{{(currPage-1)*countOfPage + index + 1}}</td>
+                    <td v-show="isShow">{{item.articleID}}</td>
+                    <td>{{item.createDate}}</td>
+                    <td style="text-overflow: ellipsis;">{{item.title}}</td>
+                    <td>
+                        <button type="button" class="btn btn-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#staticBackdrop" v-bind:value="item.articleID" v-on:click="edit($event)">
+                            修改
+                        </button>
+                        <button type="submit" class="btn btn-danger btn-sm " data-bs-toggle="modal" data-bs-target="#deleteModel" v-bind:value="item.articleID" v-on:click="gettarget($event)">
+                            刪除
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+
+    <!--分頁-->
+    <nav aria-label="Page navigation example">
+        <ul class="pagination pagination-sm " style="">
+            <li class="page-item" v-bind:class="{'disabled': (currPage === 1)}"
+                @@click.prevent="setPage(currPage-1)">
+                <a class="page-link" href="#" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+
+            <li class="page-item" v-for="n in totalPage"
+                v-bind:class="{'active': (currPage === (n))}"
+                @@click.prevent="setPage(n)"><a class="page-link" href="#">{{n}}</a></li>
+
+            <li class="page-item" v-bind:class="{'disabled': (currPage === totalPage)}"
+                @@click.prevent="setPage(currPage+1)">
+                <a class="page-link" href="#" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+
+        </ul>
+    </nav>
+
+
+
+
+    <!-- editModal -->
+    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel">修改資料</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form v-on:submit.prevent="editsend">
+                    <div class="modal-body">
+                        <div class="form-row">
+                            <input disabled type="text" required v-model="article.articleID"> @* 修改 id寫死 *@
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-title" style="margin-right: 10px;">文章標題:</div>
+                            <input type="text" required v-model="article.title" style="width: 80%;">
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-title" style="margin-right: 10px;">文章內容:</div>
+                            <textarea required v-model="article.description" style="width: 80%;"></textarea>
+
+                            <div class="form-row">
+                                <div class="form-title" style="margin-right: 10px;">文章圖片:</div>
+                                <input type="file" v-on:change="up($event)" /> @* up事件 *@
+                                <img v-if="article.preview" :src="article.preview" style="max-height:200px">  @*新照片顯示*@
+                                <img :src="article.picPath" style="max-height:235px" v-show="isPhotoShow" />  @*抓取原先圖片*@
+
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary btn-sm">修改</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- deleteModal -->
+    <div class="modal fade" id="deleteModel" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteLabel">刪除</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    確定刪除該筆資料?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-danger btn-sm" v-on:click="deletesend">Delete</button> @* deletesend事件 *@
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+</fieldset>
+
+
+<script>
+    //新增的Vue
+    let addapp = new Vue({
+        el: '#form1',
+        data: {
+            hello: {
+                title: "",
+                description: "",
+                picPath: null,
+                Preview: null,
+            }
+        },
+        methods: {
+            up: function (event) {
+                console.log(event);
+
+                if (event.target.files) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        this.hello.Preview = e.target.result;
+                        console.log(e);
+                    }
+                    reader.readAsDataURL(event.target.files[0]);
+                }
+                this.hello.picPath = event.target.files[0]
+                SWUploadFile("上傳成功!","","close");
+            },
+            send: function () {
+                var bodyFormData = new FormData();
+                bodyFormData.append("title", this.hello.title);
+                bodyFormData.append("description", this.hello.description);
+                bodyFormData.append("picPath", this.hello.picPath);
+                @* 按下新增 送出時傳的append物件 *@
+
+                axios({
+                    method: "post",
+                    url: "/AddSystemMessage/CreateMessage",
+                    data: bodyFormData,
+                    headers: { "Content-Type": "multipart/form-data" },  @* 傳照片的 *@
+                })
+                    .then(function (response) {
+                        if (response.data == true) {
+                            SWseccess("成功","分享更多文章吧!","close");
+                            window.location.reload(); //新增完視窗跳回當前頁面
+                        } else {
+                            SWerror("失敗","在檢查一下","close");
+                        }
+
+                    })
+                    .catch(function (response) {
+                        console.log(response);
+                    });
+            }
+        }
+    });
+
+    //修改 刪除的Vue
+    let app = new Vue({
+        el: '#list',
+        data: {
+            systemlist: [],
+            article: {
+                articleID: "",
+                title: "",
+                description: "",
+                picPath: "",
+                Preview: null,
+            },
+            target: null,
+            date: new Date().toLocaleDateString('en-CA'),
+            isShow: false,
+            countOfPage: 5,
+            currPage: 1,
+            isPhotoShow: true
+
+        },
+        mounted: function () {
+            let self = this;
+            axios.get("/AddSystemMessage/GetAllMessage").then(function (res) {
+                self.systemlist = res.data;
+                console.log(res);
+            })
+        },
+        computed: {
+
+            pageStart: function () {
+                return (this.currPage - 1) * this.countOfPage;
+            },
+
+            totalPage: function () {
+                return Math.ceil((this.systemlist.length / this.countOfPage))
+            }
+        },
+
+        methods: {
+
+            setPage: function (idx) {
+                if (idx <= 0 || idx > this.totalPage) {
+                    return;
+                }
+                this.currPage = idx;
+            },
+
+
+            deletesend: function (event) {
+
+                let self = this;
+
+                axios.delete(`/AddSystemMessage/DeleteMessage/?articleID=${self.target.articleID}`)
+
+                Swal.fire({
+                    title: '確定要刪除嗎?',
+                    text: "刪除就無法復原囉!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'delete'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        Swal.fire(
+                            'Deleted!',
+                            'Your file has been deleted.',
+                            'success'
+                        )
+                        window.location.reload();
+                    }
+                })
+
+            },
+
+            up: function (event) {
+                console.log(event);
+                app.article.preview = null;
+                if (event.target.files) {
+                    let reader = new FileReader();
+                    reader.onload = function (e) {
+                        console.log("callback");
+                        console.log(app.article);
+                        app.article.preview = e.target.result;
+                        console.log(e.target.result);
+                        app.isPhotoShow = false;
+                    }
+                    reader.readAsDataURL(event.target.files[0]);
+
+                }
+
+                this.article.picPath = event.target.files[0]
+            },
+
+            gettarget: function (event) {
+                let self = this;
+                let articleID = event.target.value;
+                self.target = self.systemlist.find((sourceItem) => { return +sourceItem.articleID === +articleID });
+                self.article = target; //等於選取的文章
+                console.log(target);
+                console.log(articleID);
+            },
+
+            edit: function (event) {
+                let self = this;
+                let articleID = event.target.value;
+                let target = self.systemlist.find((sourceItem) => { return +sourceItem.articleID === +articleID });
+                let copy = Object.assign({}, target);
+                self.article = copy;
+                console.log(articleID);
+            },
+
+            editsend: function () {
+                var bodyFormData = new FormData();
+                bodyFormData.append("articleID", this.article.articleID);
+                bodyFormData.append("title", this.article.title);
+                bodyFormData.append("description", this.article.description);
+                bodyFormData.append("picPath", this.article.picPath);
+
+                axios({
+                    method: "post",
+                    url: "/AddSystemMessage/UpdateMessage",
+                    data: bodyFormData,
+                    Headers: { "Content-Type": "multipart/form-data" },
+                })
+
+                Swal.fire({
+                    title: '確定要修改嗎?',
+                    showDenyButton: true,
+                    confirmButtonText: 'Save',
+                    denyButtonText: `Don't save`,
+                })
+                    .then((result) => {
+                    if (result.isConfirmed) {
+                        Swal.fire('修改成功!', '', 'success')
+                        window.location.reload();
+                    } else if (result.isDenied) {
+                        Swal.fire('修改失敗', '', 'info')
+                    }
+                    })
+            },
+            setPage: function (idx) {
+                if (idx <= 0 || idx > this.totalPage) {
+                    return;
+                }
+                this.currPage = idx;
+            },
+        },
+    });
+</script>
+
+
+<!--SweetAlert-->
+<script>
+    function SWUploadFile(title, text, close) {
+        Swal.fire({
+            title: title,
+            text: text,
+            icon: 'success',
+            confirmButtonText: close
+        });
+    }
+
+    function SWseccess(title, text, ok) {
+        Swal.fire({
+            title: title,
+            text: text,
+            icon: 'success',
+            confirmButtonText: ok
+        })
+    }
+
+    function SWerror(title, text, ok) {
+        Swal.fire({
+            title: title,
+            text: text,
+            icon: 'error',
+            confirmButtonText: ok
+        })
+    }
+
+</script>
+
+
+

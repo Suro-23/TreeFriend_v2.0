@@ -21,7 +21,8 @@ namespace TreeFriend.Models.ViewModel
         public string EventTimeStart { get; set; }
         public string EventTimeEnd { get; set; }
         public string Venue { get; set; }
-
-
+        public string UserName { get; set; }
+        public string ImgPath { get; set; }
+        public int LectureId { get; set; }
     }
 }

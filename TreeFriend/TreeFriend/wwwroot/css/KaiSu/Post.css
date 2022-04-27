@@ -115,10 +115,11 @@ body {
 }
 
 .msgcontent {
-    margin-left: 3vmin;
-    font-size: 14px;
-    float: right;
+    font-size: 12px;
     word-break: break-word;
+}
+.msgname {
+    font-size: 14px;
 }
 
 .updatetime {
@@ -209,13 +210,14 @@ body {
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
 }
-/*    .borderline {
-        border-top: 3px solid #f6e6cd
-    }*/
 .cardtext {
     width: 100%;
     overflow: hidden;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
+}
+.user-msgcontent {
+    background-color: #fdf8f2;
+    border-radius: 0.7rem;
 }

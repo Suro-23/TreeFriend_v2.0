@@ -53,8 +53,8 @@
         <div class="row user-msg ms-2 pe-4">
             <div class="user-msg-div" v-for="msg in item.message">
                 <div class="user-msg-img">
-                    <img :src="msg.userHeadshot" alt="" >
-                </div>
+                    <a :href="'/personalpost/post?id='+ msg.userId"><img :src="msg.userHeadshot" alt=""></a>
+</div>
                 <div class="user-msg-content">
                     <span class="fw-bold">{{msg.userName}}</span>
                     <span>

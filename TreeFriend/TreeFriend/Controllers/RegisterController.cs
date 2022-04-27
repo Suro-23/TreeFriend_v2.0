@@ -256,8 +256,6 @@ namespace TreeFriend.Controllers {
                     byte[] hashBytes = new SHA256Managed().ComputeHash(passwordAndSaltBytes);
                     string hashString = Convert.ToBase64String(hashBytes);
 
-
-
                     if (hashString == check.Password)
                     {
                         if (check.UserStatus == true)

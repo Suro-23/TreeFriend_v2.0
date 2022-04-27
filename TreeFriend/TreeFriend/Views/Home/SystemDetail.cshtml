@@ -171,6 +171,22 @@
                             </ul>
                         </aside>
                     </div>
+
+                    @*關於我們 寫死的內容*@
+                    @*<div class="message-we">
+                            <aside class="message-title-box">
+                                <h4 class="message-title">
+                                    關於我們
+                                </h4>
+                                <ul>
+                                    <li>【學生學習】透過線上學習的方式，讓學生方便使用</li>
+                                    <li>【老師授課】提供線上管道，把教學熱忱從實體帶到網路上！</li>
+                                    <li>【自由學習】每天學習新知識，讓學習不在受到書本上的限制</li>
+                                    <li>【交換技能】大家互相學習，分享自己知識的同時，也能學習想了解的領域!</li>
+                                </ul>
+                            </aside>
+                     </div>*@
+
                 </div>
             </div>
         </div>
@@ -198,9 +214,9 @@
             function () {
                 var self = this;
                 axios.get("/SystemMessage/SystemDetailContent/?articleId=" + articleId).then(function (result) {
+                    /*axios.get("/SystemMessage/FullContent1/3").then(function (result) {*/
                     self.MessageList = result.data;
                     console.log(self.MessageList);
-
 
                     axios.get("/SystemMessage/GetAllSystemMessage").then(function (result) {
                         self.Content = result.data;

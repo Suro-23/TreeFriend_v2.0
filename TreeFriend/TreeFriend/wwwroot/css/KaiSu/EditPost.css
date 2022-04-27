@@ -56,10 +56,6 @@
     padding: 16px;
     justify-content: center
 }
-/*    .imgs {
-        position: absolute;
-        bottom: 2px;
-    }*/
 .messagewidth {
     width: 30vmin;
     border: none;
@@ -95,10 +91,12 @@
 }
 
 .msgcontent {
-    margin-left: 3vmin;
-    font-size: 14px;
-    float: right;
+    font-size: 12px;
     word-break: break-word;
+}
+
+.msgname {
+    font-size: 14px;
 }
 
 .updatetime {
@@ -256,10 +254,9 @@ textarea {
     background-color: #dc3545;
     border-color: #dc3545;
 }
-.ellipsis-edit {
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
+.user-msgcontent {
+    background-color: #fdf8f2;
+    border-radius: 0.7rem;
 }
 
 

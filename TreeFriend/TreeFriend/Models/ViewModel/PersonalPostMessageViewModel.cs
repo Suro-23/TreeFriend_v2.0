@@ -9,6 +9,8 @@ namespace TreeFriend.Models.ViewModel
     {
 
         public int PersonalPostId { get; set; }
+        public int MessageUserId { get; set; }
+
         public string UserMessage { get; set; }
         public string HeadshotPath { get; set; }
         public string UserName { get; set; }

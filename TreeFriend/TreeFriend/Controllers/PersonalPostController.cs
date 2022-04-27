@@ -136,7 +136,7 @@ namespace TreeFriend.Controllers.Api
                         HeadshotPath =_context.usersDetail.Where(x=>x.UserId==y.UserId).FirstOrDefault().HeadshotPath,
                         CreateDate = y.CreateDate,
                         UserName= _context.usersDetail.Where(x => x.UserId == y.UserId).FirstOrDefault().UserName,
-                        //TODO 加暱稱
+                        MessageUserId=y.UserId
                     }).ToList();
                     //建立貼文內容物件渲染
                     var a = _context.personalPosts.Where(x => x.PersonalPostId == F).OrderByDescending(x => x.CreateDate)
@@ -224,7 +224,7 @@ namespace TreeFriend.Controllers.Api
                         HeadshotPath = _context.usersDetail.Where(x => x.UserId == y.UserId).FirstOrDefault().HeadshotPath,
                         CreateDate = y.CreateDate,
                         UserName = _context.usersDetail.Where(x => x.UserId == y.UserId).FirstOrDefault().UserName,
-                        //TODO 加暱稱
+                        MessageUserId = y.UserId
                     }).ToList();
                     //建立貼文內容物件渲染
                     var a = _context.personalPosts.Where(x => x.PersonalPostId == F).OrderByDescending(x => x.CreateDate)

@@ -141,7 +141,7 @@
                                         <div class="msgbox" v-for="msg in item.message">
                                             @*彈出視窗-使用者留言*@
                                             <span>
-                                                <img :src="msg.headshotPath" class="rounded-circle msgsize" alt="Alternate Text" />
+                                                <a  :href="'/personalpost/post?id='+ msg.messageUserId"><img :src="msg.headshotPath" class="rounded-circle msgsize" alt="Alternate Text" /></a>
                                             </span>
                                             <div class="user-msgcontent ms-2 p-1 ps-2 pe-2">
                                                 <span class=" d-flex msgname fw-bold" >

@@ -65,7 +65,7 @@
                             </div>
                             <img class="iconmessage" src="/img/message.png" alt="Alternate Text" />
                         </div>
-                        <div class="cardtext" style="width: 100%; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; ">
+                        <div class="cardtext" style="width: 100%; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; word-break: keep-all;">
                             {{item.content}}
                         </div>
                     </div>
@@ -153,18 +153,6 @@
                                 </div>
                             </div>
                         </div>
-
-                        @*留言*@
-                        @*<div class="msgboxout" v-for="(msg,index1) in item.message" v-if="index1 < 1">
-                                <span>
-                                    <img src="https://i.pravatar.cc/50/random" class="rounded-circle msgsize" alt="Alternate Text" />
-                                </span>
-                                <span class="msgcontent">
-                                    {{msg.userMessage}}
-                                    <small class="text-muted updatetime">3 mins ago{{msg.createDate}}</small>
-                                </span>
-                            </div>*@
-                    
                 </div>
             </div>
         </div>
@@ -196,7 +184,6 @@
 
             textnonull: "",
 
-            /*msginside:[] */
             content: [],
             usercontent: []
 

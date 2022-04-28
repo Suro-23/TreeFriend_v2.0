@@ -83,7 +83,7 @@ namespace TreeFriend.Controllers.Api {
                     messageResult = messageList.Select(p => new SkillPostMessageViewModel {
                         SkillPostId = p.SkillPostId,
                         UserId = p.UserId,
-                        UserName = p.UserName,
+                        UserName = _db.usersDetail.FirstOrDefault(u => u.UserId == p.UserId).UserName,
                         UserHeadshot = _db.usersDetail.FirstOrDefault(u => u.UserId == p.UserId).HeadshotPath,
                         Content = p.Content
                     }).ToList();
@@ -176,7 +176,7 @@ namespace TreeFriend.Controllers.Api {
                                 messageResult = messageList.Select(p => new SkillPostMessageViewModel {
                                     SkillPostId = p.SkillPostId,
                                     UserId = p.UserId,
-                                    UserName = p.UserName,
+                                    UserName = _db.usersDetail.FirstOrDefault(u => u.UserId == p.UserId).UserName,
                                     UserHeadshot = _db.usersDetail.FirstOrDefault(u => u.UserId == p.UserId).HeadshotPath,
                                     Content = p.Content
                                 }).ToList();
@@ -304,7 +304,7 @@ namespace TreeFriend.Controllers.Api {
                     messageResult = messageList.Select(p => new SkillPostMessageViewModel {
                         SkillPostId = p.SkillPostId,
                         UserId = p.UserId,
-                        UserName = p.UserName,
+                        UserName = _db.usersDetail.FirstOrDefault(u => u.UserId == p.UserId).UserName,
                         UserHeadshot = _db.usersDetail.FirstOrDefault(u => u.UserId == p.UserId).HeadshotPath,
                         Content = p.Content
                     }).ToList();
@@ -344,7 +344,6 @@ namespace TreeFriend.Controllers.Api {
             SkillPostMessage post = new SkillPostMessage() {
                 SkillPostId = skMessage.SkillPostId,
                 UserId = Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(u => u.Type == "UserId").Value),
-                UserName = User.Claims.FirstOrDefault(u => u.Type == "UserName").Value,
                 Content = skMessage.Content
             };
             await _db.skillPostMessages.AddAsync(post);
@@ -360,7 +359,7 @@ namespace TreeFriend.Controllers.Api {
             messageResult = await messageList.Select(p => new SkillPostMessageViewModel {
                 SkillPostId = p.SkillPostId,
                 UserId = p.UserId,
-                UserName = p.UserName,
+                UserName = _db.usersDetail.FirstOrDefault(u => u.UserId == p.UserId).UserName,
                 UserHeadshot = _db.usersDetail.FirstOrDefault(u => u.UserId == p.UserId).HeadshotPath,
                 Content = p.Content
             }).ToListAsync();

@@ -484,7 +484,6 @@
             let self = this;
             axios.get("/AddLecture/GetAllLecture").then(function (res) {
                 self.lecturelist = res.data;
-
             })
         },
         computed: {
@@ -506,13 +505,6 @@
                     return this.lecturelist;
                 }
 
-                //return (this.filter_name.trim() !== '') ?
-                //    this.searchList = this.lecturelist.filter(function (d) {
-                //        return d.theme.toLowerCase().includes(filter_name)||
-                //            d.venue.toLowerCase().includes(filter_name) || d.speaker.toLowerCase().includes(filter_name) /* ||*/
-                //            //d.count===Number(filter_name)|| d.price===Number(filter_name)
-                //    }) :
-                //    this.lecturelist;
             },
 
             pageStart: function () {
@@ -525,9 +517,6 @@
 
         },
         methods: {
-            //add: function () {
-            //    window.location.href = "/AddLecture/Upload";
-            //},
 
             speakerimgup: function (event) {
                 console.log(event);
@@ -567,10 +556,6 @@
 
                 this.lecture.picture = event.target.files[0]
             },
-
-            //load: function () {
-            //    window.location.reload();
-            //},
 
             edit: function (event) {
                 let self = this;
@@ -619,7 +604,7 @@
                 let self = this;
                 let lectureId = event.target.value;
                 self.target = self.lecturelist.find((sourceItem) => { return +sourceItem.lectureId === +lectureId });
-                self.lecture = self.target; //等於選取的講座
+                self.lecture = self.target; 
                 console.log(self.target);
                 console.log(lectureId);
             },

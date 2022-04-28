@@ -17,7 +17,7 @@
         <div class="catgory w-auto fs-5">{{item.categoryName}}</div>
         <div class="row">
             <div class="uer-info d-flex fs-5 align-items-center">
-                <a :href="'/personalpost/post?id='+ item.userId"><img :src="item.userHeadshot" @*v-on:click="topersonalpost(item.userId)"*@></a>
+                <a :href="'/personalpost/post?id='+ item.userId"><img :src="item.userHeadshot"></a>
                 <span class="ms-2">{{item.userName}}</span>
             </div>
         </div>
@@ -35,9 +35,7 @@
                     <span class="rounded-pill" v-for="tag in item.hashtagName">#{{tag}}</span>
                 </div>
             </div>
-            <span>
-                {{item.content}}
-            </span>
+            <span class="p-Content">{{item.content}}</span>
         </div>
         <div class="row d-flex justify-content-end pe-0 mb-2 mt-2">
             <button class="msg-icon w-auto p-0">
@@ -57,9 +55,7 @@
                 </div>
                 <div class="user-msg-content">
                     <span class="fw-bold">{{msg.userName}}</span>
-                    <span>
-                        {{msg.content}}
-                    </span>
+                    <span class="p-Content">{{msg.content}}</span>
                 </div>
             </div>
         </div>

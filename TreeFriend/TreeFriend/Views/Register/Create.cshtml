@@ -46,14 +46,7 @@
                 </div>
                 @*第三方登入*@
                 <div class="img_btn">
-
-                    <!-- Load the JS SDK asynchronously -->
-                    @*<script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"></script>*@
-
-                    <!-- The JS SDK Login Button -->
-                    @*<fb:login-button scope="public_profile,email" onlogin="checkLoginState()";></fb:login-button>*@
-
-                    <a href="/register/fblogin" id=fblogin @*scope="public_profile,email" onclick="checkLoginState();*@>
+                    <a href="/register/fblogin" id=fblogin >
                         <img src="/img/fb48px.png" alt="" />
                     </a>
                     <a href="/register/googlelogin" id="googlelogin">
@@ -149,58 +142,14 @@
                     //console.log(res);
                     if (res == "帳號或密碼錯誤") {
                         SWerror("帳號或密碼錯誤!", "", "再想想看");
-                        //alert("帳號或密碼錯誤");
                     } else if (res == "請至信箱開通帳號") {
                         SWwarning("請至信箱開通帳號", "", "馬上去開通");
-                        //alert("請至信箱開通帳號");
                     } else {
                         SWseccess("歡迎回來!", "", "學習新技能吧!");
-                        /*window.location.href = "/Home/HomePage";*/
                     }
                 }
             });
 
-        //$.ajax(
-        //    {
-        //        url: '/register/ConfirmUserStatus',
-        //        /*dataType: 'JSON',*/
-        //        contentType: "application/json",
-        //        type: 'POST',
-        //        data:
-        //            JSON.stringify(data),
-        //        error: function (xhr) {
-        //            alert('Ajax request 發生錯誤');
-        //        },
-        //        success: function (res) {
-        //            if (res == "成功") {
-        //                $.ajax(
-        //                    {
-        //                        url: '/register/login',
-        //                        /*dataType: 'JSON',*/
-        //                        contentType: "application/json",
-        //                        type: 'POST',
-        //                        data:
-        //                            JSON.stringify(data),
-        //                        error: function (xhr) {
-        //                            alert('Ajax request 發生錯誤');
-        //                        },
-        //                        success: function (res) {
-        //                            console.log(res);
-        //                            if (res == "帳號或密碼錯誤") {
-        //                                alert("帳號或密碼錯誤");
-        //                            } else if ("請至信箱開通帳號") {
-        //                                alert("請至信箱開通帳號");
-        //                            }
-        //                            window.location.href = "/Home/HomePage";
-        //                        }
-        //                    });
-        //            } else if (res == "請至信箱開通帳號") {
-        //                alert("請至信箱開通帳號");
-        //            } else {
-        //                alert("帳號密碼錯誤");
-        //            }
-        //        }
-        //    });
 
     });
 </script>
@@ -242,17 +191,14 @@
                             if (SameEmail == false) {
 
                                 labelemailTY.textContent = "帳號已被使用,請重新輸入";
-                                //alert("帳號已被使用，請重新輸入");
                             }
                             else {
 
                                 labelemailOK.textContent = "帳號尚未被使用，可以註冊";
-                                //alert("帳號尚未被使用，可以註冊");
                             }
                         }
                     } else {
                         labelemailTY.textContent = "帳號為必填";
-                        //alert("帳號為必填");
                     }
                 }
             });
@@ -271,24 +217,17 @@
     registerbtn.addEventListener("click", function () {
         let registerEmail = document.getElementById("registerEmail").value;
         let registerPassword = document.getElementById("registerPassword").value;
-        /*         let registerPhone = document.getElementById("phone").value;*/
 
         var data = {};
         data.Password = registerPassword;
         data.Email = registerEmail;
-        /*         data.Phone = registerPhone;*/
 
         var lablepwd = document.querySelector("#Psrequired");
         var Psrequired = document.getElementById("registerPassword").value
-        /*      var emailrequired = document.getElementById("registerEmail").value;*/
         if (Psrequired == "") {
             lablepwd.textContent = "";
             lablepwd.textContent = "密碼為必填";
         } else { lablepwd.textContent = ""; }
-        //if (emailConfirmvalue == "") {
-        //    labelEconfirm.textContent = "";
-        //    labelEconfirm.textContent = "需填驗證碼";
-        //}
 
         let confirmpassword = document.getElementById("confirmPassword").value;
         let registerpassword = document.getElementById("registerPassword").value;
@@ -311,8 +250,6 @@
                             alert("資料有誤");
                         } else {
                             SWinfo("註冊成功!", "請至email開通帳號~開通即可開始技能交換!", "馬上去開通");
-                            //alert("請至信箱開通帳號");
-                            //window.location.href = "/register/AfterRegister";
                         }
                     }
                 });
@@ -323,66 +260,6 @@
     });
 </script>
 
-@*第三方登入*@
-<script>
-
-    //function statusChangeCallback(response) {  // Called with the results from FB.getLoginStatus().
-    //    console.log('statusChangeCallback');
-    //    console.log(response);                   // The current login status of the person.
-    //    if (response.status === 'connected') {   // Logged into your webpage and Facebook.
-    //        testAPI();
-    //    } else {                                 // Not logged into your webpage or we are unable to tell.
-    //        document.getElementById('status').innerHTML = 'Please log ' +
-    //            'into this webpage.';
-    //    }
-    //}
-
-
-    //function checkLoginState() {               // Called when a person is finished with the Login Button.
-    //    FB.login(function (response) {   // See the onlogin handler
-    //        statusChangeCallback(response);
-    //    });
-    //}
-
-
-    //window.fbAsyncInit = function () {
-    //    FB.init({
-    //        appId: '389172842808048',
-    //        cookie: true,                     // Enable cookies to allow the server to access the session.
-    //        xfbml: true,                     // Parse social plugins on this webpage.
-    //        version: 'v13.0'           // Use this Graph API version for this call.
-    //    });
-
-
-    //    FB.getLoginStatus(function (response) {   // Called after the JS SDK has been initialized.
-    //        statusChangeCallback(response);        // Returns the login status.
-    //    });
-    //};
-
-    //function testAPI() {                      // Testing Graph API after login.  See statusChangeCallback() for when this call is made.
-    //    console.log('Welcome!  Fetching your information.... ');
-    //    FB.api('/me', function (response) {
-    //        console.log('Successful login for: ' + response.name);
-    //        document.getElementById('status').innerHTML =
-    //            'Thanks for logging in, ' + response.name + '!';
-    //    });
-    //}
-
-</script>
-
-@*FB登出*@
-<script>
-    //function logoutFromFacebookAndRedirect(redirectUrl) {
-    //    FB.getLoginStatus(function (response) {
-    //        if (response.status == 'connected')
-    //            FB.logout(function (response) {
-    //                window.location.href = "/home/";
-    //            });
-    //        else
-    //            window.location.href = "/home/";
-    //    });
-    //}
-</script>
 
 <!--SweetAlert-->
 <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>

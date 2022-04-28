@@ -19,6 +19,7 @@ using System.IO;
 using EmailService;
 using Microsoft.AspNetCore.Authentication.Facebook;
 using Microsoft.AspNetCore.Authentication.Google;
+using TreeFriend.Models.ViewModel;
 
 namespace TreeFriend.Controllers {
     public class RegisterController : Controller {
@@ -205,6 +206,52 @@ namespace TreeFriend.Controllers {
         }
         #endregion
 
+        public IActionResult EditPassword()
+        {
+            return View();
+        }
+        [HttpPost]
+        public bool PasswordChange([FromBody] string OldPassword, string NewPassword )
+        {
+            var user = HttpContext.User.Claims.FirstOrDefault(x => x.Type == "UserId").Value;
+            var finduser = _context.users.FirstOrDefault(n => n.Password == OldPassword);
+            if (finduser != null) { 
+            try
+            {
+                byte[] salt = new byte[128 / 8];
+                using(var rngCsp=new RNGCryptoServiceProvider())
+                {
+                    rngCsp.GetNonZeroBytes(salt);
+                }
+                byte[] passwordAndSaltBytes = System.Text.Encoding.UTF8.GetBytes(NewPassword+ salt);
+                byte[] hashBytes = new SHA256Managed().ComputeHash(passwordAndSaltBytes);
+                string afterpwd = Convert.ToBase64String(hashBytes);
+                finduser.Password = afterpwd;
+                _context.SaveChanges();
+                return true;
+            }
+            catch(Exception ex)
+            {
+                    throw;
+            }
+            }
+            return false;
+
+        }
+
+        public EditPwdUserDetailViewModel GetUserDetail()
+        {
+            var user = Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(x => x.Type == "UserId").Value);
+            var userHeadshot = HttpContext.User.Claims.FirstOrDefault(x => x.Type == "Headshot").Value;
+            var finduser = _context.users.FirstOrDefault(n => n.UserId == user);
+            var userdetail = new EditPwdUserDetailViewModel
+            {
+                Email = finduser.Email,
+                HeadshotPath = userHeadshot,
+            };
+            return userdetail;
+        }
+
         #region 補加鹽用
         [AllowAnonymous]
         [HttpPost]
@@ -314,14 +361,6 @@ namespace TreeFriend.Controllers {
 
         public async Task<IActionResult> ResponseAsync(User user) {
             var res = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            //var data = res.Principal.Claims.Select(x => new
-            //{
-            //    x.Type,
-            //    x.Value,
-            //    x.Issuer,
-            //    x.OriginalIssuer
-            //});
-            //var value= data.Select(x => x.Value);
             foreach (Claim claim in res.Principal.Claims) {
                 var fbemail = "";
                 //var fbId = "";
@@ -333,6 +372,7 @@ namespace TreeFriend.Controllers {
 
                     if (sameEmail == null) { //第一次登入
 
+                        user.UserStatus = true;
                         _context.Add(user);
                         await _context.SaveChangesAsync();
 

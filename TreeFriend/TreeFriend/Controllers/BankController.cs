@@ -34,27 +34,16 @@ namespace TreeFriend.Controllers
         /// 金流基本資料(可再移到Web.config或資料庫設定)
         /// </summary>
         private BankInfoModel _bankInfoModel = new BankInfoModel
-        {   //已改為TreeFriend
+        {   
             MerchantID = "MS134173586",
             HashKey = "DIQL4I5DZ6sG6aVcBnQ6sFgkzmxUHSdP",
             HashIV = "CNnhZ4oa0qTNVUMP",
-            ReturnURL = "http://yourWebsitUrl/Bank/SpgatewayReturn", //ngrok網址要更改 https://0d54-1-164-234-176.ngrok.io/Home/HomePage 跳過NotifyUEL頁面 
-            NotifyURL = "https://f699-49-158-79-227.ngrok.io/Bank/SpgatewayReturn",
+            ReturnURL = "http://yourWebsitUrl/Bank/SpgatewayReturn",
+            NotifyURL = "https://treefriends.azurewebsites.net/Bank/SpgatewayReturn",
             CustomerURL = "http://yourWebsitUrl/Bank/SpgatewayCustomer",
             AuthUrl = "https://ccore.spgateway.com/MPG/mpg_gateway",
             CloseUrl = "https://core.newebpay.com/API/CreditCard/Close"
         };
-
-        
-
-         /// <summary>
-         /// 付款頁面
-         /// </summary>
-         /// <returns></returns>
-         //public ActionResult PayBill()
-         //{
-         //    return View();
-         //}
 
          /// <summary>
          /// [智付通支付]金流介接
@@ -66,8 +55,6 @@ namespace TreeFriend.Controllers
          /// 
 
 
-
-         //金流只在意付款方式、價格、訂單編號
          [HttpPost]
         public async Task<IActionResult> SpgatewayPayBillAsync(int Buyercount, int InputlectureId)
         {
@@ -115,7 +102,6 @@ namespace TreeFriend.Controllers
             }
 
 
-
             TradeInfo tradeInfo = new TradeInfo()
             {
                 // * 商店代號
@@ -133,8 +119,8 @@ namespace TreeFriend.Controllers
                 // * 訂單金額
                 Amt = Amount,
                 // * 商品資訊
-                //ItemDesc = "商品資訊(自行修改)",//TODO商品資料 撈出商品名稱和購買數量
-                ItemDesc = GoodDesc, //TODO商品資料 撈出商品名稱和購買數量
+                //ItemDesc = "商品資訊(自行修改)",
+                ItemDesc = GoodDesc, 
                 // 繳費有效期限(適用於非即時交易)
                 ExpireDate = null,
                 // 支付完成 返回商店網址
@@ -145,7 +131,7 @@ namespace TreeFriend.Controllers
                 // 商店取號網址
                 CustomerURL = _bankInfoModel.CustomerURL,
                 // 支付取消 返回商店網址
-                ClientBackURL = "https://f699-49-158-79-227.ngrok.io/home/PersonalOrderHistory",//返回商店網址 ngrok網址要更改
+                ClientBackURL = "https://treefriends.azurewebsites.net/home/PersonalOrderHistory",
                 // * 付款人電子信箱
                 Email = string.Empty,
                 // 付款人電子信箱 是否開放修改(1=可修改 0=不可修改)
@@ -162,18 +148,13 @@ namespace TreeFriend.Controllers
                 CVS = null,
                 // 超商條碼繳費啟用(1=啟用、0或者未有此參數，即代表不開啟)(當該筆訂單金額小於 20 元或超過 4 萬元時，即使此參數設定為啟用，MPG 付款頁面仍不會顯示此支付方式選項。)
                 BARCODE = null,
-                //LINEPAY = null
             };
 
             if (PayMethod == "creditcard")
             {
                 tradeInfo.CREDIT = 1;
             }
-            //else if (PayMethod == "linePay")
-            //{
-            //    tradeInfo.LINEPAY = 1;
-            //}
-
+        
             Atom<string> result = new Atom<string>()
             {
                 IsSuccess = true
@@ -219,6 +200,7 @@ namespace TreeFriend.Controllers
             return null;
         }
 
+
         /// <summary>
         /// [智付通]金流介接(結果: 支付完成 返回商店網址)
         /// </summary>
@@ -254,28 +236,12 @@ namespace TreeFriend.Controllers
                     
                     var user = _db.users.SingleOrDefault(x => x.UserId == od.UserId);
 
-                    //var mails = new string[] {user.Email};
+                    var mails = new string[] { user.Email };
 
                     var mailhelper = new MailHelper();
-                    //部署後確認可不可以寄發圖片再更改
-                    //mailhelper.CreateMail(mails,"TreeFriend講座入場資訊", $@"親愛會員您好，感謝您購買TreeFriend講座，活動當日請出示此憑證即可確認入場。<div><img src='img/LecturePic/T1.png' width='500'/ ></div><div><img src='img/LecturePic/T2.png' width='500'/></div>"<div>此為系統主動發送信函，請勿直接回覆此封信件。</div>);
-                    //mailhelper.Send();
-                    //return Content("寄信成功");
-                    //電腦上傳圖片
-                    var mail = new MailMessage();
-                    mail.IsBodyHtml = true;
-                    var res = new LinkedResource($@"C:\Users\Tibame_T14\Documents\GitHub\TreeFriend_v2.0\TreeFriend\TreeFriend\wwwroot\img\LecturePic\T1.Png");
-                    res.ContentId = Guid.NewGuid().ToString();
-                    var htmlBody = $@"親愛會員您好，感謝您購買TreeFriend講座，活動當日請出示此憑證即可確認入場。<div><img width='500' src='cid:{res.ContentId}'/></div><div>此為系統主動發送信函，請勿直接回覆此封信件。</div>";
-                    var altView = AlternateView.CreateAlternateViewFromString(htmlBody, null, MediaTypeNames.Text.Html);
-
-                    altView.LinkedResources.Add(res);
-
-                    mail.AlternateViews.Add(altView);
-                    mail.To.Add(user.Email);
-                    mail.From = new MailAddress("tfm104.2@gmail.com");
-                    mail.Subject = "TreeFriend講座入場資訊";
-                    mailhelper.Send(mail);
+                    
+                    mailhelper.CreateMail(mails, "TreeFriend講座入場資訊", $@"親愛會員您好，感謝您購買TreeFriend講座，活動當日請出示此憑證即可確認入場。<div><img src='https://treefriends.azurewebsites.net/img/LecturePic/T1.png' width='500'/ ></div><div><img src='https://treefriends.azurewebsites.net/img/LecturePic/T2.png' width='500'/></div><div>此為系統主動發送信函，請勿直接回覆此封信件。</div>");
+                    mailhelper.Send();
                     return Content("寄信成功");
                 }
 
@@ -289,39 +255,12 @@ namespace TreeFriend.Controllers
                     lecture.UpdateTime = DateTime.UtcNow.AddHours(8);
 
                     _db.SaveChanges();
-                    
                 }
-
-
 
                 return Content(JsonConvert.SerializeObject(convertModel));
             }
 
             return Content(string.Empty); 
-           
-
-        }
-
-        /// <summary>
-        /// [智付通]金流介接(結果: 支付通知網址)
-        /// </summary>
-        //[HttpPost]
-        //public ActionResult SpgatewayNotify()
-        //{
-        //    // 取法同SpgatewayResult
-
-        //    Request.LogFormData("SpgatewayNotify(支付通知)");
-        //    return Content(string.Empty);
-        //}
-
-
-        /// <summary>
-        /// 銀行API測試
-        /// </summary>
-        /// <returns></returns>
-        public ActionResult RefundTest()
-        {
-            return View();
         }
 
     }

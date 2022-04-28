@@ -19,6 +19,7 @@ using System.IO;
 using EmailService;
 using Microsoft.AspNetCore.Authentication.Facebook;
 using Microsoft.AspNetCore.Authentication.Google;
+using TreeFriend.Models.ViewModel;
 
 namespace TreeFriend.Controllers {
     public class RegisterController : Controller {
@@ -94,6 +95,7 @@ namespace TreeFriend.Controllers {
         private string Decrypt(string str) ////解密字符串
         {
             try {
+                str = str.Replace(' ', '+');
                 byte[] key = Encoding.Unicode.GetBytes(encryptKey);//密鑰
                 byte[] data = Convert.FromBase64String(str);//待解密字符串
 
@@ -122,7 +124,7 @@ namespace TreeFriend.Controllers {
             var secretcode = Encrypt(members.UserId.ToString() + "&y=true");
             //string g = Guid.NewGuid().ToString("d").Substring(0, 7);
             var message = new Message(new string[] { $"{members.Email}" }, "技能交換網站驗證碼", "親愛的" + $"{ members.Email }" + "先生/小姐" +
-                "您好，請點擊以下網址註冊:" + "https://localhost:44341/register/get?d=" + secretcode);
+                "您好，請點擊以下網址註冊:" + "https://treefriends.azurewebsites.net/register/get?d=" + secretcode);
             _emailSender.SendEmail(message);
 
             return Content("信已寄出");
@@ -158,21 +160,36 @@ namespace TreeFriend.Controllers {
         //[ValidateAntiForgeryToken]
         #region 註冊
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] User user) {
-            if (user.Email != "" && user.Password != "") {
+        public async Task<IActionResult> Create([FromBody] User user)
+        {
+            if (user.Email != "" && user.Password != "")
+            {
                 var register = _context.users.Where(x => x.Email == user.Email).FirstOrDefault();
-                if (register == null) {
-                    if (ModelState.IsValid) {
+                if (register == null)
+                {
+                    if (ModelState.IsValid)
+                    {
                         byte[] salt = new byte[128 / 8];
-                        using (var rngCsp = new RNGCryptoServiceProvider()) {
+                        using (var rngCsp = new RNGCryptoServiceProvider())
+                        {
                             rngCsp.GetNonZeroBytes(salt);
                         }
-                        //Console.WriteLine($"Salt: {Convert.ToBase64String(salt)}");
 
-                        // derive a 256-bit subkey (use HMACSHA256 with 100,000 iterations)
-                        //string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
-                        byte[] passwordAndSaltBytes = System.Text.Encoding.UTF8.GetBytes(user.Password + salt);
-                        byte[] hashBytes = new SHA256Managed().ComputeHash(passwordAndSaltBytes);
+                        //把salt複製一份備用
+                        byte[] copySalt = (byte[])salt.Clone();
+                        //把密碼轉成byte陣列
+                        var pwdByte = Encoding.UTF8.GetBytes(user.Password);
+                        //取得salt陣列的長度備用
+                        int pwdByteLength = salt.Length;
+                        //將複製的陣列修改長度，並加入密碼陣列
+                        Array.Resize(ref copySalt, copySalt.Length + pwdByte.Length);
+                        for (int i = 0; i < pwdByte.Length; i++)
+                        {
+                            //這邊就會用到剛剛的salt陣列長度
+                            copySalt[pwdByteLength + i] = pwdByte[i];
+                        }
+                        //再把新陣列加密並存進去
+                        byte[] hashBytes = new SHA256Managed().ComputeHash(copySalt);
                         string hashed = Convert.ToBase64String(hashBytes);
 
 
@@ -195,35 +212,145 @@ namespace TreeFriend.Controllers {
                         //return RedirectToAction(nameof(AfterRegister));
                     }
                     return View(user);
-                } else {
+                }
+                else
+                {
                     return Content("成功");
                 }
-            } else {
+            }
+            else
+            {
                 return Content("資料有誤");
             }
+        }
+        #endregion
+
+        public IActionResult EditPassword()
+        {
+            return View();
+        }
+
+        #region 修改密碼
+        [HttpPost]
+        public bool PasswordChange([FromBody] EditPasswordViewModel edit )
+        {
+            var UserId = Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(x => x.Type == "UserId").Value);
+
+            var salt = _context.users.SingleOrDefault(n => n.UserId == UserId).Salt;
+
+            //把salt複製一份備用
+            byte[] copySalt = (byte[])salt.Clone();
+            //把密碼轉成byte陣列
+            var pwdByte = Encoding.UTF8.GetBytes(edit.OldPassword);
+            //取得salt陣列的長度備用
+            int pwdByteLength = salt.Length;
+            //將複製的陣列修改長度，並加入密碼陣列
+            Array.Resize(ref copySalt, copySalt.Length + pwdByte.Length);
+            for (int i = 0; i < pwdByte.Length; i++)
+            {
+                //這邊就會用到剛剛的salt陣列長度
+                copySalt[pwdByteLength + i] = pwdByte[i];
+            }
+            //再把新陣列加密並存進去
+
+           
+            byte[] hashBytes = new System.Security.Cryptography.SHA256Managed().ComputeHash(copySalt);
+            string hashString = Convert.ToBase64String(hashBytes);
+
+      
+            var finduser = _context.users.FirstOrDefault(n => n.Password == hashString);
+
+
+            if (finduser != null)
+            {
+                try
+                {
+                    byte[] newsalt = new byte[128 / 8];
+                    using (var rngCsp = new RNGCryptoServiceProvider())
+                    {
+                        rngCsp.GetNonZeroBytes(newsalt);
+                    }
+
+                    //把salt複製一份備用
+                    byte[] newcopySalt = (byte[])newsalt.Clone();
+                    //把密碼轉成byte陣列
+                    var newpwdByte = Encoding.UTF8.GetBytes(edit.NewPassword);
+                    //取得salt陣列的長度備用
+                    int newpwdByteLength = newsalt.Length;
+                    //將複製的陣列修改長度，並加入密碼陣列
+                    Array.Resize(ref newcopySalt, newcopySalt.Length + newpwdByte.Length);
+                    for (int i = 0; i < newpwdByte.Length; i++)
+                    {
+                        //這邊就會用到剛剛的salt陣列長度
+                        newcopySalt[newpwdByteLength + i] = newpwdByte[i];
+                    }
+                    //再把新陣列加密並存進去
+
+          
+                    byte[] newhashBytes = new SHA256Managed().ComputeHash(newcopySalt);
+                    string afterpwd = Convert.ToBase64String(newhashBytes);
+                    finduser.Password = afterpwd;
+                    finduser.Salt = newsalt;
+                    _context.SaveChanges();
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    throw;
+                }
+            }
+            return false;
+
+        }
+
+
+        public EditPwdUserDetailViewModel GetUserDetail()
+        {
+            var user = Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(x => x.Type == "UserId").Value);
+            var userHeadshot = HttpContext.User.Claims.FirstOrDefault(x => x.Type == "Headshot").Value;
+            var finduser = _context.users.FirstOrDefault(n => n.UserId == user);
+            var userdetail = new EditPwdUserDetailViewModel
+            {
+                Email = finduser.Email,
+                HeadshotPath = userHeadshot,
+            };
+            return userdetail;
         }
         #endregion
 
         #region 補加鹽用
         [AllowAnonymous]
         [HttpPost]
-        public bool getSalt([FromBody] User user) {
+        public bool GetSalt([FromBody] User user)
+        {
             var _user = _context.users.FirstOrDefault(x => x.Email == user.Email);
-            try {
+            try
+            {
                 byte[] salt = new byte[128 / 8];
-                using (var rngCsp = new RNGCryptoServiceProvider()) {
+                using (var rngCsp = new RNGCryptoServiceProvider())
+                {
                     rngCsp.GetNonZeroBytes(salt);
                 }
-                byte[] passwordAndSaltBytes = System.Text.Encoding.UTF8.GetBytes(user.Password + salt);
-                byte[] hashBytes = new SHA256Managed().ComputeHash(passwordAndSaltBytes);
-                string hashed = Convert.ToBase64String(hashBytes);
 
+                byte[] copySalt = (byte[])salt.Clone();
+                var pwdByte = Encoding.UTF8.GetBytes(user.Password);
+                int pwdByteLength = salt.Length;
+                Array.Resize(ref copySalt, copySalt.Length + pwdByte.Length);
+                for (int i = 0; i < pwdByte.Length; i++)
+                {
+                    copySalt[pwdByteLength + i] = pwdByte[i];
+                }
+
+                byte[] hashBytes = new SHA256Managed().ComputeHash(copySalt);
+                string hashed = Convert.ToBase64String(hashBytes);
 
                 _user.Salt = salt;
                 _user.Password = hashed;
                 _context.SaveChanges();
                 return true;
-            } catch (Exception) {
+            }
+            catch (Exception)
+            {
 
                 throw;
             }
@@ -238,7 +365,8 @@ namespace TreeFriend.Controllers {
         #region 登入
         [HttpPost]
         //[Authorize(Roles="admin")]
-        public async Task<IActionResult> Login([FromBody] UserLoginViewModel model) {
+        public async Task<IActionResult> Login([FromBody] UserLoginViewModel model)
+        {
             var check = _context.users.Where(x => x.Email == model.Email)
                 .FirstOrDefault();
 
@@ -250,11 +378,25 @@ namespace TreeFriend.Controllers {
             {
                 if (check.Salt != null)
                 {
-                    string salt = check.Salt.ToString();
+                    //string salt = check.Salt.ToString();
+                    var salt = check.Salt;
 
-                    byte[] passwordAndSaltBytes = System.Text.Encoding.UTF8.GetBytes(model.Password + salt);
-                    byte[] hashBytes = new SHA256Managed().ComputeHash(passwordAndSaltBytes);
+                    byte[] copySalt = (byte[])salt.Clone();
+                    var pwdByte = Encoding.UTF8.GetBytes(model.Password);
+                    int pwdByteLength = salt.Length;
+                    Array.Resize(ref copySalt, copySalt.Length + pwdByte.Length);
+                    for (int i = 0; i < pwdByte.Length; i++)
+                    {
+                        copySalt[pwdByteLength + i] = pwdByte[i];
+                    }
+                    //byte[] passwordAndSaltBytes = System.Text.Encoding.UTF8.GetBytes(user.Password + salt);
+                    //byte[] hashBytes = new SHA256Managed().ComputeHash(passwordAndSaltBytes);
+                    byte[] hashBytes = new SHA256Managed().ComputeHash(copySalt);
                     string hashString = Convert.ToBase64String(hashBytes);
+
+                    //byte[] passwordAndSaltBytes = System.Text.Encoding.UTF8.GetBytes(model.Password + salt);
+                    //byte[] hashBytes = new SHA256Managed().ComputeHash(passwordAndSaltBytes);
+                    //string hashString = Convert.ToBase64String(hashBytes);
 
                     if (hashString == check.Password)
                     {
@@ -313,14 +455,6 @@ namespace TreeFriend.Controllers {
 
         public async Task<IActionResult> ResponseAsync(User user) {
             var res = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            //var data = res.Principal.Claims.Select(x => new
-            //{
-            //    x.Type,
-            //    x.Value,
-            //    x.Issuer,
-            //    x.OriginalIssuer
-            //});
-            //var value= data.Select(x => x.Value);
             foreach (Claim claim in res.Principal.Claims) {
                 var fbemail = "";
                 //var fbId = "";
@@ -332,6 +466,7 @@ namespace TreeFriend.Controllers {
 
                     if (sameEmail == null) { //第一次登入
 
+                        user.UserStatus = true;
                         _context.Add(user);
                         await _context.SaveChangesAsync();
 

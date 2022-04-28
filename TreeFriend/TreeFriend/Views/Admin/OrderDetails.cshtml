@@ -28,9 +28,6 @@
                                 <span class="material-symbols-outlined icon" @@click="sort(),isReverse = !isReverse" v-bind:class="{'inverse': isReverse}">
                                     arrow_drop_down
                                 </span>
-                                @*<span class="material-symbols-outlined" @@click="reset">
-                                    arrow_drop_up
-                                </span>*@
                             </div>
                         </th>
                         <th scope="col">付款狀態</th>
@@ -197,10 +194,6 @@
                     return this.orderList;
                     }
 
-                 //return (this.filter_name.trim() !== '') ?
-                //    this.searchList = this.orderList.filter(function (d) { return d.userName.toLowerCase().indexOf(filter_name) > -1; }) :
-                //    this.orderList;
-                
             },
             pageStart: function () {
                 return (this.currPage - 1) * this.countOfPage;

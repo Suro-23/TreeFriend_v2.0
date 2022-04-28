@@ -17,7 +17,7 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background-color: #D2C4AA;
+    background-color: #9DB6A5;
     transition: 0.5s;
 }
 
@@ -95,7 +95,7 @@ input {
     width: 90px;
     min-height: 20px;
     display: block;
-    background-color: #BDA684;
+    background-color: #899f90;
     border: none;
     color: #FFF;
     padding: 10px 0px;

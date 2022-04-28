@@ -17,7 +17,7 @@
         <div class="catgory w-auto fs-5">{{item.categoryName}}</div>
         <div class="row">
             <div class="uer-info d-flex fs-5 align-items-center">
-                <a :href="'/personalpost/post?id='+ item.userId"><img :src="item.userHeadshot" @*v-on:click="topersonalpost(item.userId)"*@ ></a>
+                <a :href="'/personalpost/post?id='+ item.userId"><img :src="item.userHeadshot"></a>
                 <span class="ms-2">{{item.userName}}</span>
             </div>
         </div>
@@ -35,9 +35,7 @@
                     <span class="rounded-pill" v-for="tag in item.hashtagName">#{{tag}}</span>
                 </div>
             </div>
-            <span>
-                {{item.content}}
-            </span>
+            <span class="p-Content">{{item.content}}</span>
         </div>
         <div class="row d-flex justify-content-end pe-0 mb-2 mt-2">
             <button class="msg-icon w-auto p-0">
@@ -54,12 +52,10 @@
             <div class="user-msg-div" v-for="msg in item.message">
                 <div class="user-msg-img">
                     <a :href="'/personalpost/post?id='+ msg.userId"><img :src="msg.userHeadshot" alt=""></a>
-</div>
+                </div>
                 <div class="user-msg-content">
                     <span class="fw-bold">{{msg.userName}}</span>
-                    <span>
-                        {{msg.content}}
-                    </span>
+                    <span class="p-Content">{{msg.content}}</span>
                 </div>
             </div>
         </div>
@@ -93,21 +89,9 @@
             //取得所有貼文
             axios.get("../Api/SkillPost/GetAllSkillPost")
                 .then(res => { self.skillPostList = res.data; console.log(res.data); });
-            
+
         },
         watch:{
-            //checkedHashtag.hashtagIdList: function(){
-            //    const self = this;
-            //    self.checkedHashtag.checkId = category.checkId;
-            //    if(self.checkedHashtag.hashtagIdList.length !== 0){
-            //        axios.post("../Api/SkillPost/GetSKillPostByHashtag",self.checkedHashtag)
-            //        .then(res => self.skillPostList = res.data);
-            //    }else{
-            //        axios.get("../Api/SkillPost/GetAllSkillPost")
-            //        .then(res => self.skillPostList = res.data);
-            //    }
-            //}
-
             //監聽物件中的屬性OR陣列要用深度監聽
             checkedHashtag: {
                 handler(newValue,oldValue){
@@ -125,18 +109,19 @@
             }
         },
         methods:{
-            sendMessage: function(e){
+            sendMessage:async function(e){
                 const self = this;
                 if(e.leaveMsg.trim() !=""){
                     self.message.skillPostId = e.skillPostId;
                     self.message.content = e.leaveMsg;
-                    axios.post("../Api/SkillPost/SkPostMessage",self.message)
+                    await axios.post("../Api/SkillPost/SkPostMessage",self.message)
                     .then(res =>{
-                        alert("留言成功");
                         self.message = new msg();
                         e.leaveMsg = "";
                     })
                     .catch(err => err.response);
+
+                    this.getMessage(e);
                 }
             },
             topersonalpost: function (event) {
@@ -149,6 +134,16 @@
                         window.location.href = "/personalpost/post";
                     })
                     .catch(err => err.response);
+            },
+            getMessage:async function(e){
+                const get =await axios.get(`../Api/SkillPost/GetSkillPostMsgById?id=${e.skillPostId}`);
+                const {data} = get;
+                this.skillPostList.forEach(post =>{
+                    if(post.skillPostId === e.skillPostId){
+                        console.log(post);
+                        post.message = data;
+                    }
+                });
             }
         }
     });

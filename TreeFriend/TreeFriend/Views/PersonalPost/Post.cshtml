@@ -85,7 +85,8 @@
                                 </div>
                                 <img class="iconmessage" src="/img/message.png" alt="Alternate Text" type="button" data-bs-toggle="modal" :data-bs-target="'#staticBackdrop'+num1" />
                             </div>
-                            <div class="cardtext" style="width: 100%; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; ">
+                            <!--內容在多於兩行時收起-->
+                            <div class="cardtext" style="width: 100%; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; word-break: keep-all; ">
                                 {{item.content}}
                             </div>
                         </div>
@@ -113,8 +114,8 @@
                                                         <img class="d-block w-100 cardimagesize card-img-top " alt="" v-bind:src="'/PostPicture/'+img" style="margin:0px; padding:0px; float:none">
                                                     </div>
                                                 </div>
+                                                <!--左右按鈕在大於一張圖片時才顯示-->
                                                 <div v-if="item.postPhotoPath.length>1">
-
                                                     <button class="carousel-control-prev" :data-bs-target="'#carouselExampleIndicators1'+num1" type="button" data-bs-slide="prev">
                                                         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                                                         <span class="visually-hidden">Previous</span>
@@ -139,7 +140,7 @@
                                                 <img class="iconmessageInside" src="/img/message.png" alt="Alternate Text" @*type="button" data-bs-toggle="modal" data-bs-target="#staticBackdrop"*@ />
                                             </div>
                                             <div>
-                                                <p class="card-text ellipsis-post">
+                                                <p class="card-text" style="word-break: keep-all;">
                                                     {{item.content}}
                                                 </p>
                                             </div>
@@ -185,33 +186,11 @@
                                 </div>
                             </div>
                         </div>
-
-                        <!--<div class="" v-for="(msg,index1) in item.message" v-if="index1 < 1">-->@*card-footer*@
-                        <!--{{msg.createDate}} mins ago
-                        </div>-->
-                        @*留言*@
-                        <!--<div class="msgboxout" >
-                                <span>
-                                    <img src="https://i.pravatar.cc/25/random" class="rounded-circle msgsize" alt="Alternate Text" />
-                                </span>
-                                <span class="msgcontent">
-                                    {{msg.userMessage}}
-
-                                    <small class="text-muted updatetime">3 mins ago{{msg.createDate}}</small>
-
-                                </span>
-                            </div>
-
-                        </div>-->
-                        @*<div v-else></div>*@
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    @*<div class="text-center">
-            <p>顯示更多</p>
-        </div>*@
 </div>
 
 

@@ -313,6 +313,7 @@ namespace TreeFriend.Controllers {
             {
                 Email = finduser.Email,
                 HeadshotPath = userHeadshot,
+                UserName = _context.usersDetail.FirstOrDefault(n => n.UserId == user).UserName,
             };
             return userdetail;
         }

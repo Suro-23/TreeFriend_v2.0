@@ -17,7 +17,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <p class="modal-title" id="addLabel">Add</p>
+                        <p class="modal-title" id="addLabel">講座活動新增</p>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <form id="form1" v-on:submit.prevent="send">
@@ -95,8 +95,8 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary btn-sm">Add</button>
+                            <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">取消</button>
+                            <button type="submit" class="btn btn-primary btn-sm">新增</button>
                         </div>
                     </form>
                 </div>
@@ -198,7 +198,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <p class="modal-title" id="staticBackdropLabel">Edit</p>
+                        <p class="modal-title" id="staticBackdropLabel">講座活動修改</p>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <form v-on:submit.prevent="editsend">
@@ -282,8 +282,8 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary btn-sm">SaveChange</button>
+                            <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">取消</button>
+                            <button type="submit" class="btn btn-primary btn-sm">儲存</button>
                         </div>
                     </form>
                 </div>
@@ -299,15 +299,15 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <p class="modal-title" id="deleteLabel">Delete</p>
+                        <p class="modal-title" id="deleteLabel">講座活動刪除</p>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        確定刪除該筆資料?
+                        是否刪除該筆講座活動?
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-danger btn-sm" v-on:click="deletesend">Delete</button>
+                        <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">取消</button>
+                        <button type="button" class="btn btn-danger btn-sm" v-on:click="deletesend">刪除</button>
                     </div>
                 </div>
             </div>

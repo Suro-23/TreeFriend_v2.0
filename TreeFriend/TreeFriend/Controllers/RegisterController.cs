@@ -159,21 +159,36 @@ namespace TreeFriend.Controllers {
         
         #region 註冊
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] User user) {
-            if (user.Email != "" && user.Password != "") {
+        public async Task<IActionResult> Create([FromBody] User user)
+        {
+            if (user.Email != "" && user.Password != "")
+            {
                 var register = _context.users.Where(x => x.Email == user.Email).FirstOrDefault();
-                if (register == null) {
-                    if (ModelState.IsValid) {
+                if (register == null)
+                {
+                    if (ModelState.IsValid)
+                    {
                         byte[] salt = new byte[128 / 8];
-                        using (var rngCsp = new RNGCryptoServiceProvider()) {
+                        using (var rngCsp = new RNGCryptoServiceProvider())
+                        {
                             rngCsp.GetNonZeroBytes(salt);
                         }
-                        //Console.WriteLine($"Salt: {Convert.ToBase64String(salt)}");
 
-                        // derive a 256-bit subkey (use HMACSHA256 with 100,000 iterations)
-                        //string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
-                        byte[] passwordAndSaltBytes = System.Text.Encoding.UTF8.GetBytes(user.Password + salt);
-                        byte[] hashBytes = new SHA256Managed().ComputeHash(passwordAndSaltBytes);
+                        //把salt複製一份備用
+                        byte[] copySalt = (byte[])salt.Clone();
+                        //把密碼轉成byte陣列
+                        var pwdByte = Encoding.UTF8.GetBytes(user.Password);
+                        //取得salt陣列的長度備用
+                        int pwdByteLength = salt.Length;
+                        //將複製的陣列修改長度，並加入密碼陣列
+                        Array.Resize(ref copySalt, copySalt.Length + pwdByte.Length);
+                        for (int i = 0; i < pwdByte.Length; i++)
+                        {
+                            //這邊就會用到剛剛的salt陣列長度
+                            copySalt[pwdByteLength + i] = pwdByte[i];
+                        }
+                        //再把新陣列加密並存進去
+                        byte[] hashBytes = new SHA256Managed().ComputeHash(copySalt);
                         string hashed = Convert.ToBase64String(hashBytes);
 
 
@@ -196,10 +211,14 @@ namespace TreeFriend.Controllers {
                         //return RedirectToAction(nameof(AfterRegister));
                     }
                     return View(user);
-                } else {
+                }
+                else
+                {
                     return Content("成功");
                 }
-            } else {
+            }
+            else
+            {
                 return Content("資料有誤");
             }
         }
@@ -209,34 +228,80 @@ namespace TreeFriend.Controllers {
         {
             return View();
         }
+
+        #region 修改密碼
         [HttpPost]
-        public bool PasswordChange([FromBody] string OldPassword, string NewPassword )
+        public bool PasswordChange([FromBody] EditPasswordViewModel edit )
         {
-            var user = HttpContext.User.Claims.FirstOrDefault(x => x.Type == "UserId").Value;
-            var finduser = _context.users.FirstOrDefault(n => n.Password == OldPassword);
-            if (finduser != null) { 
-            try
+            var UserId = Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(x => x.Type == "UserId").Value);
+
+            var salt = _context.users.SingleOrDefault(n => n.UserId == UserId).Salt;
+
+            //把salt複製一份備用
+            byte[] copySalt = (byte[])salt.Clone();
+            //把密碼轉成byte陣列
+            var pwdByte = Encoding.UTF8.GetBytes(edit.OldPassword);
+            //取得salt陣列的長度備用
+            int pwdByteLength = salt.Length;
+            //將複製的陣列修改長度，並加入密碼陣列
+            Array.Resize(ref copySalt, copySalt.Length + pwdByte.Length);
+            for (int i = 0; i < pwdByte.Length; i++)
             {
-                byte[] salt = new byte[128 / 8];
-                using(var rngCsp=new RNGCryptoServiceProvider())
+                //這邊就會用到剛剛的salt陣列長度
+                copySalt[pwdByteLength + i] = pwdByte[i];
+            }
+            //再把新陣列加密並存進去
+
+           
+            byte[] hashBytes = new System.Security.Cryptography.SHA256Managed().ComputeHash(copySalt);
+            string hashString = Convert.ToBase64String(hashBytes);
+
+      
+            var finduser = _context.users.FirstOrDefault(n => n.Password == hashString);
+
+
+            if (finduser != null)
+            {
+                try
                 {
-                    rngCsp.GetNonZeroBytes(salt);
+                    byte[] newsalt = new byte[128 / 8];
+                    using (var rngCsp = new RNGCryptoServiceProvider())
+                    {
+                        rngCsp.GetNonZeroBytes(newsalt);
+                    }
+
+                    //把salt複製一份備用
+                    byte[] newcopySalt = (byte[])newsalt.Clone();
+                    //把密碼轉成byte陣列
+                    var newpwdByte = Encoding.UTF8.GetBytes(edit.NewPassword);
+                    //取得salt陣列的長度備用
+                    int newpwdByteLength = newsalt.Length;
+                    //將複製的陣列修改長度，並加入密碼陣列
+                    Array.Resize(ref newcopySalt, newcopySalt.Length + newpwdByte.Length);
+                    for (int i = 0; i < newpwdByte.Length; i++)
+                    {
+                        //這邊就會用到剛剛的salt陣列長度
+                        newcopySalt[newpwdByteLength + i] = newpwdByte[i];
+                    }
+                    //再把新陣列加密並存進去
+
+          
+                    byte[] newhashBytes = new SHA256Managed().ComputeHash(newcopySalt);
+                    string afterpwd = Convert.ToBase64String(newhashBytes);
+                    finduser.Password = afterpwd;
+                    finduser.Salt = newsalt;
+                    _context.SaveChanges();
+                    return true;
                 }
-                byte[] passwordAndSaltBytes = System.Text.Encoding.UTF8.GetBytes(NewPassword+ salt);
-                byte[] hashBytes = new SHA256Managed().ComputeHash(passwordAndSaltBytes);
-                string afterpwd = Convert.ToBase64String(hashBytes);
-                finduser.Password = afterpwd;
-                _context.SaveChanges();
-                return true;
-            }
-            catch(Exception ex)
-            {
+                catch (Exception ex)
+                {
                     throw;
-            }
+                }
             }
             return false;
 
         }
+
 
         public EditPwdUserDetailViewModel GetUserDetail()
         {
@@ -247,30 +312,45 @@ namespace TreeFriend.Controllers {
             {
                 Email = finduser.Email,
                 HeadshotPath = userHeadshot,
+                UserName = _context.usersDetail.FirstOrDefault(n => n.UserId == user).UserName,
             };
             return userdetail;
         }
+        #endregion
 
         #region 補加鹽用
         [AllowAnonymous]
         [HttpPost]
-        public bool getSalt([FromBody] User user) {
+        public bool GetSalt([FromBody] User user)
+        {
             var _user = _context.users.FirstOrDefault(x => x.Email == user.Email);
-            try {
+            try
+            {
                 byte[] salt = new byte[128 / 8];
-                using (var rngCsp = new RNGCryptoServiceProvider()) {
+                using (var rngCsp = new RNGCryptoServiceProvider())
+                {
                     rngCsp.GetNonZeroBytes(salt);
                 }
-                byte[] passwordAndSaltBytes = System.Text.Encoding.UTF8.GetBytes(user.Password + salt);
-                byte[] hashBytes = new SHA256Managed().ComputeHash(passwordAndSaltBytes);
-                string hashed = Convert.ToBase64String(hashBytes);
 
+                byte[] copySalt = (byte[])salt.Clone();
+                var pwdByte = Encoding.UTF8.GetBytes(user.Password);
+                int pwdByteLength = salt.Length;
+                Array.Resize(ref copySalt, copySalt.Length + pwdByte.Length);
+                for (int i = 0; i < pwdByte.Length; i++)
+                {
+                    copySalt[pwdByteLength + i] = pwdByte[i];
+                }
+
+                byte[] hashBytes = new SHA256Managed().ComputeHash(copySalt);
+                string hashed = Convert.ToBase64String(hashBytes);
 
                 _user.Salt = salt;
                 _user.Password = hashed;
                 _context.SaveChanges();
                 return true;
-            } catch (Exception) {
+            }
+            catch (Exception)
+            {
 
                 throw;
             }
@@ -285,7 +365,8 @@ namespace TreeFriend.Controllers {
         #region 登入
         [HttpPost]
         //[Authorize(Roles="admin")]
-        public async Task<IActionResult> Login([FromBody] UserLoginViewModel model) {
+        public async Task<IActionResult> Login([FromBody] UserLoginViewModel model)
+        {
             var check = _context.users.Where(x => x.Email == model.Email)
                 .FirstOrDefault();
 
@@ -297,11 +378,25 @@ namespace TreeFriend.Controllers {
             {
                 if (check.Salt != null)
                 {
-                    string salt = check.Salt.ToString();
+                    //string salt = check.Salt.ToString();
+                    var salt = check.Salt;
 
-                    byte[] passwordAndSaltBytes = System.Text.Encoding.UTF8.GetBytes(model.Password + salt);
-                    byte[] hashBytes = new SHA256Managed().ComputeHash(passwordAndSaltBytes);
+                    byte[] copySalt = (byte[])salt.Clone();
+                    var pwdByte = Encoding.UTF8.GetBytes(model.Password);
+                    int pwdByteLength = salt.Length;
+                    Array.Resize(ref copySalt, copySalt.Length + pwdByte.Length);
+                    for (int i = 0; i < pwdByte.Length; i++)
+                    {
+                        copySalt[pwdByteLength + i] = pwdByte[i];
+                    }
+                    //byte[] passwordAndSaltBytes = System.Text.Encoding.UTF8.GetBytes(user.Password + salt);
+                    //byte[] hashBytes = new SHA256Managed().ComputeHash(passwordAndSaltBytes);
+                    byte[] hashBytes = new SHA256Managed().ComputeHash(copySalt);
                     string hashString = Convert.ToBase64String(hashBytes);
+
+                    //byte[] passwordAndSaltBytes = System.Text.Encoding.UTF8.GetBytes(model.Password + salt);
+                    //byte[] hashBytes = new SHA256Managed().ComputeHash(passwordAndSaltBytes);
+                    //string hashString = Convert.ToBase64String(hashBytes);
 
                     if (hashString == check.Password)
                     {

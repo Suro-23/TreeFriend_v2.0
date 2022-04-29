@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 using TreeFriend.Models;
 using TreeFriend.Models.KallinAndYolan;
@@ -67,17 +68,16 @@ namespace TreeFriend.Controllers.Api
                 {
                     rngCsp.GetNonZeroBytes(salt);
                 }
-                //Console.WriteLine($"Salt: {Convert.ToBase64String(salt)}");
+                byte[] copySalt = (byte[])salt.Clone();
+                var pwdByte = Encoding.UTF8.GetBytes(Newpassword);
+                int pwdByteLength = salt.Length;
+                Array.Resize(ref copySalt, copySalt.Length + pwdByte.Length);
+                for (int i = 0; i < pwdByte.Length; i++)
+                {
+                    copySalt[pwdByteLength + i] = pwdByte[i];
+                }
 
-                // derive a 256-bit subkey (use HMACSHA256 with 100,000 iterations)
-                //string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
-                //    password: Newpassword,
-                //    salt: salt,
-                //    prf: KeyDerivationPrf.HMACSHA256,
-                //    iterationCount: 100000,
-                //    numBytesRequested: 256 / 8));
-                byte[] passwordAndSaltBytes = System.Text.Encoding.UTF8.GetBytes(Newpassword + salt);
-                byte[] hashBytes = new SHA256Managed().ComputeHash(passwordAndSaltBytes);
+                byte[] hashBytes = new SHA256Managed().ComputeHash(copySalt);
                 string hashed = Convert.ToBase64String(hashBytes);
 
                 check.Salt = salt;

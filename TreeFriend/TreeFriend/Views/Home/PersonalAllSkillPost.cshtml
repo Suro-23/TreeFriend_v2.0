@@ -32,9 +32,10 @@
             </div>
             <span class="p-Content">{{item.content}}</span>
         </div>
-        <div class="row d-flex justify-content-end pe-0 mb-2 mt-2">
-            <button class="msg-icon w-auto p-0">
-                <img src="~/icon/message.png" alt="">
+        <div class="row d-flex ps-4 mb-2 mt-2 ms-0 me-0">
+            <button class="msg-icon w-auto p-0" @@click="changeMsgStatus(item.skillPostId)">
+                <img v-if="item.msgIsPrivate" src="~/icon/privateMsgClick.png" alt="">
+                <img v-else src="~/icon/privateMsg.png" alt="">
             </button>
         </div>
         <div class="row ms-2 mb-2 pe-3 leave-msg justify-content-around">
@@ -78,7 +79,6 @@
             .then(res =>{
                 if(res.data.length !== 0){
                     this.skillPostList = res.data;
-                    console.log(this.skillPostList);
                 }else{
                     self.noPost = true;
                 }
@@ -86,19 +86,51 @@
             .catch(err => console.log(err.response.data));
         },
         methods:{
-            sendMessage: function(e){
+            sendMessage:async function(e){
                 const self = this;
                 if(e.leaveMsg.trim() !=""){
                     self.message.skillPostId = e.skillPostId;
                     self.message.content = e.leaveMsg;
-                    axios.post("../Api/SkillPost/SkPostMessage",self.message)
+                    await axios.post("../Api/SkillPost/SkPostMessage",self.message)
                     .then(res =>{
-                        alert("留言成功");
                         self.message = new msg();
                         e.leaveMsg = "";
                     })
                     .catch(err => err.response);
                 }
+                this.getMessage(e.skillPostId);
+            },
+            getMessage:async function(e){
+                const get =await axios.get(`../Api/SkillPost/GetSkillPostMsgById?id=${e}`);
+                const {data} = get;
+                this.skillPostList.forEach(post =>{
+                    if(post.skillPostId === e){
+                        post.message = data;
+                    }
+                });
+            },
+            getPrivateMsg: async function(e){
+                const get = await axios.get(`../Api/SkillPost/GetPrivateMsgByPostId?id=${e}`)
+                const {data} = get;
+                console.log(e)
+                this.skillPostList.forEach(post =>{
+                    if(post.skillPostId === e){
+                        post.message = data;
+                    }
+                });
+            },
+            changeMsgStatus:function(e) {
+                this.skillPostList.forEach(post =>{
+                    if(post.skillPostId == e){
+                        post.msgIsPrivate = !post.msgIsPrivate;
+                        if(post.msgIsPrivate){
+                            this.getPrivateMsg(e);
+                        }
+                        else{
+                            this.getMessage(e);
+                        }
+                    }
+                });
             }
         }
     });

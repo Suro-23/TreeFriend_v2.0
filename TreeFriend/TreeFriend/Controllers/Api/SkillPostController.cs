@@ -63,7 +63,7 @@ namespace TreeFriend.Controllers.Api {
                     Content = p.Content,
                     Region = p.Region,
                     HashtagId = h.HashtagId,
-                    HashtagName = h.Hashtag.HashtagName
+                    HashtagName = h.Hashtag.HashtagName,
                 }).ToList();
 
             var groupList = from skPost in skillPostJoin
@@ -78,14 +78,15 @@ namespace TreeFriend.Controllers.Api {
             //這裡的遍歷是根據
             foreach (var group in groupList) {
                 List<SkillPostMessageViewModel> messageResult = null;
-                var messageList = _db.skillPostMessages.Where(p => p.SkillPostId == group.Key);
+                var messageList = _db.skillPostMessages.Where(p => p.SkillPostId == group.Key && p.MsgIsPrivate == false);
                 if (messageList.Count() != 0) {
                     messageResult = messageList.Select(p => new SkillPostMessageViewModel {
                         SkillPostId = p.SkillPostId,
                         UserId = p.UserId,
                         UserName = _db.usersDetail.FirstOrDefault(u => u.UserId == p.UserId).UserName,
                         UserHeadshot = _db.usersDetail.FirstOrDefault(u => u.UserId == p.UserId).HeadshotPath,
-                        Content = p.Content
+                        Content = p.Content,
+                        MsgIsPrivate = p.MsgIsPrivate == true? 1:0
                     }).ToList();
                 }
 
@@ -105,7 +106,8 @@ namespace TreeFriend.Controllers.Api {
                         HashtagName = group.Select(x => x.HashtagName).ToArray(),
                         Message = messageResult,
                         //讓前端用的欄位，後端不須使用
-                        LeaveMsg = null
+                        LeaveMsg = null,
+                        MsgIsPrivate = false
                     });
             }
 
@@ -171,7 +173,7 @@ namespace TreeFriend.Controllers.Api {
 
                             //將當前貼文下的所有留言取出備用
                             List<SkillPostMessageViewModel> messageResult = null;
-                            var messageList = _db.skillPostMessages.Where(p => p.SkillPostId == postInfo.SkillPostId);
+                            var messageList = _db.skillPostMessages.Where(p => p.SkillPostId == postInfo.SkillPostId && p.MsgIsPrivate == false);
                             if (messageList.Count() != 0) {
                                 messageResult = messageList.Select(p => new SkillPostMessageViewModel {
                                     SkillPostId = p.SkillPostId,
@@ -299,7 +301,7 @@ namespace TreeFriend.Controllers.Api {
             //這裡的遍歷是根據
             foreach (var group in groupList) {
                 List<SkillPostMessageViewModel> messageResult = null;
-                var messageList = _db.skillPostMessages.Where(p => p.SkillPostId == group.Key);
+                var messageList = _db.skillPostMessages.Where(p => p.SkillPostId == group.Key && p.MsgIsPrivate == false);
                 if (messageList.Count() != 0) {
                     messageResult = messageList.Select(p => new SkillPostMessageViewModel {
                         SkillPostId = p.SkillPostId,
@@ -344,7 +346,8 @@ namespace TreeFriend.Controllers.Api {
             SkillPostMessage post = new SkillPostMessage() {
                 SkillPostId = skMessage.SkillPostId,
                 UserId = Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(u => u.Type == "UserId").Value),
-                Content = skMessage.Content
+                Content = skMessage.Content,
+                MsgIsPrivate = skMessage.MsgIsPrivate == 1 ? true : false
             };
             await _db.skillPostMessages.AddAsync(post);
             await _db.SaveChangesAsync();
@@ -354,7 +357,7 @@ namespace TreeFriend.Controllers.Api {
         [Route("GetSkillPostMsgById")]
         public async Task<List<SkillPostMessageViewModel>> GetSkillPostMsgById(int id) {
             List<SkillPostMessageViewModel> messageResult = new();
-            var messageList = _db.skillPostMessages.Where(p => p.SkillPostId == id);
+            var messageList = _db.skillPostMessages.Where(p => p.SkillPostId == id && p.MsgIsPrivate == false);
 
             messageResult = await messageList.Select(p => new SkillPostMessageViewModel {
                 SkillPostId = p.SkillPostId,
@@ -367,6 +370,42 @@ namespace TreeFriend.Controllers.Api {
             return messageResult;
         }
 
+        //取得私訊
+        [HttpGet]
+        [Route("GetPrivateMsgById")]
+        public async Task<List<SkillPostMessageViewModel>> GetPrivateMsgById(int id) {
+            int userId = Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(u => u.Type == "UserId").Value);
+            List<SkillPostMessageViewModel> messageResult = new();
+            var messageList = _db.skillPostMessages.Where(p => p.SkillPostId == id && p.MsgIsPrivate == true && p.UserId == userId);
+
+            messageResult = await messageList.Select(p => new SkillPostMessageViewModel {
+                SkillPostId = p.SkillPostId,
+                UserId = p.UserId,
+                UserName = _db.usersDetail.FirstOrDefault(u => u.UserId == p.UserId).UserName,
+                UserHeadshot = _db.usersDetail.FirstOrDefault(u => u.UserId == p.UserId).HeadshotPath,
+                Content = p.Content
+            }).ToListAsync();
+
+            return messageResult;
+        }
+
+        //取得私訊
+        [HttpGet]
+        [Route("GetPrivateMsgByPostId")]
+        public async Task<List<SkillPostMessageViewModel>> GetPrivateMsgByPostId(int id) {
+            List<SkillPostMessageViewModel> messageResult = new();
+            var messageList = _db.skillPostMessages.Where(p => p.SkillPostId == id && p.MsgIsPrivate == true);
+
+            messageResult = await messageList.Select(p => new SkillPostMessageViewModel {
+                SkillPostId = p.SkillPostId,
+                UserId = p.UserId,
+                UserName = _db.usersDetail.FirstOrDefault(u => u.UserId == p.UserId).UserName,
+                UserHeadshot = _db.usersDetail.FirstOrDefault(u => u.UserId == p.UserId).HeadshotPath,
+                Content = p.Content
+            }).ToListAsync();
+
+            return messageResult;
+        }
         #endregion
 
     }

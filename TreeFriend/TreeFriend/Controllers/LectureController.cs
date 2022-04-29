@@ -19,25 +19,25 @@ namespace TreeFriend.Controllers
             _db = db;
         }
 
-        [AllowAnonymous]
-        public List<LecturelistViewModel> GetAllLecture()
-        {
+        //[AllowAnonymous]
+        //public List<LecturelistViewModel> GetAllLecture()
+        //{
             
-            var result = _db.Lectures.Where( x => x.IsDelete == false && x.Count > 0 && x.EventDate>=DateTime.Now).Select(x => new LecturelistViewModel
-            {
-                LectureId = x.LectureId,
-                Theme = x.Theme,
-                EventDate = x.EventDate.ToString("yyyy-MM-dd"),
-                EventTimeStart = x.EventTimeStart.ToString("HH:mm"),
-                EventTimeEnd = x.EventTimeEnd.ToString("HH:mm"),
-                Price = x.Price,
-                Description = x.Description,
-                ImgPath = x.ImgPath
-            }).ToList();
+        //    var result = _db.Lectures.Where( x => x.IsDelete == false && x.Count > 0 && x.EventDate>=DateTime.Now).Select(x => new LecturelistViewModel
+        //    {
+        //        LectureId = x.LectureId,
+        //        Theme = x.Theme,
+        //        EventDate = x.EventDate.ToString("yyyy-MM-dd"),
+        //        EventTimeStart = x.EventTimeStart.ToString("HH:mm"),
+        //        EventTimeEnd = x.EventTimeEnd.ToString("HH:mm"),
+        //        Price = x.Price,
+        //        Description = x.Description,
+        //        ImgPath = x.ImgPath
+        //    }).ToList();
 
-            return result;
+        //    return result;
 
-        }
+        //}
 
         [AllowAnonymous]
         [HttpGet]

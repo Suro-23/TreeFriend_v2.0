@@ -21,22 +21,22 @@ namespace TreeFriend.Controllers
             return View();
         }
 
-        public List<LecturelistViewModel> GetLecture()
-        {
-            var result = _db.Lectures.Where(x => x.IsDelete == false && x.Count > 0 && x.EventDate >= DateTime.Now).OrderBy(x=>x.LectureId).Take(4).Select(x => new LecturelistViewModel
-            {
-                LectureId = x.LectureId,
-                Theme = x.Theme,
-                EventDate = x.EventDate.ToString("yyyy-MM-dd"),
-                EventTimeStart = x.EventTimeStart.ToString("HH:mm"),
-                EventTimeEnd = x.EventTimeEnd.ToString("HH:mm"),
-                Price = x.Price,
-                Description = x.Description,
-                ImgPath = x.ImgPath
-            }).ToList();
+        //public List<LecturelistViewModel> GetLecture()
+        //{
+        //    var result = _db.Lectures.Where(x => x.IsDelete == false && x.Count > 0 && x.EventDate >= DateTime.Now).OrderBy(x=>x.LectureId).Take(4).Select(x => new LecturelistViewModel
+        //    {
+        //        LectureId = x.LectureId,
+        //        Theme = x.Theme,
+        //        EventDate = x.EventDate.ToString("yyyy-MM-dd"),
+        //        EventTimeStart = x.EventTimeStart.ToString("HH:mm"),
+        //        EventTimeEnd = x.EventTimeEnd.ToString("HH:mm"),
+        //        Price = x.Price,
+        //        Description = x.Description,
+        //        ImgPath = x.ImgPath
+        //    }).ToList();
 
-            return result;
+        //    return result;
 
-        }
+        //}
     }
 }

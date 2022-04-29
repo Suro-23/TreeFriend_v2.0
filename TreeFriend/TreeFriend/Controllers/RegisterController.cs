@@ -156,8 +156,7 @@ namespace TreeFriend.Controllers {
             return Content("帳號已開通");
         }
         #endregion
-        // POST: Register/Create
-        //[ValidateAntiForgeryToken]
+        
         #region 註冊
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] User user) {
@@ -292,7 +291,7 @@ namespace TreeFriend.Controllers {
 
             if (check == null && (model.Email == "" || model.Password == ""))
             {
-                return View("帳號或密碼錯誤");
+                return Content("帳號或密碼錯誤");
             }
             else
             {
@@ -465,9 +464,7 @@ namespace TreeFriend.Controllers {
             return View(user);
         }
 
-        // POST: Register/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("UserId,Email,Password")] User user) {

@@ -91,3 +91,7 @@
     .send-msg img {
         width: 25px;
     }
+
+.p-Content {
+    white-space: pre-line;
+}

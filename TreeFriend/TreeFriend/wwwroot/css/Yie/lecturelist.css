@@ -33,10 +33,16 @@
     border-bottom: solid 0.5rem #fcd9b3;
 }
 
+
+
+
 .imgPath {
-    width: 60vw;
-   /* height: 60vh;*/
+   /* width: 60vw;*/
+    height: 61vh;
+  
+ 
 }
+
 
 .btn {
     color: #fff;
@@ -91,7 +97,7 @@
 }
 
 #search {
-    width: 220px;
+    width: 180px;
     height: 25px;
     border: 1px solid rgb(187, 183, 183);
     border-radius: 5px;
@@ -100,4 +106,108 @@
 
 .material-symbols-outlined {
     vertical-align: bottom;
+}
+
+
+
+@media screen and (max-width: 992px) {
+    .imgPath {
+        /* width: 60vw;*/
+        height: 45vh;
+    }
+
+    .mflrg-img {
+        z-index: 1;
+        max-width: 139%;
+        right: 100%;
+        top: 0%;
+    }
+
+    .flegsmile-img {
+        /* position: relative; */
+        z-index: 1;
+        max-width: 130%;
+        /* left: 50%; */
+        top: 78%;
+    }
+}
+
+
+
+
+@media screen (min-width: 768px) and (max-width: 991px) {
+        .imgPath {
+            height: 35vw;
+        }
+
+        .mflrg-img {
+            z-index: 1;
+            max-width: 139%;
+            right: 100%;
+            top: 0%;
+        }
+
+        .flegsmile-img {
+            /* position: relative; */
+            z-index: 1;
+            max-width: 130%;
+            /* left: 50%; */
+            top: 78%;
+        }
+}
+
+@media screen (min-width: 481px) and (max-width: 767px) {
+    .imgPath {
+        height: 30vw;
+    }
+
+    .mflrg-img {
+        z-index: 1;
+        max-width: 139%;
+        right: 100%;
+        top: 0%;
+    }
+
+    .flegsmile-img {
+        /* position: relative; */
+        z-index: 1;
+        max-width: 130%;
+        /* left: 50%; */
+        top: 78%;
+    }
+
+}
+
+
+@media screen and (max-device-width: 480px) {
+    .imgPath {
+        /* width: 60vw;*/
+        height: 25vh;
+    }
+
+    .mflrg-img {
+        z-index: 1;
+        max-width: 139%;
+        right: 100%;
+        top: 0%;
+    }
+
+    .flegsmile-img {
+        /* position: relative; */
+        z-index: 1;
+        max-width: 130%;
+        /* left: 50%; */
+        top: 78%;
+    }
+    #search {
+        width: 200px;
+        height: 30px;
+        border: 1px solid rgb(187, 183, 183);
+        border-radius: 5px;
+        outline: none;
+    }
+
+    .material-symbols-outlined {
+        vertical-align: bottom;
+    }
 }

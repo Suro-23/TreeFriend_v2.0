@@ -245,9 +245,9 @@
                     },
                     success: function (res) {
                         if (res == "成功") {
-                            alert("帳號重複");
+                            SWinfo("帳號重複!","","此帳號已被註冊")
                         } else if (res == "資料有誤") {
-                            alert("資料有誤");
+                            SWerror("資料有誤!","","再檢查一次")
                         } else {
                             SWinfo("註冊成功!", "請至email開通帳號~開通即可開始技能交換!", "馬上去開通");
                         }
@@ -255,7 +255,7 @@
                 });
         }
         else {
-            alert("資料有誤");
+            SWerror("資料有誤!", "", "再檢查一次")
         }
     });
 </script>

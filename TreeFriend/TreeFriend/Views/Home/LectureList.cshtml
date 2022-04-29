@@ -31,7 +31,7 @@
                 </div>
 
                 <div class="carousel-inner">
-                    <div v-bind:class="{'active': activeIndex === index}" class="carousel-item " v-for="(item,index) in lecturelist.slice(0,3)">
+                    <div v-bind:class="{'active': activeIndex === index}" class="carousel-item" v-for="(item,index) in lecturelist.slice(0,3)">
 
                         <img :src="item.imgPath" class="d-block w-100 rounded imgPath ">
                     </div>
@@ -59,7 +59,7 @@
     <div class="row mb-5 mx-auto">
         <div class="mt-5 ms-0 ">
             <label for="search"><span class="material-symbols-outlined">search</span></label>
-            <input type="text" v-model="filter_name" id="search" placeholder="搜尋你想要的講座主題或價格" class="search">
+            <input type="text" v-model="filter_name" id="search" placeholder="搜尋講座主題或價格" class="search">
         </div>
         <div class="row row-cols-1 row-cols-lg-4 row-cols-md-4 g-3 mt-3">
             <a class="lecture link-secondary" v-for="item in  filteredLectureList" :href="'/home/lectureDetail?id='+ item.lectureId">
@@ -138,11 +138,11 @@
                     let self = this;
 
                     axios.get("/Lecture/GetAllLecture").then(res => {
-                        if (res.data.length <= 4) {
+                        if (res.data.length <= 8) {
                             self.lecturelist = res.data;
                             self.isMoreShow = false
                         } else {
-                            self.lecturelist = res.data.slice(0, 4);
+                            self.lecturelist = res.data.slice(0, 8);
                             self.isMoreShow = true;
                         } 
                     });
@@ -150,9 +150,9 @@
                 moreShow() {
                     let self = this;
                     axios.get("/Lecture/GetAllLecture").then(res => {
-                        self.lecturelist = self.lecturelist.concat(res.data.slice(self.nowPage * 4, (self.nowPage + 1) * 4));
+                        self.lecturelist = self.lecturelist.concat(res.data.slice(self.nowPage * 8, (self.nowPage + 1) * 8));
                         self.nowPage++;
-                        if (res.data.length >= self.nowPage * 4) {
+                        if (res.data.length >= self.nowPage * 8) {
                             self.isMoreShow = true;
                         } else {
                             self.isMoreShow= false;

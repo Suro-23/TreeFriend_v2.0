@@ -68,9 +68,21 @@ namespace TreeFriend.Controllers
             //Console.WriteLine(Amount);
             string GoodName = _db.Lectures.Where(x => x.LectureId == InputlectureId).Select(y => y.Theme).SingleOrDefault();
             string GoodDesc = GoodName + "*" + Buyercount;
-            
-           
-           
+
+            var ud = _db.Lectures.Where(x => x.LectureId == InputlectureId).SingleOrDefault();
+            if (ud.Count - Buyercount >= 0)
+            {
+                ud.Count -= Buyercount;
+                _db.SaveChanges();
+
+            }
+            else
+            {
+                var message = $"親愛會員，您所選擇的講座{GoodName}目前票券不足";
+                return RedirectToAction("Quantity", "Error", new { whatever = message });
+            }
+
+
             _db.OrderDetails.Add(new Models.Entity.OrderDetail()
             {
                 CreateDate = DateTime.UtcNow.AddHours(8),
@@ -88,19 +100,7 @@ namespace TreeFriend.Controllers
             //Console.WriteLine(odno);
             string Ordernumber = odno;
 
-            var ud= _db.Lectures.Where(x => x.LectureId == InputlectureId).SingleOrDefault();
-            if (ud.Count-Buyercount>= 0)
-            {
-                ud.Count -= Buyercount;
-                _db.SaveChanges();
-                
-            }
-            else
-            {
-                var message = $"親愛會員，您所選擇的講座{GoodName}目前票券不足";
-                return RedirectToAction("Quantity", "Error", new { whatever = message });
-            }
-
+            
 
             TradeInfo tradeInfo = new TradeInfo()
             {

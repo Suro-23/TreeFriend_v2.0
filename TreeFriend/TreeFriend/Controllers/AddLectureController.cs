@@ -3,9 +3,11 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using TreeFriend.Models;
 using TreeFriend.Models.Entity;
@@ -33,30 +35,31 @@ namespace TreeFriend.Controllers
 
 
         #region 渲染
-        //public List<AddLecturelistViewModel> GetAllLecture()
-        //{
-        //    var result = _db.Lectures.Where(x => x.IsDelete == false).OrderByDescending(x => x.CreateDate).Select(x => new AddLecturelistViewModel
-        //    {
-        //        LectureId = x.LectureId,
-        //        CreateDate = x.CreateDate.ToString("yyyy-MM-dd"),
-        //        Theme = x.Theme,
-        //        EventDate = x.EventDate.ToString("yyyy-MM-dd"),
-        //        EventTimeStart = x.EventTimeStart.ToString("HH:mm"), //HH24小時 hh12小時
-        //        EventTimeEnd = x.EventTimeEnd.ToString("HH:mm"),
-        //        Venue = x.Venue,
-        //        SpeakerImgPath = x.SpeakerImgPath,
-        //        Speaker = x.Speaker,
-        //        Count = x.Count,
-        //        Price = x.Price,
-        //        Description = x.Description,
-        //        Content = x.Content,
-        //        ImgPath = x.ImgPath,
-        //        UpdateTime = x.UpdateTime.HasValue ? x.UpdateTime.Value.ToString("yyyy-MM-dd") : ""
+        public List<AddLecturelistViewModel> GetAllLecture()
+        {
+            var result = _db.Lectures.OrderByDescending(x => x.CreateDate).Select(x => new AddLecturelistViewModel
+            {
+                LectureId = x.LectureId,
+                CreateDate = x.CreateDate.ToString("yyyy-MM-dd"),
+                Theme = x.Theme,
+                EventDate = x.EventDate.ToString("yyyy-MM-dd"),
+                EventTimeStart = x.EventTimeStart.ToString("HH:mm"), //HH24小時 hh12小時
+                EventTimeEnd = x.EventTimeEnd.ToString("HH:mm"),
+                Venue = x.Venue,
+                SpeakerImgPath = x.SpeakerImgPath,
+                Speaker = x.Speaker,
+                Count = x.Count,
+                Price = x.Price,
+                Description = x.Description,
+                Content = x.Content,
+                ImgPath = x.ImgPath,
+                UpdateTime = x.UpdateTime.HasValue ? x.UpdateTime.Value.ToString("yyyy-MM-dd") : "",
+                Status = x.Status.HasValue ? x.Status.GetType().GetMember(x.Status.ToString()).First().GetCustomAttribute<DisplayAttribute>().GetName() : ""
 
-        //    }).ToList();
+            }).ToList();
 
-        //    return result;
-        //}
+            return result;
+        }
         #endregion
 
         #region 講座修改
@@ -171,8 +174,8 @@ namespace TreeFriend.Controllers
                     Price = model.Price,
                     ImgPath = pic,
                     SpeakerImgPath = speakerpic,
-                    UserId = UserId
-
+                    UserId = UserId,
+                    Status = Models.Enum.LectureStatus.Unapproved
 
                 });
 
@@ -186,25 +189,43 @@ namespace TreeFriend.Controllers
         }
         #endregion
 
-        #region 講座軟刪除
-        //[HttpDelete]
-        //public bool DeleteLecture([FromQuery] int lectureId)
-        //{
-        //    try
-        //    {
-        //        var result = _db.Lectures.Where(x => x.LectureId == lectureId).SingleOrDefault();
-        //        Console.WriteLine(result);
-        //        result.IsDelete = true;
-        //        result.UpdateTime = DateTime.UtcNow.AddHours(8);
-        //        _db.Lectures.Update(result);
-        //        _db.SaveChanges();
-        //        return true;
-        //    }
-        //    catch (Exception)
-        //    {
-        //        return false;
-        //    }
-        //}
+        #region 講座上下架
+        [HttpDelete]
+        public bool IsNotSoldLecture([FromQuery] int lectureId)
+        {
+            try
+            {
+                var result = _db.Lectures.Where(x => x.LectureId == lectureId).SingleOrDefault();
+                Console.WriteLine(result);
+                result.Status = Models.Enum.LectureStatus.NotSold;
+                result.UpdateTime = DateTime.UtcNow.AddHours(8);
+                _db.Lectures.Update(result);
+                _db.SaveChanges();
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+      
+        public bool IsLaunchedLecture([FromQuery] int lectureId)
+        {
+            try
+            {
+                var result = _db.Lectures.Where(x => x.LectureId == lectureId).SingleOrDefault();
+                Console.WriteLine(result);
+                result.Status = Models.Enum.LectureStatus.Launched;
+                _db.Lectures.Update(result);
+                _db.SaveChanges();
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
 
         #endregion
     }

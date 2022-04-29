@@ -104,7 +104,7 @@
 
         </div>
     </div>
-    <div id="list"  style="height:74%;">
+    <div id="list" style="height:74%;">
         <div class="mt-3">
             <label for="search"><span class="material-symbols-outlined">search</span></label>
             <input type="text" v-model="filter_name" id="search" placeholder="搜尋">
@@ -125,6 +125,7 @@
                         <th scope="col">講師</th>
                         <th scope="col">庫存</th>
                         <th scope="col">票價</th>
+                        <th scope="col">狀態</th>
                         @*<th scope="col">講座規劃</th>*@
                         @*<th scope="col">講座內容</th>*@
                         @*<th scope="col">封面圖片</th>*@
@@ -150,13 +151,16 @@
                         @*<td>{{item.content}}</td>*@
                         @*<td><img :src="item.imgPath" style="max-height:50px" /></td>*@
                         @*<td>{{item.updateTime}}</td>*@
+                        <td>{{item.status}}</td>
                         <td nowrap="nowrap">
                             <button type="button" class="btn btn-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#staticBackdrop" v-bind:value="item.lectureId" v-on:click="edit($event)">
                                 修改
                             </button>
-
-                            <button type="button" class="btn btn-danger btn-sm " data-bs-toggle="modal" data-bs-target="#deleteModel" v-bind:value="item.lectureId" v-on:click="gettarget($event)">
-                                刪除
+                            <button type="button" class="btn btn-secondary btn-sm " data-bs-toggle="modal" data-bs-target="#upModel" v-bind:value="item.lectureId" v-on:click="getup($event)">
+                                上架
+                            </button>
+                            <button type="button" class="btn btn-danger btn-sm " data-bs-toggle="modal" data-bs-target="#deleteModel" v-bind:value="item.lectureId" v-on:click="getdelete($event)">
+                                下架
                             </button>
                         </td>
 
@@ -293,25 +297,47 @@
 
 
 
+        <!--upModel -->
+        <div class="modal fade" id="upModel" tabindex="-1" aria-labelledby="upModelLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="upLabel">講座活動上架</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        確定上架該筆講座活動?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">取消</button>
+                        <button type="button" class="btn  btn-primary btn-sm" v-on:click="launchedsend">確定</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
 
         <!-- deleteModal -->
         <div class="modal fade" id="deleteModel" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <p class="modal-title" id="deleteLabel">講座活動刪除</p>
+                        <p class="modal-title" id="deleteLabel">講座活動下架</p>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        是否刪除該筆講座活動?
+                        是否下架該筆講座活動?
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">取消</button>
-                        <button type="button" class="btn btn-danger btn-sm" v-on:click="deletesend">刪除</button>
+                        <button type="button" class="btn btn-danger btn-sm" v-on:click="deletesend">確定</button>
                     </div>
                 </div>
             </div>
         </div>
+
+
 
     </div>
 </fieldset>
@@ -469,7 +495,8 @@
                 imgPath: "",
                 speakerImgPath: "",
             },
-            target: null,
+            launchedtarget: null,
+            deletetarget: null,
             date: new Date().toLocaleDateString('en-CA'),
             isShow: false,
             countOfPage: 5,
@@ -600,12 +627,37 @@
                     })
             },
 
-            gettarget: function (event) {
+            getup: function (event) {
                 let self = this;
                 let lectureId = event.target.value;
-                self.target = self.lecturelist.find((sourceItem) => { return +sourceItem.lectureId === +lectureId });
-                self.lecture = self.target; 
-                console.log(self.target);
+                self.launchedtarget = self.lecturelist.find((sourceItem) => { return +sourceItem.lectureId === +lectureId });
+                self.lecture = self.launchedtarget; //等於選取的講座
+                console.log(self.launchedtarget);
+                console.log(lectureId);
+            },
+
+            launchedsend: function (event) {
+
+                let self = this;
+
+                axios.delete(`/AddLecture/IsLaunchedLecture/?lectureId=${self.launchedtarget.lectureId}`)
+                    .then(res => {
+                        if (res.data == true) {
+                            successAlert("上架成功");
+                        } else {
+                            errorAlert("上架失敗");
+                        }
+                    }
+                    ).catch(err => console.log(err));
+
+            },
+
+            getdelete: function (event) {
+                let self = this;
+                let lectureId = event.target.value;
+                self.deletetarget = self.lecturelist.find((sourceItem) => { return +sourceItem.lectureId === +lectureId });
+                self.lecture = self.deletetarget;
+                console.log(self.deletetarget);
                 console.log(lectureId);
             },
 
@@ -613,12 +665,12 @@
 
                 let self = this;
 
-                axios.delete(`/AddLecture/DeleteLecture/?lectureId=${self.target.lectureId}`)
+                axios.delete(`/AddLecture/IsNotSoldLecture/?lectureId=${self.deletetarget.lectureId}`)
                     .then(res => {
                         if (res.data == true) {
-                            successAlert("刪除成功");
+                            successAlert("下架成功");
                         } else {
-                            errorAlert("刪除失敗");
+                            errorAlert("下架失敗");
                         }
                     }
                     ).catch(err => console.log(err));

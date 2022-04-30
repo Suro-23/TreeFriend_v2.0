@@ -14,6 +14,8 @@
     @*<link rel="stylesheet" href="~/css/Reset.css" />*@
     @*<link rel="stylesheet" href="~/css/HomePage.css" />*@
     @*<link rel="stylesheet" href="~/css/site.css" />*@
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 </head>
 <body>
     <nav id="header-nav" class="navbar navbar-expand-lg navbar-light header-bg">
@@ -113,3 +115,34 @@
     });
 </script>
 </html>
+<script>
+    function SWMseccess(title, text, ok) {
+        Swal.fire({
+            title: title,
+            text: text,
+            icon: 'success',
+            confirmButtonText: ok,
+            willClose: () => {
+                location.reload();
+            }
+        });
+    }
+    function SWMerror(title, text, close) {
+        Swal.fire({
+            title: title,
+            text: text,
+            icon: 'error',
+            confirmButtonText: close
+        });
+    }
+    function SWMseccessL(title, text, ok) {
+        Swal.fire({
+            title: title,
+            text: text,
+            icon: 'success',
+            confirmButtonText: ok
+        }).then(function () {
+            window.location.href = "./AllSkillPostPage";
+        });
+    }
+</script>

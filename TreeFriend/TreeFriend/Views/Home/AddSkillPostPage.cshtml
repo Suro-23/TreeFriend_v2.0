@@ -58,9 +58,10 @@
             addSkillPost: function(){
                 const self = this;
                 axios.post("../Api/SkillPost/AddSkillPost",self.skillPost)
-                .then(res => {
-                    alert(res.data);
-                    window.location.href="./AllSkillPostPage";
+                    .then(res => {
+                    console.log(res.data);
+                    SWMseccessL("更新成功", "", "完成");
+                    //window.location.href="./AllSkillPostPage";
                 })
                 .catch(err => console.log(err.response.data));
             }

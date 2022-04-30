@@ -8,6 +8,12 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using System.IO;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace TreeFriend.Controllers.Api {
     [Authorize]
@@ -43,10 +49,11 @@ namespace TreeFriend.Controllers.Api {
         //編輯基本資料
         [Route("UpdateUserInfo")]
         [HttpPut]
-        public string UpdateUserInfo([FromBody] UserDetailViewModel userVM) {
+        public async Task<string> UpdateUserInfo([FromBody] UserDetailViewModel userVM) {
             //獲取Cookies中的UserId後找尋該筆Entity資料
             int userId = Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(u => u.Type == "UserId").Value);
             var memberInfo = _db.usersDetail.FirstOrDefault(u => u.UserId == userId);
+            var oldHeadshot = memberInfo.HeadshotPath;
 
             //將字串轉成日期格式 輸入格式: YYYY-MM-DD
             var birthDay = DateTime.Parse(userVM.Birthday);
@@ -60,6 +67,37 @@ namespace TreeFriend.Controllers.Api {
                 memberInfo.HeadshotPath = userVM.HeadshotPath;
                 memberInfo.SelfIntrodution = userVM.SelfIntrodution;
                 _db.SaveChanges();
+
+                //為了讓頭像即時更新，需登出一次再登入
+                if (memberInfo.HeadshotPath != oldHeadshot) {
+                    //登出
+                    await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
+                    //登入
+                    var check = _db.users.FirstOrDefault(x => x.UserId == userId);
+
+                    var UserLevel = check.UserLevel == true ? "Admin" : "Member";
+                    var claims = new List<Claim>(){
+                        //YP : 確認身分後cookie綁定權限
+                        new Claim(ClaimTypes.Email,check.Email),
+                        new Claim("UserId",check.UserId.ToString()),
+                        new Claim(ClaimTypes.Role,UserLevel),
+                        new Claim("Headshot",check.UserDetail.HeadshotPath),
+                        new Claim("UserName",check.UserDetail.UserName)
+                    };
+
+                    var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                    var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+
+                    await HttpContext.SignInAsync(claimsPrincipal);
+                    await HttpContext.SignInAsync(
+                    CookieAuthenticationDefaults.AuthenticationScheme,
+                    new ClaimsPrincipal(claimsIdentity),
+                    new AuthenticationProperties {
+                        IsPersistent = true,
+                        ExpiresUtc = DateTime.UtcNow.AddMinutes(20)
+                    });
+                }
                 return "更新成功";
             } catch (Exception) {
                 return "更新失敗";
@@ -87,23 +125,22 @@ namespace TreeFriend.Controllers.Api {
         [HttpGet]
         public List<OrderHistoryViewModel> GetOrder() {
             int userId = Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(u => u.Type == "UserId").Value);
-            var result = _db.OrderDetails.Where(od => od.UserId == userId && od.Lecture.EventDate>=DateTime.Now && od.OrderStatus==true).OrderByDescending(od => od.CreateDate).Select(od => new OrderHistoryViewModel
-            {
-                OrderDetailId=od.OrderDetailId,
-                CreateDate=od.CreateDate.ToString("yyyy-MM-dd HH:mm"),
-                TotoalAmount = Convert.ToInt32(od.Price*od.Count),
-                PayTime=od.PayTime.HasValue ? od.PayTime.Value.ToString("yyyy-MM-dd HH:mm"):"",
-                PaymentStatus=od.PaymentStatus,
-                OrderStatus=od.OrderStatus,
-                Theme=od.Lecture.Theme,
-                EventDate= od.Lecture.EventDate.ToString("yyyy-MM-dd"),
-                EventTimeStart= od.Lecture.EventTimeStart.ToString("HH:mm"),
-                EventTimeEnd= od.Lecture.EventTimeEnd.ToString("HH:mm"),
-                Venue= od.Lecture.Venue,
-                Price=od.Price,
-                Count=od.Count,
-                ImgPath=od.Lecture.ImgPath,
-                LectureId=od.LectureId
+            var result = _db.OrderDetails.Where(od => od.UserId == userId && od.Lecture.EventDate >= DateTime.Now && od.OrderStatus == true).OrderByDescending(od => od.CreateDate).Select(od => new OrderHistoryViewModel {
+                OrderDetailId = od.OrderDetailId,
+                CreateDate = od.CreateDate.ToString("yyyy-MM-dd HH:mm"),
+                TotoalAmount = Convert.ToInt32(od.Price * od.Count),
+                PayTime = od.PayTime.HasValue ? od.PayTime.Value.ToString("yyyy-MM-dd HH:mm") : "",
+                PaymentStatus = od.PaymentStatus,
+                OrderStatus = od.OrderStatus,
+                Theme = od.Lecture.Theme,
+                EventDate = od.Lecture.EventDate.ToString("yyyy-MM-dd"),
+                EventTimeStart = od.Lecture.EventTimeStart.ToString("HH:mm"),
+                EventTimeEnd = od.Lecture.EventTimeEnd.ToString("HH:mm"),
+                Venue = od.Lecture.Venue,
+                Price = od.Price,
+                Count = od.Count,
+                ImgPath = od.Lecture.ImgPath,
+                LectureId = od.LectureId
             }).ToList();
 
             return result;
@@ -112,11 +149,9 @@ namespace TreeFriend.Controllers.Api {
 
         [Route("GetOrderHistory")]
         [HttpGet]
-        public List<OrderHistoryViewModel> GetOrderHistory()
-        {
+        public List<OrderHistoryViewModel> GetOrderHistory() {
             int userId = Convert.ToInt32(HttpContext.User.Claims.FirstOrDefault(u => u.Type == "UserId").Value);
-            var result = _db.OrderDetails.Where(od => od.UserId == userId &&( od.Lecture.EventDate < DateTime.Now || od.OrderStatus == false)).OrderByDescending(od=>od.CreateDate).Select(od => new OrderHistoryViewModel
-            {
+            var result = _db.OrderDetails.Where(od => od.UserId == userId && (od.Lecture.EventDate < DateTime.Now || od.OrderStatus == false)).OrderByDescending(od => od.CreateDate).Select(od => new OrderHistoryViewModel {
                 OrderDetailId = od.OrderDetailId,
                 CreateDate = od.CreateDate.ToString("yyyy-MM-dd HH:mm"),
                 TotoalAmount = Convert.ToInt32(od.Price * od.Count),
@@ -136,7 +171,7 @@ namespace TreeFriend.Controllers.Api {
             return result;
 
         }
-        
+
         #endregion
     }
 }

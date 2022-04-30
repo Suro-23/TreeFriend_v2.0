@@ -389,14 +389,9 @@ namespace TreeFriend.Controllers {
                     {
                         copySalt[pwdByteLength + i] = pwdByte[i];
                     }
-                    //byte[] passwordAndSaltBytes = System.Text.Encoding.UTF8.GetBytes(user.Password + salt);
-                    //byte[] hashBytes = new SHA256Managed().ComputeHash(passwordAndSaltBytes);
+
                     byte[] hashBytes = new SHA256Managed().ComputeHash(copySalt);
                     string hashString = Convert.ToBase64String(hashBytes);
-
-                    //byte[] passwordAndSaltBytes = System.Text.Encoding.UTF8.GetBytes(model.Password + salt);
-                    //byte[] hashBytes = new SHA256Managed().ComputeHash(passwordAndSaltBytes);
-                    //string hashString = Convert.ToBase64String(hashBytes);
 
                     if (hashString == check.Password)
                     {

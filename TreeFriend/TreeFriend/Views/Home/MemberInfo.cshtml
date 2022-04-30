@@ -84,11 +84,15 @@
             editInfo: function(){
                 const self = this;
                 axios.put("../Api/Member/UpdateUserInfo",self.userInfo)
-                .then(res =>{
-                    alert(res.data);
-                    location.reload();
+                    .then(res => {
+                        console.log(res.data);
+                    SWMseccess("更新成功", "", "完成");
+                    //location.reload();
                 })
-                .catch(err => {console.log(err.response.data)});
+                    .catch(err => {
+                        console.log(err.response.data);
+                        SWMerror("更新失敗", "", "關閉");
+                    });
             },
             uploadImage: function(e){
                 this.formData.append("file",e.target.files[0]);

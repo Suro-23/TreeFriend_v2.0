@@ -23,7 +23,7 @@ namespace TreeFriend.Controllers
 
         public List<LecturelistViewModel> GetLecture()
         {
-            var result = _db.Lectures.Where(x => x.Status == Models.Enum.LectureStatus.Launched && x.Count > 0 && x.EventDate >= DateTime.Now).OrderBy(x => x.LectureId).Take(4).Select(x => new LecturelistViewModel
+            var result = _db.Lectures.Where(x => x.Status == Models.Enum.LectureStatus.Launched && x.Count > 0 && x.EventDate >= DateTime.UtcNow.AddHours(8)).OrderBy(x => x.LectureId).Take(4).Select(x => new LecturelistViewModel
             {
                 LectureId = x.LectureId,
                 Theme = x.Theme,

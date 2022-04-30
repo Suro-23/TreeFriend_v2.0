@@ -1,5 +1,6 @@
 ﻿@{
     Layout = "~/Views/Shared/_Post.cshtml";
+    var user = Context.User.Claims.FirstOrDefault();
 }
 
 <link rel="stylesheet" href="~/css/YP/AllSkillPost.css" />
@@ -45,9 +46,9 @@
         </div>
         <div class="row ms-2 mb-2 pe-3 leave-msg justify-content-around">
             <textarea v-model="item.leaveMsg" class="col-11 user-msg border-0 rounded-2" rows="2" placeholder="留言"></textarea>
-            <button @@click="sendMessage(item)" class="w-auto border-0 send-msg p-0">
-                <img src="~/icon/send.png" alt="">
-            </button>
+                <button @@click="sendMessage(item)" class="w-auto border-0 send-msg p-0">
+                    <img src="~/icon/send.png" alt="">
+                </button>
         </div>
         <div class="row user-msg ms-2 pe-4">
             <div class="user-msg-div" v-for="msg in item.message">
@@ -116,6 +117,8 @@
                 if(e.leaveMsg.trim() !=""){
                     self.message.skillPostId = e.skillPostId;
                     self.message.content = e.leaveMsg;
+                    self.message.msgIsPrivate = e.msgIsPrivate?"1":"0";
+
                     await axios.post("../Api/SkillPost/SkPostMessage",self.message)
                     .then(res =>{
                         self.message = new msg();
@@ -123,8 +126,11 @@
                     })
                     .catch(err => console.log(err.response));
                 }
-                e.msgIsPrivate = !e.msgIsPrivate;
-                this.getMessage(e.skillPostId);
+                if('@user' != ""){
+                    this.changeMsgStatus(e.skillPostId);
+                }else{
+                    window.location.replace("../Register/Create");
+                }
             },
             topersonalpost: function (event) {
                 const self = this;
@@ -160,12 +166,10 @@
                 this.skillPostList.forEach(post =>{
                     if(post.skillPostId == e){
                         post.msgIsPrivate = !post.msgIsPrivate;
-                        if(this.message.msgIsPrivate === "0"){
-                            this.message.msgIsPrivate = "1";
+                        if(post.msgIsPrivate === true){
                             this.getPrivateMsg(e);
                         }
                         else{
-                            this.message.msgIsPrivate = "0";
                             this.getMessage(e);
                         }
                     }

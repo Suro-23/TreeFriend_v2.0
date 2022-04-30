@@ -97,20 +97,29 @@
                         <div class="d-flex gap-1 mt-1 align-items-center">
                             <span class="material-icons-sharp align-middle">alarm</span>
 
-                        <p class="m-0" v-cloak>剩餘{{dateDiff}}天截止</p>
+                            <p class="m-0" v-cloak>剩餘{{dateDiff}}天截止</p>
                         </div>
                         <div class="d-flex gap-1 align-items-center">
                             <span class="material-icons-sharp align-middle">local_fire_department</span>
                             <p class="m-0" v-cloak>講座剩{{item.count}}位</p>
                         </div>
 
-                        <div class="flex-row d-flex align-items-center gap-2 qty  mt-3">
+                        <div class="flex-row d-flex align-items-center gap-2 qty  mt-3" v-if="item.count>1">
                             <span class="fs-5 text-center">購買數量</span>
                             <span class="material-icons-sharp qtyminus rounded-circle p-1"
                                   v-on:click="changeIndex(-1)">remove</span>
                             <span class="number" v-cloak>{{amount}}</span>
                             <span class="material-icons-sharp qtyplus rounded-circle p-1 "
                                   v-on:click="changeIndex(+1)" v-if="item.count>=amount+1">add</span>
+                        </div>
+                        <div class="flex-row d-flex align-items-center gap-2 qty  mt-3" v-else="item.count<1">
+                            <span class="fs-5 text-center">購買數量</span>
+                            <span class="fs-5 text-center">目前庫存不足</span>
+                            @*<span class="material-icons-sharp qtyminus rounded-circle p-1"
+                              v-on:click="changeIndex(-1)">remove</span>
+                              <span class="number" v-cloak>{{amount}}</span>
+                              <span class="material-icons-sharp qtyplus rounded-circle p-1 "
+                              v-on:click="changeIndex(+1)" v-if="item.count>=amount+1">add</span>*@
                         </div>
 
                         <div class="d-grid gap-2 mt-3">
@@ -155,7 +164,7 @@
                 eventDate: '',
 
             },
-            amountShow:false
+            
         },
         mounted: function () {
             let lectureURL = window.location.search;
@@ -186,10 +195,10 @@
             changeIndex(change) {
 
                 this.amount += change;
-                
+
                 if (this.amount < 1) {
                     this.amount = 1;
-                };
+                } 
                                
             },
 

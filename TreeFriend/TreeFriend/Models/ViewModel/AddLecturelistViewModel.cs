@@ -23,5 +23,6 @@ namespace TreeFriend.Models.ViewModel
         public string ImgPath { get; set; }
 
         public string UpdateTime { get; set; }
+        public string Status { get; set; }
     }
 }

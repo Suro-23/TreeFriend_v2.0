@@ -15,6 +15,8 @@ namespace TreeFriend.Models.Entity {
 
         [Required]
         public string Content { get; set; }
+        [Required]
+        public bool MsgIsPrivate { get; set; } = false;
 
         [Required]
         public bool Status { get; set; } = true;

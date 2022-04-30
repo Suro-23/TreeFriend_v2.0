@@ -30,5 +30,7 @@ namespace TreeFriend.Models.ViewModel {
 
         //讓前端用的欄位，後端不需要使用
         public string LeaveMsg { get; set; }
+        //讓前端用的欄位，後端不需要使用
+        public bool MsgIsPrivate { get; set; }
     }
 }

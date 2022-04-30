@@ -3,9 +3,11 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using TreeFriend.Models;
 using TreeFriend.Models.Entity;
@@ -35,7 +37,7 @@ namespace TreeFriend.Controllers
         #region 渲染
         public List<AddLecturelistViewModel> GetAllLecture()
         {
-            var result = _db.Lectures.Where(x => x.IsDelete == false).OrderByDescending(x => x.CreateDate).Select(x => new AddLecturelistViewModel
+            var result = _db.Lectures.OrderByDescending(x => x.CreateDate).Select(x => new AddLecturelistViewModel
             {
                 LectureId = x.LectureId,
                 CreateDate = x.CreateDate.ToString("yyyy-MM-dd"),
@@ -51,7 +53,8 @@ namespace TreeFriend.Controllers
                 Description = x.Description,
                 Content = x.Content,
                 ImgPath = x.ImgPath,
-                UpdateTime = x.UpdateTime.HasValue ? x.UpdateTime.Value.ToString("yyyy-MM-dd") : ""
+                UpdateTime = x.UpdateTime.HasValue ? x.UpdateTime.Value.ToString("yyyy-MM-dd") : "",
+                Status = x.Status.HasValue ? x.Status.GetType().GetMember(x.Status.ToString()).First().GetCustomAttribute<DisplayAttribute>().GetName() : ""
 
             }).ToList();
 
@@ -171,8 +174,8 @@ namespace TreeFriend.Controllers
                     Price = model.Price,
                     ImgPath = pic,
                     SpeakerImgPath = speakerpic,
-                    UserId = UserId
-
+                    UserId = UserId,
+                    Status = Models.Enum.LectureStatus.Unapproved
 
                 });
 
@@ -186,16 +189,34 @@ namespace TreeFriend.Controllers
         }
         #endregion
 
-        #region 講座軟刪除
+        #region 講座上下架
         [HttpDelete]
-        public bool DeleteLecture([FromQuery] int lectureId)
+        public bool IsNotSoldLecture([FromQuery] int lectureId)
         {
             try
             {
                 var result = _db.Lectures.Where(x => x.LectureId == lectureId).SingleOrDefault();
                 Console.WriteLine(result);
-                result.IsDelete = true;
+                result.Status = Models.Enum.LectureStatus.NotSold;
                 result.UpdateTime = DateTime.UtcNow.AddHours(8);
+                _db.Lectures.Update(result);
+                _db.SaveChanges();
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+      
+        public bool IsLaunchedLecture([FromQuery] int lectureId)
+        {
+            try
+            {
+                var result = _db.Lectures.Where(x => x.LectureId == lectureId).SingleOrDefault();
+                Console.WriteLine(result);
+                result.Status = Models.Enum.LectureStatus.Launched;
                 _db.Lectures.Update(result);
                 _db.SaveChanges();
                 return true;

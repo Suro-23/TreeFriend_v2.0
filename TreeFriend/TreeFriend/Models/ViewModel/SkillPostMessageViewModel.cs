@@ -8,5 +8,7 @@
 
         public string UserHeadshot { get; set; }
         public string Content { get; set; }
+
+        public int MsgIsPrivate { get; set; }
     }
 }

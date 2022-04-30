@@ -22,8 +22,8 @@ namespace TreeFriend.Controllers
         [AllowAnonymous]
         public List<LecturelistViewModel> GetAllLecture()
         {
-            
-            var result = _db.Lectures.Where( x => x.IsDelete == false && x.Count > 0 && x.EventDate>=DateTime.Now).Select(x => new LecturelistViewModel
+
+            var result = _db.Lectures.Where(x => x.Status== Models.Enum.LectureStatus.Launched && x.Count > 0 && x.EventDate >= DateTime.Now).Select(x => new LecturelistViewModel
             {
                 LectureId = x.LectureId,
                 Theme = x.Theme,

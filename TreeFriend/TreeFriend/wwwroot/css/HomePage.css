@@ -110,13 +110,14 @@ a {
 .txt-context {
     margin-top: 20px;
     margin-bottom: 10px;
-    font-size: 28px;
+    font-size: 23px;
+    font-weight: 700;
 }
 
 .txt-p2 {
     max-width: 360px;
     margin-top: 15px;
-    margin-bottom: 20px;
+    margin-bottom: 13px;
     font-size: 18px;
     color: #545454;
 }

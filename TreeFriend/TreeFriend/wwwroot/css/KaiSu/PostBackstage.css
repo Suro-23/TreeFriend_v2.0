@@ -1,5 +1,10 @@
-﻿
+﻿body {
+    background-color: aliceblue;
+}
 
+.form-control {
+    background-color: aliceblue;
+}
 
 .btnimg {
     width: 100px;

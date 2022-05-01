@@ -8,36 +8,36 @@
 @*<script src="~/js/site.js" asp-append-version="true"></script>*@
 <link href="/css/KaiSu/PostBackstage.css" rel="stylesheet" />
 
-
-<div id="app" method="post">
-    <div class="imgbox">
-        <label class="btnimg " v-if='hello.sizeback > hello.imgback.length '>
-            <label class="plus ">
-                +
-                <input type="file" class="form-control" id='files' style="display: none" @@change='fileChangeback' name="name" value="" multiple>
+<body>
+    <div id="app" method="post">
+        <div class="imgbox">
+            <label class="btnimg " v-if='hello.sizeback > hello.imgback.length '>
+                <label class="plus ">
+                    +
+                    <input type="file" class="form-control" id='files' style="display: none" @@change='fileChangeback' name="name" value="" multiple>
+                </label>
             </label>
-        </label>
 
-        <div v-if='hello.imgback.length>0' class="imgbox">
-            <div class="eachimg" v-for="(item, i) in hello.imgback" :key='i'>
-                <img class="imgupload" :src="item" alt="">
-                <div class="delect" @@click="delect(i)">x</div>
+            <div v-if='hello.imgback.length>0' class="imgbox">
+                <div class="eachimg" v-for="(item, i) in hello.imgback" :key='i'>
+                    <img class="imgupload" :src="item" alt="">
+                    <div class="delect" @@click="delect(i)">x</div>
+                </div>
             </div>
         </div>
-    </div>
 
 
-    <div>
-        @*<div class="input-group filename">
-                <button type="button" class="btn btn-outline-secondary clearbtn" id="clear">清除圖片</button>
-            </div>*@
-        <div class="form-floating filename">
-            <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px" v-model="hello.content"></textarea>
-            <label for="floatingTextarea2">輸入內容</label>
+        <div>
+            @*<div class="input-group filename">
+                    <button type="button" class="btn btn-outline-secondary clearbtn" id="clear">清除圖片</button>
+                </div>*@
+            <div class="form-floating filename">
+                <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px" v-model="hello.content"></textarea>
+                <label for="floatingTextarea2">輸入內容</label>
+            </div>
+            <button type="button" class="btn btn-primary btnsubmit" id="createbtn" @@click="send">新增</button>
         </div>
-        <button type="button" class="btn btn-primary btnsubmit" id="createbtn" @@click="send">新增</button>
-    </div>
-
+</body>
 </div>
 <script>
     var app = new Vue({
@@ -292,7 +292,8 @@
                 window.location.href = "/personalpost/editpost";
             }
         }
-        )}
+        )
+    }
 
     function SWwarning(title, text, ok) {
         Swal.fire({

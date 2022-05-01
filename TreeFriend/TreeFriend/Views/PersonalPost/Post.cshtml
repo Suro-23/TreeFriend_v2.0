@@ -108,7 +108,7 @@
 
                                         @*彈出視窗-旋轉木馬*@
                                         <div class="text-center">
-                                            <div :id='"carouselExampleIndicators1"+num1' class="carousel slide" data-bs-ride="carousel" style="margin:0px; padding:0px; float:none">
+                                            <div :id='"carouselExampleIndicators1"+num1' class="carousel" data-bs-ride="carousel" style="margin:0px; padding:0px; float:none">
                                                 <div class="carousel-inner" style="margin:0px; padding:0px; float:none">
                                                     <div class="carousel-item " v-for="(img,num) in item.postPhotoPath" v-bind:class="{'active': activeIndex === num}" style="margin:0px; padding:0px; float:none">
                                                         <img class="d-block w-100 cardimagesize card-img-top " alt="" v-bind:src="'/PostPicture/'+img" style="margin:0px; padding:0px; float:none">

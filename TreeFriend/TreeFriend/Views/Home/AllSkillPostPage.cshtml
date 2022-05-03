@@ -168,17 +168,22 @@
                 });
             },
             changeMsgStatus:async function(e) {
-                this.skillPostList.forEach(post =>{
-                    if(post.skillPostId == e){
-                        post.msgIsPrivate = !post.msgIsPrivate;
-                        if(post.msgIsPrivate === true){
-                            this.getPrivateMsg(e);
-                        }
-                        else{
-                            this.getMessage(e);
-                        }
-                    }
-                });
+                if('@user' != ""){
+                        this.skillPostList.forEach(post =>{
+                            if(post.skillPostId == e){
+                                post.msgIsPrivate = !post.msgIsPrivate;
+                                if(post.msgIsPrivate === true){
+                                    this.getPrivateMsg(e);
+                                }
+                                else{
+                                    this.getMessage(e);
+                                }
+                            }
+                        });
+                }else{
+                    window.location.replace("../Register/Create");
+                }
+
             }
         }
     });

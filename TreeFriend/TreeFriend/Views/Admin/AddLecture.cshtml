@@ -640,7 +640,7 @@
 
                 let self = this;
 
-                axios.delete(`/AddLecture/IsLaunchedLecture/?lectureId=${self.launchedtarget.lectureId}`)
+                axios.get(`/AddLecture/IsLaunchedLecture/?lectureId=${self.launchedtarget.lectureId}`)
                     .then(res => {
                         if (res.data == true) {
                             successAlert("上架成功");

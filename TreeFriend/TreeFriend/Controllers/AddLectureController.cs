@@ -208,8 +208,9 @@ namespace TreeFriend.Controllers
                 return false;
             }
         }
-
-      
+        
+        [HttpGet]
+        
         public bool IsLaunchedLecture([FromQuery] int lectureId)
         {
             try

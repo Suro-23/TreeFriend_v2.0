@@ -44,7 +44,7 @@
 
 
                     @*圖片*@
-                    <div class="carousel-inner" @*:data-bs-target="'#exampleModal'+num1"*@ data-bs-toggle="modal" type="button" :data-bs-target="'#staticBackdrop'+num1" href="#staticBackdrop">
+                    <div class="carousel-inner" data-bs-toggle="modal" type="button" :data-bs-target="'#staticBackdrop'+num1" href="#staticBackdrop">
                         <div class="carousel-item showwords" v-for="(img,num) in item.postPhotoPath" v-bind:class="{'active': activeIndex === num}">
                             <img class="d-block w-100 cardimagesize" alt="" v-bind:src="'/PostPicture/'+img">
                             <button>
@@ -95,7 +95,7 @@
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                     <div class="modal-header" style="background-color:linen;">
-                                        <button type="button" class="btn btn-danger me-1" @*data-bs-target="#exampleModal"*@ data-bs-toggle="modal" :href="'#mmm'+num1">刪除</button>
+                                        <button type="button" class="btn btn-danger me-1" data-bs-toggle="modal" :href="'#mmm'+num1">刪除</button>
                                         <button type="button" class="btn " style="background-color: #BDA684; color: #fff" v-on:click="edit($event,num1)" v-bind:value="item.personalPostId">儲存</button>
                                         <label id="saveOk"></label>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" v-on:click="reload"></button>
@@ -218,13 +218,11 @@
 
                             if (res.data == true) {
                                 SWseccess("儲存成功!", "", "繼續").then(
-                                    window.location.reload()//?
+                                    window.location.reload()
                                 );
-                                //alert("儲存成功");
-
+                                
                             } else {
                                 SWerror("修改失敗!", "", "返回");
-                                //alert('修改失敗');
                             }
 
                         })
@@ -234,7 +232,6 @@
                 }
                 else {
                     SWinfo("請輸入文章內容", "", "返回")
-                    //alert("請輸入文章內容");
                 }
             },
             deletepost: function (event) { //刪除貼文
@@ -242,10 +239,6 @@
                 let personalpostid = event.target.value;
                 let Bodyformdata = new FormData();
                 Bodyformdata.append('postId', personalpostid)
-
-                //console.log(personalpostid);
-
-                //axios.delete(`/personalpost/deletepost/?personalpostId = ${self.target.personalpostId}`)
 
                 axios({
                     method: 'post',
@@ -258,7 +251,6 @@
                             SWPseccess("刪除成功!", "", "繼續");
                         } else {
                             SWerror("刪除失敗!", "", "返回");
-                            //alert('刪除失敗');
                         }
                     }
                     ).catch(function (res) {
@@ -283,9 +275,6 @@
                 })
                     .then(function (res) {
                         if (res.data != "") {
-                            //console.log(res.data);
-                            //self.content = res.data;
-                            //console.log(self.content);
                             let Bodyformdata = new FormData();
                             let personalpostid = event.target.value;
                             console.log(personalpostid);
@@ -302,17 +291,11 @@
                                     console.log(res.data);
                                     self.content = res.data;
                                     console.log(self.content);
-                                    //console.log("#msgren" + self.num);
                                     self.usercontent.push(self.content);
                                     self.post.message = "";
-                                    //self.MessageList.message.push(self.usercontent)
-                                    //alert('渲染成功')
                                 } else { alert('渲染失敗') }
                             })
-                            //("'#msgren'+num1").
-
-                            //window.location.replace(location.href);
-                            //alert('留言成功');
+                           
                             SWmini("success", "留言成功");
                         }
                         else {
@@ -340,15 +323,6 @@
                     self.userList = result.data;
                     console.log(result.data);
                 })
-
-            ////最新文章 迴圈跑出渲染的東西
-            //for (let i = 0; i < result.data.length; i++) {
-            //    console.log(result.data[i]);
-            //    var contentobject = new content;
-            //    contentobject.content = result.data[i].content;
-            //    app.Content.push(contentobject);
-            //}
-            //console.log(app.Content);
 
 
         }

@@ -3,7 +3,6 @@
     ViewData["Title"] = "Post";
 
 }
-@*<script src="https://cdn.jsdelivr.net/npm/vue@2.6.14"></script>*@
 <script src='https://cdnjs.cloudflare.com/ajax/libs/vue/2.2.6/vue.min.js' integrity='sha512-yNMXFsZbP+Hii2fM4n1EvhKbBCZ2NAfW1FvlN6yB1ZanH+1sEcNV2rPEg6qCMRT/4dY01ELCdD75WflfTHdKJg==' crossorigin='anonymous'></script>
 <link href="/css/KaiSu/Post.css" rel="stylesheet" />
 <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
@@ -17,7 +16,7 @@
         <div class="container mt-4">
             <div class="row mx-auto ">
                 <div class="col-4 align-self-end">
-                    <img src="/img/藝術青蛙.png" alt="Alternate Text" class="frog" />@*position-absolute*@
+                    <img src="/img/藝術青蛙.png" alt="Alternate Text" class="frog" />
                 </div>
 
                 <div class="col-4 ">
@@ -27,7 +26,7 @@
                     <div class="text-center username">{{item1.userName}}</div>
                 </div>
                 <div class="col-4 ">
-                    <img src="/img/藝術兔子.png" alt="Alternate Text" class="rabbit " />@*position-absolute*@
+                    <img src="/img/藝術兔子.png" alt="Alternate Text" class="rabbit " />
                 </div>
             </div>
         </div>
@@ -220,7 +219,6 @@
                 postPhotoPath: "",
             }],
             userList: [],
-            //Content:[],
             activeIndex: 0,
             post: {
                 personalpostid: "",
@@ -248,39 +246,9 @@
                     self.userList = result.data;
                     console.log(result.data);
                 })
-            //let personid = 0;
-            //for (let p in MessageList) {
-            //    for (let id in p) {
-            //        personid=id.
-            //    }
-            //}
-
-
-            ////最新文章 迴圈跑出渲染的東西
-            //for (let i = 0; i < result.data.length; i++) {
-            //    console.log(result.data[i]);
-            //    var contentobject = new content;
-            //    contentobject.content = result.data[i].content;
-            //    app.Content.push(contentobject);
-            //}
-
-
-            //    //axios.get("/PersonalPost/GetAllImage").then(function (result) {
-            //    //    self.MessageListPic = result.data;
-            //    //    console.log(result);
-            //    //})
-            //})
+            
         },
-        //watch: {
-        //    content: {
-        //        handler() {
-        //            for (let i = 0; i < this.content.length; ++i) {
-        //                this.$set(this.content[i], "son", []);
-        //            }
-        //        },
-        //        immediate: true,
-        //    },
-        //},
+        
         methods: {
             toggle: function (id, index) { //愛心
                 console.log(id);
@@ -329,14 +297,10 @@
                                     self.usercontent.push(self.content);
                                     self.post.message = "";
                                     console.log(self.usercontent);
-                                    //self.MessageList.message.push(self.usercontent)
-                                    //alert('渲染成功')
+                                   
                                 } else { alert('渲染失敗') }
                             })
-                            //("'#msgren'+num1").
-
-                            //window.location.replace(location.href);
-                            //alert('留言成功');
+                            
                             SWmini("success", "留言成功");
                         }
                         else {
@@ -348,18 +312,9 @@
             reload: function () {
                 window.location.reload();
             }
-            //msgren: function (i) {
-            //    return "msgren" + i
-            //}
-            //removeDuplicates() {
-            //    this.Content = [...new Set(this.Content)]
-            //}
+            
         },
     });
 
 </script>
-<script>
-    //import VueMomentsAgo from './components/moments-ago.vue';
-    //export default VueMomentsAgo
 
-</script>
